@@ -3,30 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useUserStore } from '@/stores/userStore'
 import { useDataStore } from '@/stores/dataStore'
-import { isApartmentOccupied, getNextBooking } from '@/utils/apartmentHelpers'
-
-interface Apartment {
-  id: string
-  name: string
-  address: string
-  extra_info?: string | null
-  bookings: any[]
-  groups: string[]
-  status?: 'occupied' | 'available'
-  next_booking?: {
-    start_date: string
-    end_date: string
-  } | null
-}
+import { isApartmentOccupied, getNextBooking, type Apartment } from '@/utils/apartmentHelpers'
 
 interface PropertyListProps {
   onSelectProperty: (id: string) => void
 }
 
 export function PropertyList({ onSelectProperty }: PropertyListProps) {
-  const { currentUser } = useUserStore()
   const apartments = useDataStore(state => state.apartments) as Apartment[]
   const groups = useDataStore(state => state.groups)
   

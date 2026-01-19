@@ -37,8 +37,7 @@ export function UserManagement() {
         id: crypto.randomUUID(),
         email: newUserEmail,
         password: newUserPassword,
-        role: newUserRole,
-        created_at: new Date().toISOString()
+        role: newUserRole
       }
 
       await updateData((data) => ({

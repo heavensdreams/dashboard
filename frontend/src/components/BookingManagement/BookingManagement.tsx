@@ -1,26 +1,15 @@
 import { useState, useMemo } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { PhotoUpload } from '@/components/PhotoUpload'
 import { Modal } from '@/components/ui/modal'
 import { useDataStore } from '@/stores/dataStore'
 import { useUserStore } from '@/stores/userStore'
 import { logChange } from '@/utils/logging'
 import { filterBookingsForCustomer } from '@/utils/filtering'
-import { getAllBookings } from '@/utils/apartmentHelpers'
-
-interface Booking {
-  id: string
-  property_id: string
-  user_id: string
-  start_date: string
-  end_date: string
-  extra_info?: string
-  created_at?: string
-}
+import { getAllBookings, type Booking } from '@/utils/apartmentHelpers'
 
 export function BookingManagement() {
   const apartments = useDataStore(state => state.apartments)
@@ -36,24 +25,20 @@ export function BookingManagement() {
 
   // Filter bookings for customers and enrich with property/user names
   const bookings = useMemo(() => {
-    let filtered = [...allBookings]
+    let filtered: Booking[] = [...allBookings]
     
     if (isCustomer) {
-      filtered = filterBookingsForCustomer(filtered)
+      filtered = filterBookingsForCustomer(filtered) as Booking[]
     }
     
     // Enrich with property names and user emails
-    return filtered.map(booking => {
-      const apartment = apartments.find((a: any) => 
+    return filtered.map(booking => ({
+      ...booking,
+      property_name: apartments.find((a: any) => 
         a.bookings && a.bookings.some((b: any) => b.id === booking.id)
-      )
-      const user = users.find((u: any) => u.id === booking.user_id)
-      return {
-        ...booking,
-        property_name: apartment?.name || 'Unknown Property',
-        user_email: user?.email
-      }
-    }).sort((a, b) => {
+      )?.name || 'Unknown Property',
+      user_email: users.find((u: any) => u.id === booking.user_id)?.email
+    })).sort((a, b) => {
       const dateA = new Date(a.start_date).getTime()
       const dateB = new Date(b.start_date).getTime()
       return dateB - dateA // Newest first

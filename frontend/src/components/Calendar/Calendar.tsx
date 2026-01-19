@@ -7,16 +7,19 @@ import { useDataStore } from '@/stores/dataStore'
 import { useUserStore } from '@/stores/userStore'
 import { filterBookingsForCustomer, filterBookingsBySearch, filterBookingsByProperty } from '@/utils/filtering'
 import { getAllBookings } from '@/utils/apartmentHelpers'
+import type { Booking as ApartmentBooking } from '@/utils/apartmentHelpers'
 import { startOfMonth, endOfMonth, eachDayOfInterval, format, addMonths, subMonths, isSameDay, isWithinInterval } from 'date-fns'
 
-interface Booking {
+interface EnrichedBooking {
   id: string
   property_id: string
-  property_name?: string
-  user_email?: string
+  user_id: string
   start_date: string
   end_date: string
   extra_info?: string
+  created_at?: string
+  property_name?: string
+  user_email?: string
 }
 
 export function Calendar() {
@@ -29,28 +32,36 @@ export function Calendar() {
   // Extract all bookings from apartments
   const allBookings = useMemo(() => getAllBookings(apartments), [apartments])
   
-  // Filter bookings for customers
-  const bookings = useMemo(() => {
-    if (isCustomer) {
-      return filterBookingsForCustomer(allBookings)
-    }
-    return allBookings
-  }, [allBookings, isCustomer])
-  
-  // Enrich bookings with property names and user emails
+  // Filter bookings for customers and enrich with property names and user emails
   const enrichedBookings = useMemo(() => {
-    return bookings.map(booking => {
+    let filtered: ApartmentBooking[] = [...allBookings]
+    
+    // Enrich first, then filter for customers
+    const enriched = filtered.map((booking): EnrichedBooking => {
       const apartment = apartments.find((a: any) => 
         a.bookings && a.bookings.some((b: any) => b.id === booking.id)
       )
       const user = users.find((u: any) => u.id === booking.user_id)
       return {
-        ...booking,
+        id: booking.id,
+        property_id: booking.property_id,
+        user_id: booking.user_id,
+        start_date: booking.start_date,
+        end_date: booking.end_date,
+        extra_info: booking.extra_info,
+        created_at: booking.created_at,
         property_name: apartment?.name || 'Unknown Property',
         user_email: user?.email
       }
     })
-  }, [bookings, apartments, users])
+    
+    // Filter for customers after enrichment
+    if (isCustomer) {
+      return filterBookingsForCustomer(enriched as any) as EnrichedBooking[]
+    }
+    
+    return enriched
+  }, [allBookings, apartments, users, isCustomer])
   
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
@@ -73,13 +84,13 @@ export function Calendar() {
 
   // Use memoized filtered bookings for better performance
   const filteredBookings = useMemo(() => {
-    let result = enrichedBookings
+    let result: EnrichedBooking[] = enrichedBookings
     
     // Filter by property (frontend)
-    result = filterBookingsByProperty(result, propertyFilter)
+    result = filterBookingsByProperty(result as any, propertyFilter) as EnrichedBooking[]
     
     // Filter by search term (frontend)
-    result = filterBookingsBySearch(result, searchTerm, isCustomer)
+    result = filterBookingsBySearch(result as any, searchTerm, isCustomer) as EnrichedBooking[]
     
     return result
   }, [enrichedBookings, propertyFilter, searchTerm, isCustomer])

@@ -9,7 +9,6 @@ import { useDataStore } from '@/stores/dataStore'
 import { useUserStore } from '@/stores/userStore'
 import { logChange } from '@/utils/logging'
 import { filterBookingsForCustomer } from '@/utils/filtering'
-import { getAllBookings } from '@/utils/apartmentHelpers'
 
 interface PropertyDetailProps {
   propertyId: string | null

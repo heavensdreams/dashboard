@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { useDataStore } from '@/stores/dataStore'
 import { useUserStore } from '@/stores/userStore'
 import { PropertyDetail } from '@/components/PropertyDetail/PropertyDetail'
-import { filterPropertiesByGroup, filterPropertiesByUserGroups, filterBookingsForCustomer } from '@/utils/filtering'
+import { filterBookingsForCustomer } from '@/utils/filtering'
 
 interface Property {
   id: string
