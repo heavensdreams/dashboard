@@ -10,17 +10,31 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const app = express()
-const PORT = process.env.PORT || 8084
+const PORT = process.env.PORT || 8083
 
 // Middleware
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// Data directory - use Fly.io volume if available, otherwise fallback
-const dataDir = process.env.DATA_DIR || '/data'
-const dataFile = path.join(dataDir, 'data.json')
-const photosDir = path.join(dataDir, 'photos')
+// Detect environment: Fly.io has /data mounted, local uses project root
+const isFlyIO = fs.existsSync('/data') && process.env.DATA_DIR === '/data'
+const isProduction = process.env.NODE_ENV === 'production'
+
+// Data directory - use Fly.io volume if available, otherwise project root
+let dataDir, dataFile, photosDir
+
+if (isFlyIO) {
+  // Fly.io: use mounted volume
+  dataDir = '/data'
+  dataFile = path.join(dataDir, 'data.json')
+  photosDir = path.join(dataDir, 'photos')
+} else {
+  // Local: use project root
+  dataDir = process.cwd()
+  dataFile = path.join(dataDir, 'data.json')
+  photosDir = path.join(dataDir, 'photos')
+}
 
 // Ensure directories exist
 if (!fs.existsSync(dataDir)) {
@@ -30,6 +44,7 @@ if (!fs.existsSync(photosDir)) {
   fs.mkdirSync(photosDir, { recursive: true })
 }
 
+console.log('Environment:', isFlyIO ? 'Fly.io' : 'Local')
 console.log('Using data directory:', dataDir)
 console.log('Using data file:', dataFile)
 console.log('Using photos directory:', photosDir)
@@ -267,9 +282,11 @@ app.get('/api/health', (req, res) => {
   }
 })
 
-// Serve static files from frontend/dist (must be last)
+// Serve static files from frontend/dist (production mode only)
 const frontendDist = path.join(__dirname, 'frontend', 'dist')
-if (fs.existsSync(frontendDist)) {
+const serveFrontend = isProduction && fs.existsSync(frontendDist)
+
+if (serveFrontend) {
   app.use(express.static(frontendDist))
   
   // Handle client-side routing - all non-API routes serve index.html
@@ -280,14 +297,16 @@ if (fs.existsSync(frontendDist)) {
     }
     res.sendFile(path.join(frontendDist, 'index.html'))
   })
+  console.log('Frontend: Serving static files from dist')
 } else {
-  console.warn('Frontend dist directory not found. API only mode.')
+  console.log('Frontend: API only mode (use Vite dev server for frontend)')
 }
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`)
-  console.log(`Data file: ${dataFile}`)
-  console.log(`Photos directory: ${photosDir}`)
-  console.log(`Frontend: ${fs.existsSync(frontendDist) ? 'Serving static files' : 'Not found'}`)
+  console.log(`🚀 Server running on port ${PORT}`)
+  console.log(`📁 Data file: ${dataFile}`)
+  console.log(`📸 Photos directory: ${photosDir}`)
+  console.log(`🌐 Frontend: ${serveFrontend ? 'Serving static files' : 'API only (use Vite dev server)'}`)
+  console.log(`📍 Environment: ${isFlyIO ? 'Fly.io' : 'Local Development'}`)
 })
 
