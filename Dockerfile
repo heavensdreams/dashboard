@@ -39,11 +39,11 @@ COPY server.js ./
 # The server.js will create directories if they don't exist
 
 # Expose port
-EXPOSE 8084
+EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:8084/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+  CMD node -e "require('http').get('http://localhost:8080/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
 # Start the server
 CMD ["node", "server.js"]
