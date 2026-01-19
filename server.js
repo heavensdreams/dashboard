@@ -10,7 +10,6 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const app = express()
-const PORT = process.env.PORT || 8080
 
 // Middleware
 app.use(cors())
@@ -21,6 +20,10 @@ app.use(express.urlencoded({ extended: true }))
 // Fly.io sets FLY_APP_NAME automatically - this is the most reliable check
 const isFlyIO = !!process.env.FLY_APP_NAME || (fs.existsSync('/data') && process.env.DATA_DIR === '/data')
 const isProduction = process.env.NODE_ENV === 'production'
+
+// PORT: On Fly.io, always use 8080 (or env var if set). Local dev uses 8083
+// Fly.io sets PORT=8080 in fly.toml, but we ensure it's 8080 if not set
+const PORT = process.env.PORT || (isFlyIO ? 8080 : 8083)
 
 // Data directory - use Fly.io volume if available, otherwise project root
 let dataDir, dataFile, photosDir
