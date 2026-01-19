@@ -31,8 +31,9 @@ RUN npm ci --only=production
 COPY --from=builder /app/frontend/dist ./frontend/dist
 COPY server.js ./
 
-# Create data directory (will be mounted as volume on Fly.io)
-RUN mkdir -p /data/photos
+# Note: /data directory will be mounted as volume on Fly.io
+# We don't create it here - the volume mount will handle it
+# The server.js will create directories if they don't exist
 
 # Expose port
 EXPOSE 8084

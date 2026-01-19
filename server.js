@@ -18,22 +18,25 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // Detect environment: Fly.io has /data mounted, local uses project root
-const isFlyIO = fs.existsSync('/data') && process.env.DATA_DIR === '/data'
+// Check if we're on Fly.io by checking for the volume mount and env var
+const isFlyIO = process.env.DATA_DIR === '/data' || (fs.existsSync('/data') && process.env.FLY_APP_NAME)
 const isProduction = process.env.NODE_ENV === 'production'
 
 // Data directory - use Fly.io volume if available, otherwise project root
 let dataDir, dataFile, photosDir
 
 if (isFlyIO) {
-  // Fly.io: use mounted volume
+  // Fly.io: use mounted volume at /data
   dataDir = '/data'
   dataFile = path.join(dataDir, 'data.json')
   photosDir = path.join(dataDir, 'photos')
+  console.log('🌐 Fly.io environment detected - using /data volume')
 } else {
   // Local: use project root
   dataDir = process.cwd()
   dataFile = path.join(dataDir, 'data.json')
   photosDir = path.join(dataDir, 'photos')
+  console.log('💻 Local environment detected - using project root')
 }
 
 // Ensure directories exist
