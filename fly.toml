@@ -2,10 +2,12 @@ app = "dubai-real-estate"
 primary_region = "iad"
 
 [build]
+  dockerfile = "Dockerfile"
 
 [env]
   PORT = "8084"
   NODE_ENV = "production"
+  DATA_DIR = "/data"
 
 [http_service]
   internal_port = 8084
