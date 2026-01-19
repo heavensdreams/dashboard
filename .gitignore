@@ -46,4 +46,8 @@ frontend/photos/
 *.backup
 *.bak
 
+# Fly.io
+.fly/
+fly.toml.bak
+
 
