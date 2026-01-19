@@ -18,8 +18,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // Detect environment: Fly.io has /data mounted, local uses project root
-// Check if we're on Fly.io by checking for the volume mount and env var
-const isFlyIO = process.env.DATA_DIR === '/data' || (fs.existsSync('/data') && process.env.FLY_APP_NAME)
+// Fly.io sets FLY_APP_NAME automatically - this is the most reliable check
+const isFlyIO = !!process.env.FLY_APP_NAME || (fs.existsSync('/data') && process.env.DATA_DIR === '/data')
 const isProduction = process.env.NODE_ENV === 'production'
 
 // Data directory - use Fly.io volume if available, otherwise project root
