@@ -1,0 +1,76 @@
+# Cursor Rules for Rental Application
+
+## CRITICAL RULES
+
+1. **SIMPLE JSON FILE STORAGE** - All data stored in single `data.json` file (except images)
+2. **TWO COMMANDS ONLY** - LOAD DATA and SAVE DATA. That's it!
+3. **NO DATABASE** - No PostgreSQL, no Knex.js, just a JSON file
+4. **PORT RESTRICTION** - ONLY ports 8082, 8083, 8084 are allowed. NEVER use any other ports!
+5. **DATE FORMAT** - ALL dates MUST be in ISOString format with "Z" at the end (e.g., "2026-01-15T00:00:00.000Z"). Always use `.toISOString()` when creating dates. Never use date strings without "Z" suffix.
+
+## Architecture
+
+- **Frontend**: React + Vite (port 8084)
+- **Backend**: Express API (port 8083) - Simple JSON file storage
+- **Data File**: `data.json` in project root
+- **CRITICAL**: Only ports 8082, 8083, 8084 are allowed. NEVER use any other ports!
+
+## Port Configuration
+
+- **Port 8082**: PostgreSQL (legacy, not used for data storage)
+- **Port 8083**: Express API - Backend REST API (JSON file storage)
+- **Port 8084**: Vite Frontend - React application
+
+## Data Flow
+
+### LOAD DATA (App Start):
+Browser → GET /api/data → Read data.json → Return JSON (no passwords) → Store in memory
+
+### SAVE DATA (Any Change):
+Browser (in-memory data) → POST /api/data → Validate → Write to data.json → Response
+
+### PHOTOS:
+Browser → POST /api/upload (port 8083) → Save file to disk with MD5 hash → Return MD5
+
+### LOGIN:
+Browser → POST /api/login (port 8083) → Check password in data.json → Return user (no password)
+
+## Implementation Rules
+
+- **Load Data**: Use `loadAllData()` from `@/lib/api` - calls GET /api/data
+- **Save Data**: Use `updateData()` from `@/stores/dataStore` - automatically calls POST /api/data
+- **All data**: Stored in `useDataStore` - single source of truth in memory
+- **Photo uploads**: POST to `/api/upload` on port 8083
+- **No direct file access from frontend** - all through API
+
+## API Endpoints
+
+- `GET /api/data` - Load all data (passwords excluded)
+- `POST /api/data` - Save all data (full dataset)
+- `POST /api/login` - Login (checks password, returns user without password)
+- `POST /api/upload` - Upload photo (returns MD5)
+- `GET /api/public/properties/:ids` - Public property view (no auth)
+- `GET /api/health` - Health check
+
+## Data Structure
+
+The `data.json` file contains:
+```json
+{
+  "users": [...],      // passwords included in file, excluded from GET /api/data
+  "groups": [...],
+  "properties": [...],
+  "bookings": [...],
+  "photos": [...],
+  "logs": [...],
+  "user_groups": [...],
+  "property_groups": [...]
+}
+```
+
+## Frontend Data Store
+
+- Use `useDataStore()` hook to access all data
+- Use `updateData()` function to modify data (auto-saves)
+- All components read from data store, never directly from API
+- Data loaded once on app start (even when not logged in)

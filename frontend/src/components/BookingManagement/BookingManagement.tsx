@@ -1,0 +1,347 @@
+import { useState, useMemo } from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { PhotoUpload } from '@/components/PhotoUpload'
+import { Modal } from '@/components/ui/modal'
+import { useDataStore } from '@/stores/dataStore'
+import { useUserStore } from '@/stores/userStore'
+import { logChange } from '@/utils/logging'
+import { filterBookingsForCustomer } from '@/utils/filtering'
+import { getAllBookings } from '@/utils/apartmentHelpers'
+
+interface Booking {
+  id: string
+  property_id: string
+  user_id: string
+  start_date: string
+  end_date: string
+  extra_info?: string
+  created_at?: string
+}
+
+export function BookingManagement() {
+  const apartments = useDataStore(state => state.apartments)
+  const users = useDataStore(state => state.users)
+  const updateData = useDataStore(state => state.updateData)
+  
+  const { currentUser } = useUserStore()
+  const canEdit = currentUser?.role === 'admin' || currentUser?.role === 'normal'
+  const isCustomer = currentUser?.role === 'customer'
+
+  // Extract all bookings from apartments
+  const allBookings = useMemo(() => getAllBookings(apartments), [apartments])
+
+  // Filter bookings for customers and enrich with property/user names
+  const bookings = useMemo(() => {
+    let filtered = [...allBookings]
+    
+    if (isCustomer) {
+      filtered = filterBookingsForCustomer(filtered)
+    }
+    
+    // Enrich with property names and user emails
+    return filtered.map(booking => {
+      const apartment = apartments.find((a: any) => 
+        a.bookings && a.bookings.some((b: any) => b.id === booking.id)
+      )
+      const user = users.find((u: any) => u.id === booking.user_id)
+      return {
+        ...booking,
+        property_name: apartment?.name || 'Unknown Property',
+        user_email: user?.email
+      }
+    }).sort((a, b) => {
+      const dateA = new Date(a.start_date).getTime()
+      const dateB = new Date(b.start_date).getTime()
+      return dateB - dateA // Newest first
+    })
+  }, [allBookings, apartments, users, isCustomer])
+
+  const [editingBooking, setEditingBooking] = useState<Booking | null>(null)
+  const [editStartDate, setEditStartDate] = useState('')
+  const [editEndDate, setEditEndDate] = useState('')
+  const [editExtraInfo, setEditExtraInfo] = useState('')
+  const [editPropertyId, setEditPropertyId] = useState('')
+
+  const handleEditBooking = (booking: Booking) => {
+    setEditingBooking(booking)
+    setEditPropertyId(booking.property_id)
+    const startDate = booking.start_date.endsWith('Z') 
+      ? booking.start_date.split('T')[0]
+      : new Date(booking.start_date).toISOString().split('T')[0]
+    const endDate = booking.end_date.endsWith('Z')
+      ? booking.end_date.split('T')[0]
+      : new Date(booking.end_date).toISOString().split('T')[0]
+    
+    setEditStartDate(startDate)
+    setEditEndDate(endDate)
+    setEditExtraInfo(booking.extra_info || '')
+  }
+
+  const handleUpdateBooking = async () => {
+    if (!editingBooking || !editStartDate || !editEndDate || !editPropertyId) {
+      alert('Please fill in all required fields')
+      return
+    }
+
+    if (new Date(editEndDate) < new Date(editStartDate)) {
+      alert('End date must be after start date')
+      return
+    }
+
+    try {
+      const startDateISO = new Date(editStartDate + 'T00:00:00Z').toISOString()
+      const endDateISO = new Date(editEndDate + 'T00:00:00Z').toISOString()
+
+      const oldBooking = allBookings.find((b: any) => b.id === editingBooking.id)
+      const oldValue = oldBooking ? `${oldBooking.start_date.split('T')[0]} to ${oldBooking.end_date.split('T')[0]}${oldBooking.extra_info ? ` (${oldBooking.extra_info})` : ''}` : ''
+      const newValue = `${editStartDate} to ${editEndDate}${editExtraInfo ? ` (${editExtraInfo})` : ''}`
+
+      // Update booking in apartment
+      await updateData((data) => ({
+        ...data,
+        apartments: data.apartments.map(apt => {
+          // Remove booking from old apartment if property changed
+          if (apt.id === editingBooking.property_id && apt.id !== editPropertyId) {
+            return {
+              ...apt,
+              bookings: apt.bookings.filter((b: any) => b.id !== editingBooking.id)
+            }
+          }
+          // Update booking in current apartment
+          if (apt.id === editPropertyId) {
+            const hasBooking = apt.bookings.some((b: any) => b.id === editingBooking.id)
+            if (hasBooking) {
+              return {
+                ...apt,
+                bookings: apt.bookings.map((b: any) => 
+                  b.id === editingBooking.id
+                    ? { ...b, start_date: startDateISO, end_date: endDateISO, extra_info: editExtraInfo }
+                    : b
+                )
+              }
+            } else {
+              // Add booking to new apartment
+              return {
+                ...apt,
+                bookings: [...apt.bookings, {
+                  ...editingBooking,
+                  property_id: editPropertyId,
+                  start_date: startDateISO,
+                  end_date: endDateISO,
+                  extra_info: editExtraInfo
+                }]
+              }
+            }
+          }
+          return apt
+        })
+      }))
+
+      if (currentUser) {
+        await logChange({
+          user_id: currentUser.id,
+          action: 'Updated booking',
+          entity_type: 'booking',
+          entity_id: editingBooking.id,
+          old_value: oldValue,
+          new_value: newValue
+        })
+      }
+
+      setEditingBooking(null)
+      setEditStartDate('')
+      setEditEndDate('')
+      setEditExtraInfo('')
+      setEditPropertyId('')
+    } catch (error: any) {
+      console.error('Failed to update booking:', error)
+      alert('Failed to update booking')
+    }
+  }
+
+  const handleDeleteBooking = async (bookingId: string, bookingInfo: string) => {
+    if (!confirm(`Delete booking ${bookingInfo}?`)) return
+
+    try {
+      await updateData((data) => ({
+        ...data,
+        apartments: data.apartments.map(apt => ({
+          ...apt,
+          bookings: apt.bookings.filter((b: any) => b.id !== bookingId)
+        }))
+      }))
+
+      if (currentUser) {
+        await logChange({
+          user_id: currentUser.id,
+          action: 'Deleted booking',
+          entity_type: 'booking',
+          entity_id: bookingId,
+          old_value: bookingInfo
+        })
+      }
+    } catch (error) {
+      console.error('Failed to delete booking:', error)
+      alert('Failed to delete booking')
+    }
+  }
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    })
+  }
+
+  const getPropertyName = (booking: Booking) => {
+    const apartment = apartments.find((a: any) => 
+      a.bookings && a.bookings.some((b: any) => b.id === booking.id)
+    )
+    return apartment?.name || 'Unknown Property'
+  }
+
+  const getUserEmail = (booking: Booking) => {
+    const user = users.find((u: any) => u.id === booking.user_id)
+    return user?.email
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">All Bookings</h2>
+      </div>
+
+      {editingBooking && (
+        <Modal
+          isOpen={true}
+          onClose={() => {
+            setEditingBooking(null)
+            setEditStartDate('')
+            setEditEndDate('')
+            setEditExtraInfo('')
+            setEditPropertyId('')
+          }}
+          title="Edit Booking"
+          size="md"
+        >
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="editProperty">Property *</Label>
+              <select
+                id="editProperty"
+                value={editPropertyId}
+                onChange={(e) => setEditPropertyId(e.target.value)}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                required
+              >
+                <option value="">Select a property...</option>
+                {apartments.map((apt: any) => (
+                  <option key={apt.id} value={apt.id}>
+                    {apt.name} - {apt.address}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <Label htmlFor="editStartDate">Start Date *</Label>
+              <Input
+                id="editStartDate"
+                type="date"
+                value={editStartDate}
+                onChange={(e) => setEditStartDate(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="editEndDate">End Date *</Label>
+              <Input
+                id="editEndDate"
+                type="date"
+                value={editEndDate}
+                onChange={(e) => setEditEndDate(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="editExtraInfo">Extra Info</Label>
+              <Textarea
+                id="editExtraInfo"
+                value={editExtraInfo}
+                onChange={(e) => setEditExtraInfo(e.target.value)}
+                placeholder="Guest information, payment status, notes, etc."
+                rows={4}
+              />
+            </div>
+            <div className="flex justify-end gap-2 pt-4 border-t">
+              <Button variant="outline" onClick={() => {
+                setEditingBooking(null)
+                setEditStartDate('')
+                setEditEndDate('')
+                setEditExtraInfo('')
+                setEditPropertyId('')
+              }}>Cancel</Button>
+              <Button onClick={handleUpdateBooking}>Update Booking</Button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      <div className="space-y-2">
+        {bookings.length === 0 ? (
+          <Card>
+            <CardContent className="py-8 text-center text-muted-foreground">
+              No bookings found
+            </CardContent>
+          </Card>
+        ) : (
+          bookings.map((booking) => {
+            const propertyName = getPropertyName(booking)
+            const userEmail = getUserEmail(booking)
+            return (
+              <Card key={booking.id}>
+                <CardContent className="py-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="font-semibold">{propertyName}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {formatDate(booking.start_date)} - {formatDate(booking.end_date)}
+                      </p>
+                      {!isCustomer && userEmail && (
+                        <p className="text-xs text-muted-foreground">Guest: {userEmail}</p>
+                      )}
+                      {!isCustomer && booking.extra_info && (
+                        <p className="text-sm mt-1">{booking.extra_info}</p>
+                      )}
+                      {isCustomer && (
+                        <p className="text-xs text-muted-foreground mt-1">Booked</p>
+                      )}
+                    </div>
+                    {canEdit && (
+                      <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => handleEditBooking(booking)}>
+                          Edit
+                        </Button>
+                        <Button 
+                          variant="destructive" 
+                          onClick={() => handleDeleteBooking(booking.id, `${propertyName} (${formatDate(booking.start_date)} - ${formatDate(booking.end_date)})`)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            )
+          })
+        )}
+      </div>
+    </div>
+  )
+}

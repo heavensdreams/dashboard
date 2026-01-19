@@ -1,0 +1,2915 @@
+{
+  "users": [
+    {
+      "id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "email": "john.doe@example.com",
+      "role": "admin",
+      "created_at": "2026-01-13T13:25:19.216Z",
+      "password": "password123"
+    },
+    {
+      "id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "email": "jane.smith@example.com",
+      "role": "normal",
+      "created_at": "2026-01-13T13:25:19.218Z",
+      "password": "password123"
+    },
+    {
+      "id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "email": "bob.johnson@example.com",
+      "role": "normal",
+      "created_at": "2026-01-13T13:25:19.219Z",
+      "password": "password123"
+    }
+  ],
+  "groups": [
+    {
+      "id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "name": "Premium Properties",
+      "created_at": "2026-01-13T13:25:19.220Z"
+    },
+    {
+      "id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "name": "Standard Rentals",
+      "created_at": "2026-01-13T13:25:19.221Z"
+    },
+    {
+      "id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "name": "Budget Options",
+      "created_at": "2026-01-13T13:25:19.222Z"
+    }
+  ],
+  "properties": [
+    {
+      "id": "e52289b9-b2ba-4812-9515-e72fa5dc8310",
+      "name": "Ocean View Apartment",
+      "address": "456 Oak Avenue",
+      "extra_info": "Beautiful views, recently renovated. Pet-friendly.",
+      "created_at": "2026-01-13T13:25:19.225Z",
+      "roi_info": null
+    },
+    {
+      "id": "a4579b3a-c92e-409b-a79b-45bf071f811c",
+      "name": "Mountain Retreat",
+      "address": "789 Pine Road",
+      "extra_info": "Spacious and comfortable. Perfect for families.",
+      "created_at": "2026-01-13T13:25:19.226Z",
+      "roi_info": null
+    },
+    {
+      "id": "916d1d76-5a8a-4b3a-a124-3cd1444a3511",
+      "name": "City Center Loft",
+      "address": "321 Elm Boulevard",
+      "extra_info": "Stylish interior, great location. Includes parking.",
+      "created_at": "2026-01-13T13:25:19.228Z",
+      "roi_info": null
+    },
+    {
+      "id": "02e2fe68-8fc6-41b6-9629-870fae043298",
+      "name": "Garden Studio",
+      "address": "654 Maple Drive",
+      "extra_info": "Cozy and welcoming. Near shopping and restaurants.",
+      "created_at": "2026-01-13T13:25:19.229Z",
+      "roi_info": null
+    },
+    {
+      "id": "cf55d6e8-b389-4527-9dc7-dfd2d7e2ff74",
+      "name": "Beachside Condo",
+      "address": "987 Cedar Lane",
+      "extra_info": "Luxury finishes throughout. High-speed internet included.",
+      "created_at": "2026-01-13T13:25:19.230Z",
+      "roi_info": null
+    },
+    {
+      "id": "71a3b37d-ca45-4861-a9f8-b96e586d7601",
+      "name": "Downtown Penthouse",
+      "address": "147 Birch Street",
+      "extra_info": "Quiet neighborhood, well-maintained. Garden access.",
+      "created_at": "2026-01-13T13:25:19.231Z",
+      "roi_info": null
+    },
+    {
+      "id": "af686dee-e969-47ab-8b28-e570bab60b92",
+      "name": "Riverside Apartment",
+      "address": "258 Spruce Avenue",
+      "extra_info": "Bright and airy. Close to beach and parks.",
+      "created_at": "2026-01-13T13:25:19.232Z",
+      "roi_info": null
+    },
+    {
+      "id": "33d68d18-1768-4eb2-8c23-1d557496484b",
+      "name": "Park View Suite",
+      "address": "369 Willow Road",
+      "extra_info": "Modern design, fully equipped kitchen. Balcony included.",
+      "created_at": "2026-01-13T13:25:19.233Z",
+      "roi_info": null
+    },
+    {
+      "id": "d79e44a8-f6b4-4df2-aba6-8ae1648043a7",
+      "name": "Harbor House",
+      "address": "741 Ash Boulevard",
+      "extra_info": "Charming character, excellent condition. Great value.",
+      "created_at": "2026-01-13T13:25:19.234Z",
+      "roi_info": null
+    },
+    {
+      "id": "03ce3333-509a-4b59-88da-728ce6167093",
+      "name": "Forest Cabin",
+      "address": "852 Cherry Drive",
+      "extra_info": "Prime location, secure building. Elevator access.",
+      "created_at": "2026-01-13T13:25:19.235Z",
+      "roi_info": null
+    },
+    {
+      "id": "ebf2e449-e228-424d-9f41-5a03dce4a281",
+      "name": "Lakeside Villa",
+      "address": "963 Walnut Lane",
+      "extra_info": "Renovated recently, move-in ready. Storage included.",
+      "created_at": "2026-01-13T13:25:19.236Z",
+      "roi_info": null
+    },
+    {
+      "id": "11d67b5f-f01b-4b07-b9a9-0dae414a3282",
+      "name": "Urban Loft",
+      "address": "159 Chestnut Street",
+      "extra_info": "Stunning views, premium location. Concierge service.",
+      "created_at": "2026-01-13T13:25:19.237Z",
+      "roi_info": null
+    },
+    {
+      "id": "4640e402-0078-4242-ad6d-6126ff5bb2e1",
+      "name": "Coastal Bungalow",
+      "address": "357 Hickory Avenue",
+      "extra_info": "Comfortable and clean. Great for short stays.",
+      "created_at": "2026-01-13T13:25:19.238Z",
+      "roi_info": null
+    },
+    {
+      "id": "070597cc-66a4-40a0-8339-b04f3b16077d",
+      "name": "Meadow Cottage",
+      "address": "468 Poplar Road",
+      "extra_info": "Well-appointed, excellent amenities. Close to everything.",
+      "created_at": "2026-01-13T13:25:19.238Z",
+      "roi_info": null
+    },
+    {
+      "id": "6daf828b-4614-4873-a18d-474f32f1c2fd",
+      "name": "Skyline Apartment",
+      "address": "579 Sycamore Boulevard",
+      "extra_info": "Spacious layout, natural light. Private entrance.",
+      "created_at": "2026-01-13T13:25:19.239Z",
+      "roi_info": null
+    },
+    {
+      "id": "bf787a91-7a0d-4cec-9670-80f74613ec1a",
+      "name": "Valley View",
+      "address": "680 Magnolia Drive",
+      "extra_info": "Luxury living, top floor. Panoramic views.",
+      "created_at": "2026-01-13T13:25:19.240Z",
+      "roi_info": null
+    },
+    {
+      "id": "2e084863-af4b-4d08-bc15-ac2feb1f4348",
+      "name": "Seaside Retreat",
+      "address": "791 Dogwood Lane",
+      "extra_info": "Family-friendly, safe area. Schools nearby.",
+      "created_at": "2026-01-13T13:25:19.241Z",
+      "roi_info": null
+    },
+    {
+      "id": "69307ae2-e437-44f0-85e8-608c1cb01e08",
+      "name": "Hilltop House",
+      "address": "802 Redwood Street",
+      "extra_info": "Modern amenities, great design. Walk to shops.",
+      "created_at": "2026-01-13T13:25:19.242Z",
+      "roi_info": null
+    },
+    {
+      "id": "4317242d-e5c6-4dd8-b7d4-cf527ef93f60",
+      "name": "Plaza Suite",
+      "address": "913 Cypress Avenue",
+      "extra_info": "Peaceful setting, well-maintained. Perfect retreat.",
+      "created_at": "2026-01-13T13:25:19.243Z",
+      "roi_info": null
+    },
+    {
+      "id": "dbaab402-5d3a-4fef-a927-0ceef940ebf1",
+      "name": "Garden Apartment",
+      "address": "124 Fir Road",
+      "extra_info": "City center location, easy access. Public transport nearby.",
+      "created_at": "2026-01-13T13:25:19.244Z",
+      "roi_info": null
+    },
+    {
+      "id": "a2bdeb34-8c45-4c54-8e7b-0e29877d1922",
+      "name": "Waterfront Condo",
+      "address": "235 Hemlock Boulevard",
+      "extra_info": "Beautiful property, excellent condition. Ready to move in.",
+      "created_at": "2026-01-13T13:25:19.245Z",
+      "roi_info": null
+    },
+    {
+      "id": "aae730c6-06ff-40f2-96c7-8dbff16c10d9",
+      "name": "Historic Loft",
+      "address": "346 Juniper Drive",
+      "extra_info": "Comfortable and convenient. All utilities included.",
+      "created_at": "2026-01-13T13:25:19.246Z",
+      "roi_info": null
+    },
+    {
+      "id": "bcad1dc8-6a1e-4f48-986c-3b85fabbe482",
+      "name": "Modern Studio",
+      "address": "457 Larch Lane",
+      "extra_info": "Stylish and modern. Great investment opportunity.",
+      "created_at": "2026-01-13T13:25:19.247Z",
+      "roi_info": null
+    },
+    {
+      "id": "53b8d137-d39c-4641-b301-f6fa902ebc0f",
+      "name": "Classic Villa",
+      "address": "568 Alder Street",
+      "extra_info": "Well-located, fully furnished. Short or long term.",
+      "created_at": "2026-01-13T13:25:19.247Z",
+      "roi_info": null
+    },
+    {
+      "id": "783673da-824f-4345-80ef-3d5b49210ef4",
+      "name": "Tropical Paradise",
+      "address": "679 Beech Avenue",
+      "extra_info": "Charming and cozy. Perfect for couples.",
+      "created_at": "2026-01-13T13:25:19.249Z",
+      "roi_info": null
+    },
+    {
+      "id": "ce037a18-8bdb-41d2-9582-03c239f7f5aa",
+      "name": "Alpine Chalet",
+      "address": "780 Cedar Road",
+      "extra_info": "Spacious and bright. Natural light throughout.",
+      "created_at": "2026-01-13T13:25:19.249Z",
+      "roi_info": null
+    },
+    {
+      "id": "2b1563ee-4b08-4934-a5d5-10c0632b78f8",
+      "name": "Desert Oasis",
+      "address": "891 Pine Boulevard",
+      "extra_info": "Luxury features, premium finishes. High-end living.",
+      "created_at": "2026-01-13T13:25:19.250Z",
+      "roi_info": null
+    },
+    {
+      "id": "7bbd953f-ac89-4a94-bdeb-651fc6cfa710",
+      "name": "Countryside Home",
+      "address": "902 Oak Drive",
+      "extra_info": "Great value, excellent location. Move-in ready.",
+      "created_at": "2026-01-13T13:25:19.251Z",
+      "roi_info": null
+    },
+    {
+      "id": "a8bd8261-631d-41dc-ad20-35ad3ae29c75",
+      "name": "Metro Apartment",
+      "address": "113 Maple Lane",
+      "extra_info": "Comfortable home, well-maintained. Family-friendly.",
+      "created_at": "2026-01-13T13:25:19.252Z",
+      "roi_info": null
+    },
+    {
+      "id": "df40d733-95a4-446d-8043-59c277c93673",
+      "name": "Boutique Suite",
+      "address": "224 Elm Street",
+      "extra_info": "Modern design, quality construction. Energy efficient.",
+      "created_at": "2026-01-13T13:25:19.253Z",
+      "roi_info": null
+    },
+    {
+      "id": "e9460db3-b50c-4bc2-b614-059f40d59436",
+      "name": "Executive Penthouse",
+      "address": "335 Birch Avenue",
+      "extra_info": "Beautiful views, peaceful setting. Nature nearby.",
+      "created_at": "2026-01-13T13:25:19.254Z",
+      "roi_info": null
+    },
+    {
+      "id": "18e2efea-55ea-4211-987d-bd4fb5d43f9a",
+      "name": "Family Villa",
+      "address": "446 Spruce Road",
+      "extra_info": "Convenient location, easy access. Shopping nearby.",
+      "created_at": "2026-01-13T13:25:19.255Z",
+      "roi_info": null
+    },
+    {
+      "id": "d3528a26-cd0f-45db-b246-5bc3967e4667",
+      "name": "Romantic Getaway",
+      "address": "557 Willow Boulevard",
+      "extra_info": "Stylish interior, great amenities. Perfect for professionals.",
+      "created_at": "2026-01-13T13:25:19.255Z",
+      "roi_info": null
+    },
+    {
+      "id": "c4f854fb-526a-4eb0-801c-698982e622fa",
+      "name": "Business Suite",
+      "address": "668 Ash Drive",
+      "extra_info": "Cozy atmosphere, welcoming space. Home away from home.",
+      "created_at": "2026-01-13T13:25:19.256Z",
+      "roi_info": null
+    },
+    {
+      "id": "69df24d7-170c-44f1-bef6-9fabf100f25a",
+      "name": "Luxury Apartment",
+      "address": "779 Cherry Lane",
+      "extra_info": "Excellent condition, well-cared for. Great investment.",
+      "created_at": "2026-01-13T13:25:19.257Z",
+      "roi_info": null
+    },
+    {
+      "id": "598cde40-b577-4e57-a2da-4cecb5fd4f4c",
+      "name": "Cozy Studio",
+      "address": "880 Walnut Street",
+      "extra_info": "Prime real estate, desirable location. High demand area.",
+      "created_at": "2026-01-13T13:25:19.258Z",
+      "roi_info": null
+    },
+    {
+      "id": "a859cdf4-ca24-4c53-81c2-91098dbeed5f",
+      "name": "Spacious Loft",
+      "address": "991 Chestnut Avenue",
+      "extra_info": "Comfortable living, all conveniences. Great neighborhood.",
+      "created_at": "2026-01-13T13:25:19.259Z",
+      "roi_info": null
+    },
+    {
+      "id": "662346bd-c90b-4c47-85cb-c84e50b968db",
+      "name": "Charming Cottage",
+      "address": "102 Hickory Road",
+      "extra_info": "Modern facilities, quality finishes. Contemporary design.",
+      "created_at": "2026-01-13T13:25:19.260Z",
+      "roi_info": null
+    },
+    {
+      "id": "6d8f60d0-0132-4035-8fd8-073cb0fac766",
+      "name": "Elegant Condo",
+      "address": "213 Poplar Boulevard",
+      "extra_info": "Spacious rooms, flexible layout. Adaptable space.",
+      "created_at": "2026-01-13T13:25:19.261Z",
+      "roi_info": null
+    },
+    {
+      "id": "af458f34-4a10-4f19-b265-e3a8176b7e39",
+      "name": "Premium Villa",
+      "address": "324 Sycamore Drive",
+      "extra_info": "Beautiful property, excellent value. Must see.",
+      "created_at": "2026-01-13T13:25:19.262Z",
+      "roi_info": null
+    },
+    {
+      "id": "2e9b1dad-a350-4760-96dc-52bdc44a228f",
+      "name": "Standard Apartment",
+      "address": "435 Magnolia Lane",
+      "extra_info": "Well-maintained, move-in ready. No work needed.",
+      "created_at": "2026-01-13T13:25:19.262Z",
+      "roi_info": null
+    },
+    {
+      "id": "6218212a-8efa-4ec4-9970-b5cf94c7815b",
+      "name": "Deluxe Suite",
+      "address": "546 Dogwood Street",
+      "extra_info": "Great location, easy commute. Public transport access.",
+      "created_at": "2026-01-13T13:25:19.263Z",
+      "roi_info": null
+    },
+    {
+      "id": "380cad69-d553-45b9-a931-e86806ebb1b1",
+      "name": "Budget Studio",
+      "address": "657 Redwood Avenue",
+      "extra_info": "Comfortable and clean, well-presented. Ready to enjoy.",
+      "created_at": "2026-01-13T13:25:19.264Z",
+      "roi_info": null
+    },
+    {
+      "id": "f5681e64-b65c-4e0c-8558-5adda9168b64",
+      "name": "Comfortable Home",
+      "address": "768 Cypress Road",
+      "extra_info": "Stylish design, modern amenities. Quality living.",
+      "created_at": "2026-01-13T13:25:19.265Z",
+      "roi_info": null
+    },
+    {
+      "id": "b3fc565c-3e13-4bf0-87c1-54699522d751",
+      "name": "Stylish Loft",
+      "address": "879 Fir Boulevard",
+      "extra_info": "Peaceful environment, quiet area. Perfect for relaxation.",
+      "created_at": "2026-01-13T13:25:19.266Z",
+      "roi_info": null
+    },
+    {
+      "id": "20ff7d5d-a491-4a25-9d4b-f840fdab9cf5",
+      "name": "Quiet Retreat",
+      "address": "980 Hemlock Drive",
+      "extra_info": "Convenient access, central location. Everything nearby.",
+      "created_at": "2026-01-13T13:25:19.267Z",
+      "roi_info": null
+    },
+    {
+      "id": "4e3c6349-fd4c-49e5-89e7-54159bce6766",
+      "name": "Vibrant Apartment",
+      "address": "191 Juniper Lane",
+      "extra_info": "Excellent property, great condition. Highly recommended.",
+      "created_at": "2026-01-13T13:25:19.268Z",
+      "roi_info": null
+    },
+    {
+      "id": "592e91b7-9943-499d-b933-b61d0b843201",
+      "name": "Serene Villa",
+      "address": "202 Larch Street",
+      "extra_info": "Spacious accommodation, flexible use. Versatile space.",
+      "created_at": "2026-01-13T13:25:19.269Z",
+      "roi_info": null
+    },
+    {
+      "id": "116443b9-8a97-48b1-af56-0ce1e75ad2ae",
+      "name": "Dynamic Suite",
+      "address": "313 Alder Avenue",
+      "extra_info": "Modern living, quality home. Contemporary style.",
+      "created_at": "2026-01-13T13:25:19.269Z",
+      "roi_info": null
+    },
+    {
+      "id": "f804360f-6378-46ec-9633-5e1bfea10482",
+      "name": "Sunset Villa",
+      "address": "123 Main Street",
+      "extra_info": "Fully furnished with modern amenities. Close to public transport.",
+      "created_at": "2026-01-13T13:25:19.223Z",
+      "roi_info": "This property offers exceptional investment potential with an estimated annual ROI of 8-12%.\n\nPeak Season (December - March):\nDuring Dubai's peak tourism season, occupancy rates reach 85-95%, with premium nightly rates. This period typically generates 40-45% of annual revenue.\n\nOff-Peak Season (April - November):\nThe off-peak period maintains steady occupancy at 60-75%, with competitive pricing that ensures consistent cash flow. This period contributes 55-60% of annual revenue.\n\nAverage Annual Yield:\nBased on current market conditions and projected occupancy rates, this property delivers a balanced return that accounts for seasonal variations. The strategic location in Dubai's Business Bay ensures strong demand year-round, with premium rates during peak months and stable occupancy during off-peak periods.\n\nInvestment Highlights:\n• Prime location in Business Bay\n• High-demand area for short-term rentals\n• Professional property management included\n• Strong capital appreciation potential\n• Diversified revenue stream across seasons"
+    }
+  ],
+  "bookings": [
+    {
+      "id": "b074bf29-c972-45ef-90f9-acb0139de31f",
+      "property_id": "f804360f-6378-46ec-9633-5e1bfea10482",
+      "start_date": "2026-02-02T00:00:00.000Z",
+      "end_date": "2026-02-16T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.273Z"
+    },
+    {
+      "id": "8b4f32cf-6609-4975-b6bf-7a0c2a00360f",
+      "property_id": "f804360f-6378-46ec-9633-5e1bfea10482",
+      "start_date": "2026-04-26T00:00:00.000Z",
+      "end_date": "2026-04-30T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.273Z"
+    },
+    {
+      "id": "52fc947c-9c2c-4c84-839e-15e2bd6bffb7",
+      "property_id": "f804360f-6378-46ec-9633-5e1bfea10482",
+      "start_date": "2026-06-24T00:00:00.000Z",
+      "end_date": "2026-07-04T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.274Z"
+    },
+    {
+      "id": "d4955f25-960b-4dc0-baae-cfb725060388",
+      "property_id": "f804360f-6378-46ec-9633-5e1bfea10482",
+      "start_date": "2026-01-14T00:00:00.000Z",
+      "end_date": "2026-01-26T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.274Z"
+    },
+    {
+      "id": "61d3545c-4274-468a-ae56-679b7414d516",
+      "property_id": "f804360f-6378-46ec-9633-5e1bfea10482",
+      "start_date": "2026-03-17T00:00:00.000Z",
+      "end_date": "2026-03-23T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.275Z"
+    },
+    {
+      "id": "576f837d-4e2a-45b1-b792-77b58108d171",
+      "property_id": "e52289b9-b2ba-4812-9515-e72fa5dc8310",
+      "start_date": "2026-06-09T00:00:00.000Z",
+      "end_date": "2026-06-22T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.275Z"
+    },
+    {
+      "id": "10d7600c-9e94-4e35-b137-e04d84f30ade",
+      "property_id": "e52289b9-b2ba-4812-9515-e72fa5dc8310",
+      "start_date": "2026-02-14T00:00:00.000Z",
+      "end_date": "2026-02-18T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.276Z"
+    },
+    {
+      "id": "f3221aa4-cfdf-4003-ab3a-e4bae7702940",
+      "property_id": "e52289b9-b2ba-4812-9515-e72fa5dc8310",
+      "start_date": "2026-03-29T00:00:00.000Z",
+      "end_date": "2026-04-06T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.276Z"
+    },
+    {
+      "id": "e1249ada-b012-41cc-a171-a00d22c87c67",
+      "property_id": "e52289b9-b2ba-4812-9515-e72fa5dc8310",
+      "start_date": "2026-04-11T00:00:00.000Z",
+      "end_date": "2026-04-22T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.277Z"
+    },
+    {
+      "id": "88147d1c-a34d-40d9-9b50-7d5f526dd40a",
+      "property_id": "e52289b9-b2ba-4812-9515-e72fa5dc8310",
+      "start_date": "2026-01-21T00:00:00.000Z",
+      "end_date": "2026-01-29T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.277Z"
+    },
+    {
+      "id": "67e6609e-608e-4808-9b7e-7e754861c992",
+      "property_id": "a4579b3a-c92e-409b-a79b-45bf071f811c",
+      "start_date": "2026-04-13T00:00:00.000Z",
+      "end_date": "2026-04-24T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.278Z"
+    },
+    {
+      "id": "51a54c21-0274-4765-890b-82efb0590e76",
+      "property_id": "a4579b3a-c92e-409b-a79b-45bf071f811c",
+      "start_date": "2026-03-18T00:00:00.000Z",
+      "end_date": "2026-03-31T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.278Z"
+    },
+    {
+      "id": "8199d24e-1c4c-4ec7-ae32-e39a5abdb2b6",
+      "property_id": "a4579b3a-c92e-409b-a79b-45bf071f811c",
+      "start_date": "2026-05-20T00:00:00.000Z",
+      "end_date": "2026-05-28T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.279Z"
+    },
+    {
+      "id": "2d61403f-c1d6-4ef5-8525-1866a0662675",
+      "property_id": "a4579b3a-c92e-409b-a79b-45bf071f811c",
+      "start_date": "2026-06-04T00:00:00.000Z",
+      "end_date": "2026-06-15T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.279Z"
+    },
+    {
+      "id": "838dc4b2-4f01-4643-9a3e-36a707f863c6",
+      "property_id": "916d1d76-5a8a-4b3a-a124-3cd1444a3511",
+      "start_date": "2026-05-17T00:00:00.000Z",
+      "end_date": "2026-05-25T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.280Z"
+    },
+    {
+      "id": "7ff83c73-c9ee-4423-bc98-29a8a7c6c364",
+      "property_id": "916d1d76-5a8a-4b3a-a124-3cd1444a3511",
+      "start_date": "2026-03-13T00:00:00.000Z",
+      "end_date": "2026-03-16T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.280Z"
+    },
+    {
+      "id": "db638973-c8d9-4698-92d4-6d9c1433a582",
+      "property_id": "916d1d76-5a8a-4b3a-a124-3cd1444a3511",
+      "start_date": "2026-07-01T00:00:00.000Z",
+      "end_date": "2026-07-08T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.281Z"
+    },
+    {
+      "id": "18404cbd-153a-4770-8f69-088d1a8db097",
+      "property_id": "916d1d76-5a8a-4b3a-a124-3cd1444a3511",
+      "start_date": "2026-02-02T00:00:00.000Z",
+      "end_date": "2026-02-15T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.281Z"
+    },
+    {
+      "id": "d50d2e7a-f9e1-4bfd-a53f-6c0b1a1debf0",
+      "property_id": "916d1d76-5a8a-4b3a-a124-3cd1444a3511",
+      "start_date": "2026-04-07T00:00:00.000Z",
+      "end_date": "2026-04-15T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.282Z"
+    },
+    {
+      "id": "beff51ec-a8d1-46e9-ab99-8a0001871265",
+      "property_id": "02e2fe68-8fc6-41b6-9629-870fae043298",
+      "start_date": "2026-01-19T00:00:00.000Z",
+      "end_date": "2026-01-30T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.282Z"
+    },
+    {
+      "id": "686311f9-148d-4b06-a8e4-0d2603e3526b",
+      "property_id": "02e2fe68-8fc6-41b6-9629-870fae043298",
+      "start_date": "2026-07-01T00:00:00.000Z",
+      "end_date": "2026-07-05T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.283Z"
+    },
+    {
+      "id": "6b99b75f-dd49-438c-af72-8e80cc19b025",
+      "property_id": "02e2fe68-8fc6-41b6-9629-870fae043298",
+      "start_date": "2026-07-10T00:00:00.000Z",
+      "end_date": "2026-07-24T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.283Z"
+    },
+    {
+      "id": "274504c0-6fdf-4ad5-86c5-0653727d0a2f",
+      "property_id": "cf55d6e8-b389-4527-9dc7-dfd2d7e2ff74",
+      "start_date": "2026-03-10T00:00:00.000Z",
+      "end_date": "2026-03-18T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.284Z"
+    },
+    {
+      "id": "2f0dadc3-93bc-4c68-ad22-fadb235dd1a1",
+      "property_id": "cf55d6e8-b389-4527-9dc7-dfd2d7e2ff74",
+      "start_date": "2026-03-30T00:00:00.000Z",
+      "end_date": "2026-04-04T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.284Z"
+    },
+    {
+      "id": "16d5a552-6877-4f88-a2c8-f2f4cb8a1aac",
+      "property_id": "cf55d6e8-b389-4527-9dc7-dfd2d7e2ff74",
+      "start_date": "2026-06-28T00:00:00.000Z",
+      "end_date": "2026-07-08T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.285Z"
+    },
+    {
+      "id": "0d9febf3-8a14-461a-af7e-396e2e70b659",
+      "property_id": "cf55d6e8-b389-4527-9dc7-dfd2d7e2ff74",
+      "start_date": "2026-05-31T00:00:00.000Z",
+      "end_date": "2026-06-14T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.285Z"
+    },
+    {
+      "id": "a6591514-1e4d-4065-9ec8-f55126df75e7",
+      "property_id": "cf55d6e8-b389-4527-9dc7-dfd2d7e2ff74",
+      "start_date": "2026-07-09T00:00:00.000Z",
+      "end_date": "2026-07-15T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.285Z"
+    },
+    {
+      "id": "7a097953-9731-44d3-a3b6-14f8c9e139fb",
+      "property_id": "71a3b37d-ca45-4861-a9f8-b96e586d7601",
+      "start_date": "2026-04-02T00:00:00.000Z",
+      "end_date": "2026-04-05T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.286Z"
+    },
+    {
+      "id": "52365bdc-36ea-4b23-af2e-df92bf7fb5e1",
+      "property_id": "71a3b37d-ca45-4861-a9f8-b96e586d7601",
+      "start_date": "2026-06-03T00:00:00.000Z",
+      "end_date": "2026-06-14T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.286Z"
+    },
+    {
+      "id": "f425c099-86c1-4cb9-8a16-f8fb366df079",
+      "property_id": "71a3b37d-ca45-4861-a9f8-b96e586d7601",
+      "start_date": "2026-01-22T00:00:00.000Z",
+      "end_date": "2026-01-30T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.287Z"
+    },
+    {
+      "id": "6df421aa-d3f5-49fb-8081-f5e40542c1be",
+      "property_id": "71a3b37d-ca45-4861-a9f8-b96e586d7601",
+      "start_date": "2026-03-15T00:00:00.000Z",
+      "end_date": "2026-03-25T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.287Z"
+    },
+    {
+      "id": "e283155d-48ac-453e-9428-7132b7cd7561",
+      "property_id": "71a3b37d-ca45-4861-a9f8-b96e586d7601",
+      "start_date": "2026-06-16T00:00:00.000Z",
+      "end_date": "2026-06-20T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.288Z"
+    },
+    {
+      "id": "6d8fc210-2922-4f31-8fc6-6a0b53fe2be4",
+      "property_id": "af686dee-e969-47ab-8b28-e570bab60b92",
+      "start_date": "2026-05-01T00:00:00.000Z",
+      "end_date": "2026-05-09T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.288Z"
+    },
+    {
+      "id": "72c03ea7-7b7b-4b00-9d4c-7c101de7670e",
+      "property_id": "af686dee-e969-47ab-8b28-e570bab60b92",
+      "start_date": "2026-07-06T00:00:00.000Z",
+      "end_date": "2026-07-13T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.289Z"
+    },
+    {
+      "id": "ba0253fa-00a9-4f08-9b53-3a75eef11294",
+      "property_id": "af686dee-e969-47ab-8b28-e570bab60b92",
+      "start_date": "2026-05-15T00:00:00.000Z",
+      "end_date": "2026-05-25T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.289Z"
+    },
+    {
+      "id": "17a9333b-7bcb-4cd2-9001-074e10392f9b",
+      "property_id": "af686dee-e969-47ab-8b28-e570bab60b92",
+      "start_date": "2026-04-20T00:00:00.000Z",
+      "end_date": "2026-04-30T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.289Z"
+    },
+    {
+      "id": "579359de-7b2f-4593-b6f6-33c7236dca67",
+      "property_id": "33d68d18-1768-4eb2-8c23-1d557496484b",
+      "start_date": "2026-05-13T00:00:00.000Z",
+      "end_date": "2026-05-20T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.290Z"
+    },
+    {
+      "id": "6e59ddca-aee7-4717-903d-00afa9493e9b",
+      "property_id": "33d68d18-1768-4eb2-8c23-1d557496484b",
+      "start_date": "2026-06-15T00:00:00.000Z",
+      "end_date": "2026-06-20T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.290Z"
+    },
+    {
+      "id": "e0955316-c02d-4bbd-93df-e277778a2602",
+      "property_id": "33d68d18-1768-4eb2-8c23-1d557496484b",
+      "start_date": "2026-02-07T00:00:00.000Z",
+      "end_date": "2026-02-13T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.291Z"
+    },
+    {
+      "id": "74e45404-a322-4bdd-b613-151fcf4ab2f6",
+      "property_id": "33d68d18-1768-4eb2-8c23-1d557496484b",
+      "start_date": "2026-02-19T00:00:00.000Z",
+      "end_date": "2026-03-04T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.291Z"
+    },
+    {
+      "id": "f72aca79-287a-4a27-b5fa-56cc0552d2db",
+      "property_id": "33d68d18-1768-4eb2-8c23-1d557496484b",
+      "start_date": "2026-04-09T00:00:00.000Z",
+      "end_date": "2026-04-16T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.292Z"
+    },
+    {
+      "id": "8442fb5c-7cca-449b-aa9c-f13077c9a90d",
+      "property_id": "d79e44a8-f6b4-4df2-aba6-8ae1648043a7",
+      "start_date": "2026-05-18T00:00:00.000Z",
+      "end_date": "2026-05-31T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.292Z"
+    },
+    {
+      "id": "2add7e12-f5a5-4415-b6d5-07fd0dde3897",
+      "property_id": "d79e44a8-f6b4-4df2-aba6-8ae1648043a7",
+      "start_date": "2026-07-08T00:00:00.000Z",
+      "end_date": "2026-07-17T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.293Z"
+    },
+    {
+      "id": "b39f6e46-92e7-46b0-a4e2-276448cba632",
+      "property_id": "d79e44a8-f6b4-4df2-aba6-8ae1648043a7",
+      "start_date": "2026-05-10T00:00:00.000Z",
+      "end_date": "2026-05-16T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.293Z"
+    },
+    {
+      "id": "828fcc73-56b6-40d7-9a61-fea8febe5c92",
+      "property_id": "03ce3333-509a-4b59-88da-728ce6167093",
+      "start_date": "2026-03-08T00:00:00.000Z",
+      "end_date": "2026-03-17T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.294Z"
+    },
+    {
+      "id": "eec00d01-2221-42a1-b5e8-e08b5224a581",
+      "property_id": "03ce3333-509a-4b59-88da-728ce6167093",
+      "start_date": "2026-01-16T00:00:00.000Z",
+      "end_date": "2026-01-27T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.294Z"
+    },
+    {
+      "id": "354b1c13-c85e-42c8-ba98-af3c6814bc00",
+      "property_id": "03ce3333-509a-4b59-88da-728ce6167093",
+      "start_date": "2026-04-12T00:00:00.000Z",
+      "end_date": "2026-04-16T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.294Z"
+    },
+    {
+      "id": "056cfdeb-cc94-461d-90c0-473fc4a0cdb1",
+      "property_id": "03ce3333-509a-4b59-88da-728ce6167093",
+      "start_date": "2026-02-03T00:00:00.000Z",
+      "end_date": "2026-02-11T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.295Z"
+    },
+    {
+      "id": "e5716a21-5dbf-41e9-a992-31c6ad5e17f7",
+      "property_id": "03ce3333-509a-4b59-88da-728ce6167093",
+      "start_date": "2026-06-14T00:00:00.000Z",
+      "end_date": "2026-06-21T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.295Z"
+    },
+    {
+      "id": "c91753bd-d0a5-4826-b89d-258c2ac460f2",
+      "property_id": "ebf2e449-e228-424d-9f41-5a03dce4a281",
+      "start_date": "2026-06-08T00:00:00.000Z",
+      "end_date": "2026-06-22T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.296Z"
+    },
+    {
+      "id": "8842b407-c773-440b-b396-6cb65b14f8f0",
+      "property_id": "ebf2e449-e228-424d-9f41-5a03dce4a281",
+      "start_date": "2026-04-26T00:00:00.000Z",
+      "end_date": "2026-05-04T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.296Z"
+    },
+    {
+      "id": "7c0bfedf-fe9f-4388-89a4-4d7a0ebafb1f",
+      "property_id": "ebf2e449-e228-424d-9f41-5a03dce4a281",
+      "start_date": "2026-02-05T00:00:00.000Z",
+      "end_date": "2026-02-12T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.297Z"
+    },
+    {
+      "id": "8ef1aaeb-dd44-4ad1-9d2a-1097fbc2d249",
+      "property_id": "ebf2e449-e228-424d-9f41-5a03dce4a281",
+      "start_date": "2026-02-21T00:00:00.000Z",
+      "end_date": "2026-02-25T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.297Z"
+    },
+    {
+      "id": "3405bd7a-69bc-4b0a-b79a-dfa9fe43fab0",
+      "property_id": "ebf2e449-e228-424d-9f41-5a03dce4a281",
+      "start_date": "2026-04-20T00:00:00.000Z",
+      "end_date": "2026-04-24T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.297Z"
+    },
+    {
+      "id": "23dd1fed-b15b-41de-af02-e473cffd4249",
+      "property_id": "11d67b5f-f01b-4b07-b9a9-0dae414a3282",
+      "start_date": "2026-02-06T00:00:00.000Z",
+      "end_date": "2026-02-17T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.298Z"
+    },
+    {
+      "id": "7016959b-aca5-4337-9b0e-82c87bdd4f79",
+      "property_id": "11d67b5f-f01b-4b07-b9a9-0dae414a3282",
+      "start_date": "2026-03-19T00:00:00.000Z",
+      "end_date": "2026-04-01T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.298Z"
+    },
+    {
+      "id": "5bbed95c-5d67-4f00-a67d-932dc31e8fc5",
+      "property_id": "11d67b5f-f01b-4b07-b9a9-0dae414a3282",
+      "start_date": "2026-06-14T00:00:00.000Z",
+      "end_date": "2026-06-20T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.299Z"
+    },
+    {
+      "id": "39d8e694-4ce1-4347-b20e-9af9ce561a4a",
+      "property_id": "11d67b5f-f01b-4b07-b9a9-0dae414a3282",
+      "start_date": "2026-05-14T00:00:00.000Z",
+      "end_date": "2026-05-21T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.299Z"
+    },
+    {
+      "id": "c4d23550-552f-480b-a0e8-e9708274a189",
+      "property_id": "4640e402-0078-4242-ad6d-6126ff5bb2e1",
+      "start_date": "2026-04-01T00:00:00.000Z",
+      "end_date": "2026-04-14T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.300Z"
+    },
+    {
+      "id": "dcf69533-9ffd-4f7b-93a7-93b7e2ec57b2",
+      "property_id": "4640e402-0078-4242-ad6d-6126ff5bb2e1",
+      "start_date": "2026-04-23T00:00:00.000Z",
+      "end_date": "2026-04-28T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.300Z"
+    },
+    {
+      "id": "b2022f6e-6db3-4249-b8c3-e2457a7211be",
+      "property_id": "4640e402-0078-4242-ad6d-6126ff5bb2e1",
+      "start_date": "2026-06-04T00:00:00.000Z",
+      "end_date": "2026-06-18T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.300Z"
+    },
+    {
+      "id": "9dcbd4fd-6f7c-4a12-ab77-f1728adc2922",
+      "property_id": "070597cc-66a4-40a0-8339-b04f3b16077d",
+      "start_date": "2026-07-08T00:00:00.000Z",
+      "end_date": "2026-07-22T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.301Z"
+    },
+    {
+      "id": "023a473d-f4ba-4e3d-9037-e92a74f3a66e",
+      "property_id": "070597cc-66a4-40a0-8339-b04f3b16077d",
+      "start_date": "2026-03-25T00:00:00.000Z",
+      "end_date": "2026-03-28T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.301Z"
+    },
+    {
+      "id": "4aea08bc-953e-40ff-9f4a-5ceffef531af",
+      "property_id": "070597cc-66a4-40a0-8339-b04f3b16077d",
+      "start_date": "2026-03-29T00:00:00.000Z",
+      "end_date": "2026-04-09T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.302Z"
+    },
+    {
+      "id": "60ae4b31-a6ae-4cc2-b2d9-98cc8da635c6",
+      "property_id": "070597cc-66a4-40a0-8339-b04f3b16077d",
+      "start_date": "2026-01-29T00:00:00.000Z",
+      "end_date": "2026-02-12T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.302Z"
+    },
+    {
+      "id": "5b8f1391-a3fd-4f08-9241-e458f26cfd5a",
+      "property_id": "070597cc-66a4-40a0-8339-b04f3b16077d",
+      "start_date": "2026-05-13T00:00:00.000Z",
+      "end_date": "2026-05-25T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.302Z"
+    },
+    {
+      "id": "7e25ff50-bb3e-467a-b8bf-759470ca0a72",
+      "property_id": "6daf828b-4614-4873-a18d-474f32f1c2fd",
+      "start_date": "2026-01-19T00:00:00.000Z",
+      "end_date": "2026-02-01T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.303Z"
+    },
+    {
+      "id": "fde9e3f8-cd30-4b46-890f-dd827518a782",
+      "property_id": "6daf828b-4614-4873-a18d-474f32f1c2fd",
+      "start_date": "2026-06-14T00:00:00.000Z",
+      "end_date": "2026-06-17T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.303Z"
+    },
+    {
+      "id": "fb1b7f71-4967-4f28-ade1-467c0d2b0d91",
+      "property_id": "6daf828b-4614-4873-a18d-474f32f1c2fd",
+      "start_date": "2026-02-26T00:00:00.000Z",
+      "end_date": "2026-03-03T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.304Z"
+    },
+    {
+      "id": "3368ba58-9c4f-487e-b352-a9f9b7b86dae",
+      "property_id": "6daf828b-4614-4873-a18d-474f32f1c2fd",
+      "start_date": "2026-05-25T00:00:00.000Z",
+      "end_date": "2026-06-01T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.304Z"
+    },
+    {
+      "id": "81c86633-4003-477d-9e58-957582c2395c",
+      "property_id": "6daf828b-4614-4873-a18d-474f32f1c2fd",
+      "start_date": "2026-03-21T00:00:00.000Z",
+      "end_date": "2026-04-02T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.305Z"
+    },
+    {
+      "id": "fb704a48-efc0-4dfc-a652-43a27cdcb6eb",
+      "property_id": "bf787a91-7a0d-4cec-9670-80f74613ec1a",
+      "start_date": "2026-05-19T00:00:00.000Z",
+      "end_date": "2026-06-01T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.305Z"
+    },
+    {
+      "id": "4b75acbc-345c-4d02-b77d-2e1d3eb4af83",
+      "property_id": "bf787a91-7a0d-4cec-9670-80f74613ec1a",
+      "start_date": "2026-07-09T00:00:00.000Z",
+      "end_date": "2026-07-22T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.305Z"
+    },
+    {
+      "id": "c07e5ee5-51ac-428a-aad3-881f2e58157f",
+      "property_id": "bf787a91-7a0d-4cec-9670-80f74613ec1a",
+      "start_date": "2026-02-10T00:00:00.000Z",
+      "end_date": "2026-02-17T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.306Z"
+    },
+    {
+      "id": "10c70f67-0060-4f88-aab0-929c71c2223d",
+      "property_id": "bf787a91-7a0d-4cec-9670-80f74613ec1a",
+      "start_date": "2026-04-06T00:00:00.000Z",
+      "end_date": "2026-04-20T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.306Z"
+    },
+    {
+      "id": "8372d80b-1f26-4f76-a3c5-aa16adce83e8",
+      "property_id": "bf787a91-7a0d-4cec-9670-80f74613ec1a",
+      "start_date": "2026-05-08T00:00:00.000Z",
+      "end_date": "2026-05-16T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.307Z"
+    },
+    {
+      "id": "3d486092-7b1a-431f-a989-772d441c8109",
+      "property_id": "2e084863-af4b-4d08-bc15-ac2feb1f4348",
+      "start_date": "2026-02-20T00:00:00.000Z",
+      "end_date": "2026-03-02T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.307Z"
+    },
+    {
+      "id": "170fcb88-adb7-4029-848f-9707d4ea12f7",
+      "property_id": "2e084863-af4b-4d08-bc15-ac2feb1f4348",
+      "start_date": "2026-07-01T00:00:00.000Z",
+      "end_date": "2026-07-07T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.308Z"
+    },
+    {
+      "id": "4fd4ba51-2981-4c94-a85a-f46e9469834d",
+      "property_id": "2e084863-af4b-4d08-bc15-ac2feb1f4348",
+      "start_date": "2026-02-05T00:00:00.000Z",
+      "end_date": "2026-02-14T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.308Z"
+    },
+    {
+      "id": "6aea2b7d-e864-4b69-ba53-54e403be7fd1",
+      "property_id": "2e084863-af4b-4d08-bc15-ac2feb1f4348",
+      "start_date": "2026-04-14T00:00:00.000Z",
+      "end_date": "2026-04-24T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.309Z"
+    },
+    {
+      "id": "1d7f0a98-502a-4f0a-8705-3e6c418d6cb7",
+      "property_id": "69307ae2-e437-44f0-85e8-608c1cb01e08",
+      "start_date": "2026-02-14T00:00:00.000Z",
+      "end_date": "2026-02-19T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.309Z"
+    },
+    {
+      "id": "1de978bd-a390-473f-8bf9-f95c7280efcd",
+      "property_id": "69307ae2-e437-44f0-85e8-608c1cb01e08",
+      "start_date": "2026-04-06T00:00:00.000Z",
+      "end_date": "2026-04-17T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.309Z"
+    },
+    {
+      "id": "9e91f39d-c504-4b54-a1ab-be3d4abf854e",
+      "property_id": "69307ae2-e437-44f0-85e8-608c1cb01e08",
+      "start_date": "2026-04-21T00:00:00.000Z",
+      "end_date": "2026-04-25T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.310Z"
+    },
+    {
+      "id": "17bdb81a-2bf8-45c3-8912-60217bec41e5",
+      "property_id": "69307ae2-e437-44f0-85e8-608c1cb01e08",
+      "start_date": "2026-03-04T00:00:00.000Z",
+      "end_date": "2026-03-15T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.310Z"
+    },
+    {
+      "id": "6f92bee2-6138-40aa-bc8c-8eea1124b39e",
+      "property_id": "4317242d-e5c6-4dd8-b7d4-cf527ef93f60",
+      "start_date": "2026-01-19T00:00:00.000Z",
+      "end_date": "2026-01-24T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.311Z"
+    },
+    {
+      "id": "0d23653e-578d-4274-b228-e2cd824c680c",
+      "property_id": "4317242d-e5c6-4dd8-b7d4-cf527ef93f60",
+      "start_date": "2026-04-04T00:00:00.000Z",
+      "end_date": "2026-04-17T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.311Z"
+    },
+    {
+      "id": "2cc077c1-8ca1-44f8-b567-728006530d96",
+      "property_id": "4317242d-e5c6-4dd8-b7d4-cf527ef93f60",
+      "start_date": "2026-07-07T00:00:00.000Z",
+      "end_date": "2026-07-11T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.312Z"
+    },
+    {
+      "id": "f7f2e95c-55db-47da-94c7-53ad1179e9c0",
+      "property_id": "4317242d-e5c6-4dd8-b7d4-cf527ef93f60",
+      "start_date": "2026-03-14T00:00:00.000Z",
+      "end_date": "2026-03-20T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.312Z"
+    },
+    {
+      "id": "c91843bd-a919-4402-b2fd-ace76fabf3f4",
+      "property_id": "4317242d-e5c6-4dd8-b7d4-cf527ef93f60",
+      "start_date": "2026-05-21T00:00:00.000Z",
+      "end_date": "2026-05-29T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.312Z"
+    },
+    {
+      "id": "18f5c407-4d9f-4e85-88cd-8296cee3aed5",
+      "property_id": "dbaab402-5d3a-4fef-a927-0ceef940ebf1",
+      "start_date": "2026-01-28T00:00:00.000Z",
+      "end_date": "2026-02-02T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.313Z"
+    },
+    {
+      "id": "bc95437a-a445-43c3-9645-3985b2428da2",
+      "property_id": "dbaab402-5d3a-4fef-a927-0ceef940ebf1",
+      "start_date": "2026-04-29T00:00:00.000Z",
+      "end_date": "2026-05-11T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.313Z"
+    },
+    {
+      "id": "4501bb50-77aa-4ffd-b86b-3e3949568d4e",
+      "property_id": "dbaab402-5d3a-4fef-a927-0ceef940ebf1",
+      "start_date": "2026-06-08T00:00:00.000Z",
+      "end_date": "2026-06-15T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.314Z"
+    },
+    {
+      "id": "f8165d3e-2b32-4a6f-974a-b25e0794cd6f",
+      "property_id": "dbaab402-5d3a-4fef-a927-0ceef940ebf1",
+      "start_date": "2026-01-15T00:00:00.000Z",
+      "end_date": "2026-01-24T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.314Z"
+    },
+    {
+      "id": "47b0e0bf-4084-4687-9ccb-13cc33994f39",
+      "property_id": "dbaab402-5d3a-4fef-a927-0ceef940ebf1",
+      "start_date": "2026-02-23T00:00:00.000Z",
+      "end_date": "2026-03-09T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.315Z"
+    },
+    {
+      "id": "b6bb429c-7616-420d-a57e-1fd2a99c256f",
+      "property_id": "a2bdeb34-8c45-4c54-8e7b-0e29877d1922",
+      "start_date": "2026-01-31T00:00:00.000Z",
+      "end_date": "2026-02-08T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.315Z"
+    },
+    {
+      "id": "06368946-ff31-4b27-ad4f-4acdcb205ac4",
+      "property_id": "a2bdeb34-8c45-4c54-8e7b-0e29877d1922",
+      "start_date": "2026-05-25T00:00:00.000Z",
+      "end_date": "2026-06-05T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.315Z"
+    },
+    {
+      "id": "ad7508b7-1a7d-4c22-9401-2fbe3b2d6aaa",
+      "property_id": "a2bdeb34-8c45-4c54-8e7b-0e29877d1922",
+      "start_date": "2026-06-20T00:00:00.000Z",
+      "end_date": "2026-06-28T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.316Z"
+    },
+    {
+      "id": "ee5cad93-908f-463b-9dfe-3b77acbed97f",
+      "property_id": "a2bdeb34-8c45-4c54-8e7b-0e29877d1922",
+      "start_date": "2026-04-27T00:00:00.000Z",
+      "end_date": "2026-04-30T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.316Z"
+    },
+    {
+      "id": "93ee268e-5b70-4509-9d90-37649b88747e",
+      "property_id": "a2bdeb34-8c45-4c54-8e7b-0e29877d1922",
+      "start_date": "2026-03-03T00:00:00.000Z",
+      "end_date": "2026-03-06T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.317Z"
+    },
+    {
+      "id": "cf73a7de-bd05-4eca-8556-69a61475817f",
+      "property_id": "aae730c6-06ff-40f2-96c7-8dbff16c10d9",
+      "start_date": "2026-02-26T00:00:00.000Z",
+      "end_date": "2026-03-10T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.317Z"
+    },
+    {
+      "id": "62611615-8241-4787-a80d-740eda701c71",
+      "property_id": "aae730c6-06ff-40f2-96c7-8dbff16c10d9",
+      "start_date": "2026-05-19T00:00:00.000Z",
+      "end_date": "2026-06-01T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.318Z"
+    },
+    {
+      "id": "4cbb382b-38fe-4c69-b319-495e5bdad947",
+      "property_id": "aae730c6-06ff-40f2-96c7-8dbff16c10d9",
+      "start_date": "2026-02-17T00:00:00.000Z",
+      "end_date": "2026-02-21T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.318Z"
+    },
+    {
+      "id": "bc955524-4455-4369-9532-e1701e676f78",
+      "property_id": "bcad1dc8-6a1e-4f48-986c-3b85fabbe482",
+      "start_date": "2026-01-19T00:00:00.000Z",
+      "end_date": "2026-01-22T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.318Z"
+    },
+    {
+      "id": "0337d804-bcb8-4b67-8c0f-b3778f6a7fd3",
+      "property_id": "bcad1dc8-6a1e-4f48-986c-3b85fabbe482",
+      "start_date": "2026-05-02T00:00:00.000Z",
+      "end_date": "2026-05-07T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.319Z"
+    },
+    {
+      "id": "e5fdee72-edc7-49fa-9a47-435575588e33",
+      "property_id": "bcad1dc8-6a1e-4f48-986c-3b85fabbe482",
+      "start_date": "2026-05-13T00:00:00.000Z",
+      "end_date": "2026-05-20T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.320Z"
+    },
+    {
+      "id": "a6b73eb2-0230-45fb-a3e5-f7df4294d677",
+      "property_id": "53b8d137-d39c-4641-b301-f6fa902ebc0f",
+      "start_date": "2026-01-17T00:00:00.000Z",
+      "end_date": "2026-01-22T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.320Z"
+    },
+    {
+      "id": "c81b5996-e51a-4731-a9bc-3df5c3bfa673",
+      "property_id": "53b8d137-d39c-4641-b301-f6fa902ebc0f",
+      "start_date": "2026-03-28T00:00:00.000Z",
+      "end_date": "2026-03-31T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.320Z"
+    },
+    {
+      "id": "a51e676f-b880-42f7-bb79-e2a9412e918b",
+      "property_id": "53b8d137-d39c-4641-b301-f6fa902ebc0f",
+      "start_date": "2026-05-19T00:00:00.000Z",
+      "end_date": "2026-05-31T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.321Z"
+    },
+    {
+      "id": "2e93de0b-8ff0-4483-8b79-4b2557349751",
+      "property_id": "53b8d137-d39c-4641-b301-f6fa902ebc0f",
+      "start_date": "2026-07-06T00:00:00.000Z",
+      "end_date": "2026-07-12T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.321Z"
+    },
+    {
+      "id": "33e18694-137b-486d-bc21-6fc2f0f80384",
+      "property_id": "783673da-824f-4345-80ef-3d5b49210ef4",
+      "start_date": "2026-06-08T00:00:00.000Z",
+      "end_date": "2026-06-15T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.322Z"
+    },
+    {
+      "id": "96f2d0c0-4ac7-4171-a6a2-740fa5aaa8a4",
+      "property_id": "783673da-824f-4345-80ef-3d5b49210ef4",
+      "start_date": "2026-03-18T00:00:00.000Z",
+      "end_date": "2026-03-21T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.322Z"
+    },
+    {
+      "id": "fab61de1-8363-48d4-b5ad-bc134f69a3f7",
+      "property_id": "783673da-824f-4345-80ef-3d5b49210ef4",
+      "start_date": "2026-06-22T00:00:00.000Z",
+      "end_date": "2026-06-30T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.323Z"
+    },
+    {
+      "id": "f44dda30-6922-4fd8-9f39-e0e983334a54",
+      "property_id": "783673da-824f-4345-80ef-3d5b49210ef4",
+      "start_date": "2026-03-28T00:00:00.000Z",
+      "end_date": "2026-04-10T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.323Z"
+    },
+    {
+      "id": "b202a0f7-6af8-421a-9133-103b3c5721d1",
+      "property_id": "783673da-824f-4345-80ef-3d5b49210ef4",
+      "start_date": "2026-02-25T00:00:00.000Z",
+      "end_date": "2026-03-01T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.323Z"
+    },
+    {
+      "id": "5dae0c2a-eccb-442c-a352-6a2ee85f27a8",
+      "property_id": "ce037a18-8bdb-41d2-9582-03c239f7f5aa",
+      "start_date": "2026-01-20T00:00:00.000Z",
+      "end_date": "2026-01-31T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.324Z"
+    },
+    {
+      "id": "394d7737-4c3f-4af7-8536-a5d40c4b9821",
+      "property_id": "ce037a18-8bdb-41d2-9582-03c239f7f5aa",
+      "start_date": "2026-07-07T00:00:00.000Z",
+      "end_date": "2026-07-16T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.324Z"
+    },
+    {
+      "id": "686d8f20-e0a2-48d9-acd6-49b385535f25",
+      "property_id": "ce037a18-8bdb-41d2-9582-03c239f7f5aa",
+      "start_date": "2026-05-19T00:00:00.000Z",
+      "end_date": "2026-05-26T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.325Z"
+    },
+    {
+      "id": "97c48eb2-9bb4-4c6f-84d0-746e7c4c7d04",
+      "property_id": "ce037a18-8bdb-41d2-9582-03c239f7f5aa",
+      "start_date": "2026-05-09T00:00:00.000Z",
+      "end_date": "2026-05-13T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.325Z"
+    },
+    {
+      "id": "df06601d-f60f-4be6-b04f-d18824f0129f",
+      "property_id": "ce037a18-8bdb-41d2-9582-03c239f7f5aa",
+      "start_date": "2026-02-09T00:00:00.000Z",
+      "end_date": "2026-02-23T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.326Z"
+    },
+    {
+      "id": "e7af35cf-f24a-4037-9efe-292f571a87a0",
+      "property_id": "2b1563ee-4b08-4934-a5d5-10c0632b78f8",
+      "start_date": "2026-05-03T00:00:00.000Z",
+      "end_date": "2026-05-10T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.327Z"
+    },
+    {
+      "id": "7334e110-d550-4d4e-8263-132ec89f2435",
+      "property_id": "2b1563ee-4b08-4934-a5d5-10c0632b78f8",
+      "start_date": "2026-07-05T00:00:00.000Z",
+      "end_date": "2026-07-15T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.327Z"
+    },
+    {
+      "id": "79cc89d5-d126-4343-8f6f-e03576fec780",
+      "property_id": "2b1563ee-4b08-4934-a5d5-10c0632b78f8",
+      "start_date": "2026-05-19T00:00:00.000Z",
+      "end_date": "2026-05-26T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.328Z"
+    },
+    {
+      "id": "588d1fe7-854d-4084-8360-477bfe0cdf7c",
+      "property_id": "2b1563ee-4b08-4934-a5d5-10c0632b78f8",
+      "start_date": "2026-03-01T00:00:00.000Z",
+      "end_date": "2026-03-11T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.328Z"
+    },
+    {
+      "id": "3835731c-f53e-4c08-aef6-7e0477900d9f",
+      "property_id": "2b1563ee-4b08-4934-a5d5-10c0632b78f8",
+      "start_date": "2026-01-16T00:00:00.000Z",
+      "end_date": "2026-01-28T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.328Z"
+    },
+    {
+      "id": "46dd8c20-ba61-4e08-84e3-6945d6bea5b6",
+      "property_id": "7bbd953f-ac89-4a94-bdeb-651fc6cfa710",
+      "start_date": "2026-04-05T00:00:00.000Z",
+      "end_date": "2026-04-17T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.329Z"
+    },
+    {
+      "id": "729d0b68-89a8-42c9-b3df-5b79b057411c",
+      "property_id": "7bbd953f-ac89-4a94-bdeb-651fc6cfa710",
+      "start_date": "2026-02-23T00:00:00.000Z",
+      "end_date": "2026-02-27T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.329Z"
+    },
+    {
+      "id": "3d573c5a-7034-4718-b830-3ffa506d05cf",
+      "property_id": "7bbd953f-ac89-4a94-bdeb-651fc6cfa710",
+      "start_date": "2026-05-30T00:00:00.000Z",
+      "end_date": "2026-06-09T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.330Z"
+    },
+    {
+      "id": "dbfd6029-6b41-4436-a406-58be2403eb30",
+      "property_id": "7bbd953f-ac89-4a94-bdeb-651fc6cfa710",
+      "start_date": "2026-05-01T00:00:00.000Z",
+      "end_date": "2026-05-13T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.330Z"
+    },
+    {
+      "id": "aaa0ce8d-dc5c-4b96-8dc9-41d8b9134c71",
+      "property_id": "7bbd953f-ac89-4a94-bdeb-651fc6cfa710",
+      "start_date": "2026-03-17T00:00:00.000Z",
+      "end_date": "2026-03-29T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.331Z"
+    },
+    {
+      "id": "ebbb5a1c-cfa1-4f45-b762-3ef6ab9bc93f",
+      "property_id": "a8bd8261-631d-41dc-ad20-35ad3ae29c75",
+      "start_date": "2026-04-11T00:00:00.000Z",
+      "end_date": "2026-04-17T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.331Z"
+    },
+    {
+      "id": "6d63a1b4-30af-4ea8-89ab-1753ab64137a",
+      "property_id": "a8bd8261-631d-41dc-ad20-35ad3ae29c75",
+      "start_date": "2026-03-25T00:00:00.000Z",
+      "end_date": "2026-04-03T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.332Z"
+    },
+    {
+      "id": "12974d90-bdfa-4468-b1fa-60d617e7cfe3",
+      "property_id": "a8bd8261-631d-41dc-ad20-35ad3ae29c75",
+      "start_date": "2026-02-17T00:00:00.000Z",
+      "end_date": "2026-03-02T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.332Z"
+    },
+    {
+      "id": "f5de1a1e-1523-4179-b916-db707ca75d90",
+      "property_id": "a8bd8261-631d-41dc-ad20-35ad3ae29c75",
+      "start_date": "2026-06-20T00:00:00.000Z",
+      "end_date": "2026-06-30T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.332Z"
+    },
+    {
+      "id": "4191f091-081d-4ce9-ab51-d68a4e08a867",
+      "property_id": "a8bd8261-631d-41dc-ad20-35ad3ae29c75",
+      "start_date": "2026-02-08T00:00:00.000Z",
+      "end_date": "2026-02-13T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.333Z"
+    },
+    {
+      "id": "d4c90264-6cc9-4673-bf63-1bee768be07d",
+      "property_id": "df40d733-95a4-446d-8043-59c277c93673",
+      "start_date": "2026-03-09T00:00:00.000Z",
+      "end_date": "2026-03-16T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.333Z"
+    },
+    {
+      "id": "a596134b-fe18-4fbb-9814-52b07ca05fef",
+      "property_id": "df40d733-95a4-446d-8043-59c277c93673",
+      "start_date": "2026-06-05T00:00:00.000Z",
+      "end_date": "2026-06-14T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.334Z"
+    },
+    {
+      "id": "86862d74-04c4-4399-a823-85f943cb26d6",
+      "property_id": "df40d733-95a4-446d-8043-59c277c93673",
+      "start_date": "2026-04-20T00:00:00.000Z",
+      "end_date": "2026-04-26T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.334Z"
+    },
+    {
+      "id": "e2fe4cbd-e36a-4f73-8437-5da0ccc45fc6",
+      "property_id": "e9460db3-b50c-4bc2-b614-059f40d59436",
+      "start_date": "2026-03-23T00:00:00.000Z",
+      "end_date": "2026-04-04T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.335Z"
+    },
+    {
+      "id": "1672c1f2-9c64-480a-920a-6f6fd453c1dd",
+      "property_id": "e9460db3-b50c-4bc2-b614-059f40d59436",
+      "start_date": "2026-05-22T00:00:00.000Z",
+      "end_date": "2026-05-25T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.335Z"
+    },
+    {
+      "id": "79896e1f-012d-4db7-ac28-b11636ee0f06",
+      "property_id": "e9460db3-b50c-4bc2-b614-059f40d59436",
+      "start_date": "2026-06-01T00:00:00.000Z",
+      "end_date": "2026-06-15T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.335Z"
+    },
+    {
+      "id": "4919e9c2-dd16-45e2-abcb-6413adc49880",
+      "property_id": "18e2efea-55ea-4211-987d-bd4fb5d43f9a",
+      "start_date": "2026-05-12T00:00:00.000Z",
+      "end_date": "2026-05-21T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.336Z"
+    },
+    {
+      "id": "094ce60a-8d74-4cee-a38b-bb1518468b49",
+      "property_id": "18e2efea-55ea-4211-987d-bd4fb5d43f9a",
+      "start_date": "2026-07-01T00:00:00.000Z",
+      "end_date": "2026-07-11T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.336Z"
+    },
+    {
+      "id": "a3efcd77-e6c9-4db1-b31a-fc47ab026070",
+      "property_id": "18e2efea-55ea-4211-987d-bd4fb5d43f9a",
+      "start_date": "2026-03-03T00:00:00.000Z",
+      "end_date": "2026-03-15T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.337Z"
+    },
+    {
+      "id": "492592e4-9cfe-4a8d-9927-46796bedaaf3",
+      "property_id": "18e2efea-55ea-4211-987d-bd4fb5d43f9a",
+      "start_date": "2026-06-20T00:00:00.000Z",
+      "end_date": "2026-06-24T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.337Z"
+    },
+    {
+      "id": "d4bc9db0-ff5c-419e-a2dc-8475133154af",
+      "property_id": "18e2efea-55ea-4211-987d-bd4fb5d43f9a",
+      "start_date": "2026-05-27T00:00:00.000Z",
+      "end_date": "2026-06-02T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.338Z"
+    },
+    {
+      "id": "30373974-0518-498f-9f8e-11ec8d3f40e7",
+      "property_id": "d3528a26-cd0f-45db-b246-5bc3967e4667",
+      "start_date": "2026-03-12T00:00:00.000Z",
+      "end_date": "2026-03-23T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.338Z"
+    },
+    {
+      "id": "ec8cde95-2916-470a-9c61-633403095b2b",
+      "property_id": "d3528a26-cd0f-45db-b246-5bc3967e4667",
+      "start_date": "2026-01-20T00:00:00.000Z",
+      "end_date": "2026-02-02T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.339Z"
+    },
+    {
+      "id": "a265efcd-7c53-4fae-9804-3494eda9c772",
+      "property_id": "d3528a26-cd0f-45db-b246-5bc3967e4667",
+      "start_date": "2026-06-21T00:00:00.000Z",
+      "end_date": "2026-07-04T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.339Z"
+    },
+    {
+      "id": "fece4c82-d13d-405f-bac2-d2b45a428780",
+      "property_id": "d3528a26-cd0f-45db-b246-5bc3967e4667",
+      "start_date": "2026-06-15T00:00:00.000Z",
+      "end_date": "2026-06-20T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.340Z"
+    },
+    {
+      "id": "dfb08a21-5189-40b9-86e7-7870ec581eff",
+      "property_id": "c4f854fb-526a-4eb0-801c-698982e622fa",
+      "start_date": "2026-06-07T00:00:00.000Z",
+      "end_date": "2026-06-10T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.340Z"
+    },
+    {
+      "id": "82e88e01-d165-4060-91d6-fcd8b0032ffa",
+      "property_id": "c4f854fb-526a-4eb0-801c-698982e622fa",
+      "start_date": "2026-04-08T00:00:00.000Z",
+      "end_date": "2026-04-21T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.340Z"
+    },
+    {
+      "id": "4be5af59-8bfb-4d95-a298-37a59467b7b6",
+      "property_id": "c4f854fb-526a-4eb0-801c-698982e622fa",
+      "start_date": "2026-02-02T00:00:00.000Z",
+      "end_date": "2026-02-08T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.341Z"
+    },
+    {
+      "id": "728359d4-8173-4a92-95fb-871a869a4f7e",
+      "property_id": "c4f854fb-526a-4eb0-801c-698982e622fa",
+      "start_date": "2026-06-23T00:00:00.000Z",
+      "end_date": "2026-07-02T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.341Z"
+    },
+    {
+      "id": "674a5c28-f575-481f-a3ae-85c6c0a0c109",
+      "property_id": "c4f854fb-526a-4eb0-801c-698982e622fa",
+      "start_date": "2026-03-04T00:00:00.000Z",
+      "end_date": "2026-03-17T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.342Z"
+    },
+    {
+      "id": "d62d4f3f-04f2-441d-b202-f13cab9b98e6",
+      "property_id": "69df24d7-170c-44f1-bef6-9fabf100f25a",
+      "start_date": "2026-01-30T00:00:00.000Z",
+      "end_date": "2026-02-06T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.342Z"
+    },
+    {
+      "id": "ef50ebc7-e7b4-485c-b07e-e24271a8f066",
+      "property_id": "69df24d7-170c-44f1-bef6-9fabf100f25a",
+      "start_date": "2026-02-28T00:00:00.000Z",
+      "end_date": "2026-03-11T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.343Z"
+    },
+    {
+      "id": "04a893a1-6184-429c-91d5-645f8b948dbb",
+      "property_id": "69df24d7-170c-44f1-bef6-9fabf100f25a",
+      "start_date": "2026-04-29T00:00:00.000Z",
+      "end_date": "2026-05-04T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.343Z"
+    },
+    {
+      "id": "f0863473-4fa3-4a3a-ba70-5be3edd9dd8a",
+      "property_id": "69df24d7-170c-44f1-bef6-9fabf100f25a",
+      "start_date": "2026-03-16T00:00:00.000Z",
+      "end_date": "2026-03-27T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.344Z"
+    },
+    {
+      "id": "f8694295-a5f3-4752-91ce-c7cde015a23e",
+      "property_id": "69df24d7-170c-44f1-bef6-9fabf100f25a",
+      "start_date": "2026-04-12T00:00:00.000Z",
+      "end_date": "2026-04-23T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.344Z"
+    },
+    {
+      "id": "70fac54f-47fd-4351-80da-b587375a28d9",
+      "property_id": "598cde40-b577-4e57-a2da-4cecb5fd4f4c",
+      "start_date": "2026-03-29T00:00:00.000Z",
+      "end_date": "2026-04-05T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.344Z"
+    },
+    {
+      "id": "a4e4e7df-712e-466c-be44-327771dec1d9",
+      "property_id": "598cde40-b577-4e57-a2da-4cecb5fd4f4c",
+      "start_date": "2026-02-02T00:00:00.000Z",
+      "end_date": "2026-02-15T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.345Z"
+    },
+    {
+      "id": "74bdd8b6-6418-4485-8c1d-0458d97bc847",
+      "property_id": "598cde40-b577-4e57-a2da-4cecb5fd4f4c",
+      "start_date": "2026-06-23T00:00:00.000Z",
+      "end_date": "2026-06-28T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.345Z"
+    },
+    {
+      "id": "09822866-1430-4d0f-aa41-321ac5e1b7b5",
+      "property_id": "598cde40-b577-4e57-a2da-4cecb5fd4f4c",
+      "start_date": "2026-02-21T00:00:00.000Z",
+      "end_date": "2026-03-04T00:00:00.000Z",
+      "extra_info": "Holiday booking",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.346Z"
+    },
+    {
+      "id": "63c77623-b0d6-4fe9-beb4-e7a1924106b5",
+      "property_id": "a859cdf4-ca24-4c53-81c2-91098dbeed5f",
+      "start_date": "2026-05-05T00:00:00.000Z",
+      "end_date": "2026-05-09T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.346Z"
+    },
+    {
+      "id": "605f736a-9182-4070-a375-6101997a69b1",
+      "property_id": "a859cdf4-ca24-4c53-81c2-91098dbeed5f",
+      "start_date": "2026-06-29T00:00:00.000Z",
+      "end_date": "2026-07-09T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.347Z"
+    },
+    {
+      "id": "1a2c3e02-795f-4d2a-98a9-39399ac4fa42",
+      "property_id": "a859cdf4-ca24-4c53-81c2-91098dbeed5f",
+      "start_date": "2026-02-11T00:00:00.000Z",
+      "end_date": "2026-02-21T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.347Z"
+    },
+    {
+      "id": "a7821d4e-ec39-4cd2-8cf6-35e9f58e840e",
+      "property_id": "a859cdf4-ca24-4c53-81c2-91098dbeed5f",
+      "start_date": "2026-06-06T00:00:00.000Z",
+      "end_date": "2026-06-12T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.348Z"
+    },
+    {
+      "id": "abff1589-9479-48ad-9cf6-30f0875a8b86",
+      "property_id": "662346bd-c90b-4c47-85cb-c84e50b968db",
+      "start_date": "2026-02-18T00:00:00.000Z",
+      "end_date": "2026-02-22T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.348Z"
+    },
+    {
+      "id": "8dfb154d-60ec-4add-b506-81178a1abdc1",
+      "property_id": "662346bd-c90b-4c47-85cb-c84e50b968db",
+      "start_date": "2026-04-28T00:00:00.000Z",
+      "end_date": "2026-05-09T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.349Z"
+    },
+    {
+      "id": "6746557c-e962-4544-a7da-09d59dc8908d",
+      "property_id": "662346bd-c90b-4c47-85cb-c84e50b968db",
+      "start_date": "2026-04-04T00:00:00.000Z",
+      "end_date": "2026-04-07T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.349Z"
+    },
+    {
+      "id": "664c9c98-f8cd-4568-b256-dcca6fc70127",
+      "property_id": "662346bd-c90b-4c47-85cb-c84e50b968db",
+      "start_date": "2026-01-21T00:00:00.000Z",
+      "end_date": "2026-01-31T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.349Z"
+    },
+    {
+      "id": "91f4665c-cf9a-498c-ad84-73edeaa9dfaf",
+      "property_id": "6d8f60d0-0132-4035-8fd8-073cb0fac766",
+      "start_date": "2026-04-22T00:00:00.000Z",
+      "end_date": "2026-05-01T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.350Z"
+    },
+    {
+      "id": "78bb8681-d61b-45ba-bb53-ea6d1c63a5be",
+      "property_id": "6d8f60d0-0132-4035-8fd8-073cb0fac766",
+      "start_date": "2026-01-31T00:00:00.000Z",
+      "end_date": "2026-02-09T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.350Z"
+    },
+    {
+      "id": "35192756-7ea0-4201-a29d-1aa14e3cdd62",
+      "property_id": "6d8f60d0-0132-4035-8fd8-073cb0fac766",
+      "start_date": "2026-02-10T00:00:00.000Z",
+      "end_date": "2026-02-22T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.351Z"
+    },
+    {
+      "id": "520b3d25-b073-4df7-9552-2fd212ffc0fd",
+      "property_id": "af458f34-4a10-4f19-b265-e3a8176b7e39",
+      "start_date": "2026-04-14T00:00:00.000Z",
+      "end_date": "2026-04-22T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.352Z"
+    },
+    {
+      "id": "96b03649-2087-4fb6-8062-a9edfd1f8161",
+      "property_id": "af458f34-4a10-4f19-b265-e3a8176b7e39",
+      "start_date": "2026-06-17T00:00:00.000Z",
+      "end_date": "2026-06-28T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.352Z"
+    },
+    {
+      "id": "4ec32e7b-c466-49da-a3a4-4ad45f4d406d",
+      "property_id": "af458f34-4a10-4f19-b265-e3a8176b7e39",
+      "start_date": "2026-01-28T00:00:00.000Z",
+      "end_date": "2026-02-07T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.352Z"
+    },
+    {
+      "id": "1e289b4f-9724-4043-8c08-9f55488a5a69",
+      "property_id": "2e9b1dad-a350-4760-96dc-52bdc44a228f",
+      "start_date": "2026-04-14T00:00:00.000Z",
+      "end_date": "2026-04-23T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.353Z"
+    },
+    {
+      "id": "ca594b28-93bb-49b9-a072-6bd753436beb",
+      "property_id": "2e9b1dad-a350-4760-96dc-52bdc44a228f",
+      "start_date": "2026-03-25T00:00:00.000Z",
+      "end_date": "2026-04-05T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.353Z"
+    },
+    {
+      "id": "5ef6bd0f-a8e0-48c9-9433-9bacb85c4946",
+      "property_id": "2e9b1dad-a350-4760-96dc-52bdc44a228f",
+      "start_date": "2026-06-15T00:00:00.000Z",
+      "end_date": "2026-06-21T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.354Z"
+    },
+    {
+      "id": "b6bbff35-c0aa-44f0-af3d-e1f1b21ba1cb",
+      "property_id": "2e9b1dad-a350-4760-96dc-52bdc44a228f",
+      "start_date": "2026-02-23T00:00:00.000Z",
+      "end_date": "2026-03-06T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.354Z"
+    },
+    {
+      "id": "9603c15c-19e2-495f-95d3-84648e37034e",
+      "property_id": "6218212a-8efa-4ec4-9970-b5cf94c7815b",
+      "start_date": "2026-01-15T00:00:00.000Z",
+      "end_date": "2026-01-22T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.355Z"
+    },
+    {
+      "id": "3b2f1ef4-c994-4759-ad81-324b0d5573a5",
+      "property_id": "6218212a-8efa-4ec4-9970-b5cf94c7815b",
+      "start_date": "2026-02-21T00:00:00.000Z",
+      "end_date": "2026-03-05T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.355Z"
+    },
+    {
+      "id": "25d07b3d-1c97-4590-9cda-d1a181239553",
+      "property_id": "6218212a-8efa-4ec4-9970-b5cf94c7815b",
+      "start_date": "2026-04-08T00:00:00.000Z",
+      "end_date": "2026-04-12T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.355Z"
+    },
+    {
+      "id": "06017710-f09e-4692-a6b8-20a6a5b1ee8e",
+      "property_id": "380cad69-d553-45b9-a931-e86806ebb1b1",
+      "start_date": "2026-04-05T00:00:00.000Z",
+      "end_date": "2026-04-14T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.356Z"
+    },
+    {
+      "id": "57bfeaf4-a3c2-43f2-a8c5-eb100a6f5cf1",
+      "property_id": "380cad69-d553-45b9-a931-e86806ebb1b1",
+      "start_date": "2026-05-22T00:00:00.000Z",
+      "end_date": "2026-05-25T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.356Z"
+    },
+    {
+      "id": "e2f7742f-0f27-41ad-b2e5-4ccf2c72818b",
+      "property_id": "380cad69-d553-45b9-a931-e86806ebb1b1",
+      "start_date": "2026-07-01T00:00:00.000Z",
+      "end_date": "2026-07-11T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.357Z"
+    },
+    {
+      "id": "1781d4ef-f110-4d60-84de-c43bc15f44be",
+      "property_id": "380cad69-d553-45b9-a931-e86806ebb1b1",
+      "start_date": "2026-03-11T00:00:00.000Z",
+      "end_date": "2026-03-25T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.357Z"
+    },
+    {
+      "id": "6958a7d5-0dff-472e-9d81-afb9957e0216",
+      "property_id": "f5681e64-b65c-4e0c-8558-5adda9168b64",
+      "start_date": "2026-03-02T00:00:00.000Z",
+      "end_date": "2026-03-15T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.358Z"
+    },
+    {
+      "id": "0be6b67f-ffeb-4ff0-87ff-a516b8a71d29",
+      "property_id": "f5681e64-b65c-4e0c-8558-5adda9168b64",
+      "start_date": "2026-01-19T00:00:00.000Z",
+      "end_date": "2026-01-23T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.358Z"
+    },
+    {
+      "id": "a45cf73d-e21e-4b18-bb14-38d95bdb9331",
+      "property_id": "f5681e64-b65c-4e0c-8558-5adda9168b64",
+      "start_date": "2026-05-12T00:00:00.000Z",
+      "end_date": "2026-05-26T00:00:00.000Z",
+      "extra_info": "Extended stay",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.358Z"
+    },
+    {
+      "id": "63f7a7cf-ff78-4517-9853-a36360293ad1",
+      "property_id": "f5681e64-b65c-4e0c-8558-5adda9168b64",
+      "start_date": "2026-07-08T00:00:00.000Z",
+      "end_date": "2026-07-16T00:00:00.000Z",
+      "extra_info": "Leisure stay",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.359Z"
+    },
+    {
+      "id": "b9df1312-6d88-48b4-a74f-2dc5cca5011b",
+      "property_id": "b3fc565c-3e13-4bf0-87c1-54699522d751",
+      "start_date": "2026-05-18T00:00:00.000Z",
+      "end_date": "2026-05-21T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.359Z"
+    },
+    {
+      "id": "79e29560-a051-4de3-8cf2-99bdaa5b40ad",
+      "property_id": "b3fc565c-3e13-4bf0-87c1-54699522d751",
+      "start_date": "2026-05-25T00:00:00.000Z",
+      "end_date": "2026-05-30T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.360Z"
+    },
+    {
+      "id": "9372f25e-3eb3-4eb7-a60d-f38c3aa1a5e8",
+      "property_id": "b3fc565c-3e13-4bf0-87c1-54699522d751",
+      "start_date": "2026-02-21T00:00:00.000Z",
+      "end_date": "2026-02-26T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.360Z"
+    },
+    {
+      "id": "dac18fc3-6f4b-4aaf-bb1c-daa638442091",
+      "property_id": "20ff7d5d-a491-4a25-9d4b-f840fdab9cf5",
+      "start_date": "2026-04-03T00:00:00.000Z",
+      "end_date": "2026-04-14T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.360Z"
+    },
+    {
+      "id": "ad68ff63-2759-48ae-9a63-bbee98b2cf50",
+      "property_id": "20ff7d5d-a491-4a25-9d4b-f840fdab9cf5",
+      "start_date": "2026-02-14T00:00:00.000Z",
+      "end_date": "2026-02-25T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.361Z"
+    },
+    {
+      "id": "63ca32df-b0d5-442b-b6c7-9e59de794b08",
+      "property_id": "20ff7d5d-a491-4a25-9d4b-f840fdab9cf5",
+      "start_date": "2026-05-22T00:00:00.000Z",
+      "end_date": "2026-05-30T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.361Z"
+    },
+    {
+      "id": "8b7058fe-2ab4-4649-8733-078d00437ba6",
+      "property_id": "20ff7d5d-a491-4a25-9d4b-f840fdab9cf5",
+      "start_date": "2026-06-10T00:00:00.000Z",
+      "end_date": "2026-06-17T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.362Z"
+    },
+    {
+      "id": "aafbff17-8547-4ba6-af11-8123056ea75c",
+      "property_id": "4e3c6349-fd4c-49e5-89e7-54159bce6766",
+      "start_date": "2026-05-21T00:00:00.000Z",
+      "end_date": "2026-06-01T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.362Z"
+    },
+    {
+      "id": "9045e47c-8adf-4ca0-af0d-73fc2b4b4756",
+      "property_id": "4e3c6349-fd4c-49e5-89e7-54159bce6766",
+      "start_date": "2026-01-16T00:00:00.000Z",
+      "end_date": "2026-01-23T00:00:00.000Z",
+      "extra_info": "Tourist visit",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.363Z"
+    },
+    {
+      "id": "d934d687-7048-4d64-acab-5c59b1e9f4e2",
+      "property_id": "4e3c6349-fd4c-49e5-89e7-54159bce6766",
+      "start_date": "2026-02-17T00:00:00.000Z",
+      "end_date": "2026-02-21T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.363Z"
+    },
+    {
+      "id": "2267adaf-cb42-427b-b14b-0e1e60807b33",
+      "property_id": "4e3c6349-fd4c-49e5-89e7-54159bce6766",
+      "start_date": "2026-06-19T00:00:00.000Z",
+      "end_date": "2026-07-03T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.363Z"
+    },
+    {
+      "id": "ba703a51-b214-4d14-84a0-9e63479de93d",
+      "property_id": "4e3c6349-fd4c-49e5-89e7-54159bce6766",
+      "start_date": "2026-03-25T00:00:00.000Z",
+      "end_date": "2026-03-31T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.364Z"
+    },
+    {
+      "id": "8a45ea93-bb2e-4d23-8618-6a8248f6853c",
+      "property_id": "592e91b7-9943-499d-b933-b61d0b843201",
+      "start_date": "2026-05-09T00:00:00.000Z",
+      "end_date": "2026-05-15T00:00:00.000Z",
+      "extra_info": "Relocation period",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.364Z"
+    },
+    {
+      "id": "b6dd4ffa-a6a1-43b0-9323-731eb4839e99",
+      "property_id": "592e91b7-9943-499d-b933-b61d0b843201",
+      "start_date": "2026-06-03T00:00:00.000Z",
+      "end_date": "2026-06-11T00:00:00.000Z",
+      "extra_info": "Corporate rental",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.365Z"
+    },
+    {
+      "id": "96240674-4e24-44b6-b32e-221ddcd3689e",
+      "property_id": "592e91b7-9943-499d-b933-b61d0b843201",
+      "start_date": "2026-06-30T00:00:00.000Z",
+      "end_date": "2026-07-08T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.365Z"
+    },
+    {
+      "id": "935a6527-4448-45a4-a718-0b0631478f3b",
+      "property_id": "116443b9-8a97-48b1-af56-0ce1e75ad2ae",
+      "start_date": "2026-06-29T00:00:00.000Z",
+      "end_date": "2026-07-02T00:00:00.000Z",
+      "extra_info": "Weekend getaway",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.365Z"
+    },
+    {
+      "id": "3bd4d2a4-57b1-47b0-a13a-b4b9c499e97e",
+      "property_id": "116443b9-8a97-48b1-af56-0ce1e75ad2ae",
+      "start_date": "2026-01-29T00:00:00.000Z",
+      "end_date": "2026-02-10T00:00:00.000Z",
+      "extra_info": "Business trip",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "created_at": "2026-01-13T13:25:19.366Z"
+    },
+    {
+      "id": "0d15bc09-51f1-4dc6-8b82-0b32f57095de",
+      "property_id": "116443b9-8a97-48b1-af56-0ce1e75ad2ae",
+      "start_date": "2026-03-06T00:00:00.000Z",
+      "end_date": "2026-03-19T00:00:00.000Z",
+      "extra_info": "Event accommodation",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "created_at": "2026-01-13T13:25:19.366Z"
+    },
+    {
+      "id": "09be0400-98bf-4b12-90eb-8d5f14608f39",
+      "property_id": "6d8f60d0-0132-4035-8fd8-073cb0fac766",
+      "start_date": "2026-07-12T00:00:00.000Z",
+      "end_date": "2026-07-20T00:00:00.000Z",
+      "extra_info": "Family vacation",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "created_at": "2026-01-13T13:25:19.351Z"
+    }
+  ],
+  "photos": [
+    {
+      "id": "cc62b75e-5203-437e-a741-b37c2814094c",
+      "entity_type": "property",
+      "entity_id": "f804360f-6378-46ec-9633-5e1bfea10482",
+      "photo_md5": "806d8aa22721f98d34a8a14c548baff2",
+      "created_at": "2026-01-16T13:55:15.647Z"
+    },
+    {
+      "id": "0ed72eb3-51c8-4ddf-9d42-b0cafaab46dc",
+      "entity_type": "property",
+      "entity_id": "f804360f-6378-46ec-9633-5e1bfea10482",
+      "photo_md5": "a3a48f3b901967c1ed5c628760262a3b",
+      "created_at": "2026-01-16T13:55:15.647Z"
+    },
+    {
+      "id": "d1eb82cc-cc03-4a82-b388-2d9715f1556e",
+      "entity_type": "property",
+      "entity_id": "f804360f-6378-46ec-9633-5e1bfea10482",
+      "photo_md5": "806d8aa22721f98d34a8a14c548baff2",
+      "created_at": "2026-01-16T14:24:46.802Z"
+    },
+    {
+      "id": "5dda6726-2f49-4d16-a96b-7c20529ee315",
+      "entity_type": "property",
+      "entity_id": "f804360f-6378-46ec-9633-5e1bfea10482",
+      "photo_md5": "a3a48f3b901967c1ed5c628760262a3b",
+      "created_at": "2026-01-16T14:24:46.804Z"
+    }
+  ],
+  "logs": [
+    {
+      "id": "60cebdd1-0c31-486f-883d-fa5be5fa4b97",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Created property",
+      "entity_type": "property",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 1",
+      "timestamp": "2026-01-07T09:25:10.970Z"
+    },
+    {
+      "id": "76720df7-b1d5-4a62-b8dd-4078a55f0e6b",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Updated property",
+      "entity_type": "user",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 2",
+      "timestamp": "2026-01-05T13:43:05.752Z"
+    },
+    {
+      "id": "01208680-f818-4d51-9904-220f3ab73fc3",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Updated user",
+      "entity_type": "group",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 3",
+      "timestamp": "2026-01-04T19:35:18.510Z"
+    },
+    {
+      "id": "1f4123d1-208f-4798-8189-d7363b6184d4",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Assigned property to group",
+      "entity_type": "property",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 4",
+      "timestamp": "2025-12-27T14:55:48.156Z"
+    },
+    {
+      "id": "1ccda911-bc04-45c4-b945-b3ea8b8126f5",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Created booking",
+      "entity_type": "user",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 5",
+      "timestamp": "2026-01-10T19:53:39.112Z"
+    },
+    {
+      "id": "c40e5ac0-c2f3-481c-862e-03c018a0ca20",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Created user",
+      "entity_type": "booking",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 6",
+      "timestamp": "2026-01-11T11:14:12.775Z"
+    },
+    {
+      "id": "4f412eaa-8dd0-41e2-aea3-9157bc548129",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Created booking",
+      "entity_type": "user",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 7",
+      "timestamp": "2026-01-04T15:32:46.824Z"
+    },
+    {
+      "id": "8d584741-b32f-4cdc-83ba-a8ffb1072c6c",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Created property",
+      "entity_type": "property",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 8",
+      "timestamp": "2026-01-12T10:26:30.027Z"
+    },
+    {
+      "id": "a7f5020c-af27-449e-ac18-43a58c56724c",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Created property",
+      "entity_type": "property",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 9",
+      "timestamp": "2026-01-10T08:07:49.370Z"
+    },
+    {
+      "id": "29cb888a-46f8-4107-a365-997f14404f48",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Deleted booking",
+      "entity_type": "booking",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 10",
+      "timestamp": "2025-12-17T15:43:55.281Z"
+    },
+    {
+      "id": "6e62018c-fe1f-476f-be91-b7afd50eca69",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Created property",
+      "entity_type": "user",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 11",
+      "timestamp": "2025-12-26T07:23:24.661Z"
+    },
+    {
+      "id": "d4f7c719-a6b1-4a34-8ba9-ccef7b8a4b2b",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Created user",
+      "entity_type": "property",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 12",
+      "timestamp": "2026-01-04T04:12:37.178Z"
+    },
+    {
+      "id": "4256b157-1bd5-461b-aba1-265f2de66461",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Assigned property to group",
+      "entity_type": "group",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 13",
+      "timestamp": "2026-01-12T08:41:09.271Z"
+    },
+    {
+      "id": "d0439b0f-3f27-400f-aaae-1313500cb2c5",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Created booking",
+      "entity_type": "property",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 14",
+      "timestamp": "2025-12-22T10:31:53.475Z"
+    },
+    {
+      "id": "227e4a5b-b92d-45fa-a659-e10c64b1d9b1",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Updated booking",
+      "entity_type": "user",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 15",
+      "timestamp": "2026-01-12T19:19:40.818Z"
+    },
+    {
+      "id": "bd23ac3f-cee7-43b5-a044-f644775021cb",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Created booking",
+      "entity_type": "property",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 16",
+      "timestamp": "2025-12-18T04:09:48.979Z"
+    },
+    {
+      "id": "42a7a615-1cc2-4881-9c62-97b34ed737ab",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Created booking",
+      "entity_type": "user",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 17",
+      "timestamp": "2025-12-27T23:43:07.126Z"
+    },
+    {
+      "id": "33d43bdd-99ff-47ea-a2ea-9b0692e0eebf",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Updated property",
+      "entity_type": "group",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 18",
+      "timestamp": "2026-01-05T10:18:49.125Z"
+    },
+    {
+      "id": "b87eab88-9287-46bb-bac1-4e2d89391e50",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Created booking",
+      "entity_type": "user",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 19",
+      "timestamp": "2026-01-07T15:53:44.712Z"
+    },
+    {
+      "id": "4baa3689-eff4-4770-be99-71637ee29590",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Updated booking",
+      "entity_type": "group",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "Sample log entry 20",
+      "timestamp": "2025-12-15T17:17:41.774Z"
+    },
+    {
+      "id": "d12b58bb-edb8-459d-a656-2c4c5b1db4a0",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Updated booking",
+      "entity_type": "booking",
+      "entity_id": "09be0400-98bf-4b12-90eb-8d5f14608f39",
+      "old_value": "2026-07-12 to 2026-07-20 (Family vacation)",
+      "new_value": "2026-07-12 to 2026-07-20 (Family vacation)",
+      "timestamp": "2026-01-15T13:44:59.442Z"
+    }
+  ],
+  "user_groups": [
+    {
+      "id": "134b8475-686a-4937-9ef0-d376e06569ae",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.367Z"
+    },
+    {
+      "id": "8922e322-234b-4003-b45d-afbc20386508",
+      "user_id": "61d132a6-9f12-4ca0-a586-a625331ac256",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.368Z"
+    },
+    {
+      "id": "502c0a7c-e5c9-4a0d-a336-41e460875c27",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.368Z"
+    },
+    {
+      "id": "dc292ab0-6b26-4429-8223-f5749c60a0a0",
+      "user_id": "0ddb659c-16a4-489b-aaeb-f030d8714865",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.369Z"
+    }
+  ],
+  "property_groups": [
+    {
+      "id": "ec01c2b1-f167-424c-9b3a-81a8f626bf91",
+      "property_id": "f804360f-6378-46ec-9633-5e1bfea10482",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.224Z"
+    },
+    {
+      "id": "3ecbfb5d-e8ce-44eb-89f1-0af95d71a291",
+      "property_id": "e52289b9-b2ba-4812-9515-e72fa5dc8310",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.226Z"
+    },
+    {
+      "id": "60b70729-428f-4f29-a002-fa5a3439fd17",
+      "property_id": "a4579b3a-c92e-409b-a79b-45bf071f811c",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.227Z"
+    },
+    {
+      "id": "2900000b-7d89-43e6-aca3-ae24f442652c",
+      "property_id": "916d1d76-5a8a-4b3a-a124-3cd1444a3511",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.228Z"
+    },
+    {
+      "id": "cfffca46-43bd-48e5-b6bc-8313539bc796",
+      "property_id": "02e2fe68-8fc6-41b6-9629-870fae043298",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.229Z"
+    },
+    {
+      "id": "86f8f090-f1e1-4e86-a129-d77a0ff6f509",
+      "property_id": "cf55d6e8-b389-4527-9dc7-dfd2d7e2ff74",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.230Z"
+    },
+    {
+      "id": "414d5dfe-c6b2-4f12-9415-3d87070a85d6",
+      "property_id": "71a3b37d-ca45-4861-a9f8-b96e586d7601",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.231Z"
+    },
+    {
+      "id": "925b920f-3d83-491f-9009-8a9b1a36b4d3",
+      "property_id": "af686dee-e969-47ab-8b28-e570bab60b92",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.232Z"
+    },
+    {
+      "id": "b3f98ae8-173f-4833-8bc2-c90447798155",
+      "property_id": "33d68d18-1768-4eb2-8c23-1d557496484b",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.233Z"
+    },
+    {
+      "id": "a8e3f6f7-d72e-4f5b-be6a-f6b3613f6bb0",
+      "property_id": "d79e44a8-f6b4-4df2-aba6-8ae1648043a7",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.234Z"
+    },
+    {
+      "id": "efd7e688-1ed4-4f8d-a935-f0e5ebeec78a",
+      "property_id": "03ce3333-509a-4b59-88da-728ce6167093",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.235Z"
+    },
+    {
+      "id": "7ef0b611-5c93-4da5-8677-7f2f2fc363ea",
+      "property_id": "ebf2e449-e228-424d-9f41-5a03dce4a281",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.236Z"
+    },
+    {
+      "id": "6c4db47b-1f22-4e50-b493-19e3f4017e6e",
+      "property_id": "11d67b5f-f01b-4b07-b9a9-0dae414a3282",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.237Z"
+    },
+    {
+      "id": "43eb08fd-9a07-4e43-87db-e8c6e34539ee",
+      "property_id": "4640e402-0078-4242-ad6d-6126ff5bb2e1",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.238Z"
+    },
+    {
+      "id": "2222a858-06a5-4aa7-ac81-1b77e2589827",
+      "property_id": "070597cc-66a4-40a0-8339-b04f3b16077d",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.239Z"
+    },
+    {
+      "id": "f4f260fb-263d-4939-bd0e-b865af72041b",
+      "property_id": "6daf828b-4614-4873-a18d-474f32f1c2fd",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.240Z"
+    },
+    {
+      "id": "8fa9590b-a854-4b11-9776-5a19b8ff0b4c",
+      "property_id": "bf787a91-7a0d-4cec-9670-80f74613ec1a",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.241Z"
+    },
+    {
+      "id": "caa09458-7b85-4403-a58c-33841d1523c2",
+      "property_id": "2e084863-af4b-4d08-bc15-ac2feb1f4348",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.242Z"
+    },
+    {
+      "id": "33492c1a-2b3e-407b-9eaf-2eda2cc9abfe",
+      "property_id": "69307ae2-e437-44f0-85e8-608c1cb01e08",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.242Z"
+    },
+    {
+      "id": "ad540da2-38c4-4ba7-9909-4c5f9b49255d",
+      "property_id": "4317242d-e5c6-4dd8-b7d4-cf527ef93f60",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12",
+      "created_at": "2026-01-13T13:25:19.243Z"
+    },
+    {
+      "id": "46e40f38-20e7-4510-9acb-08359b99746b",
+      "property_id": "dbaab402-5d3a-4fef-a927-0ceef940ebf1",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.244Z"
+    },
+    {
+      "id": "75d1daef-3948-4242-b712-2b807da30255",
+      "property_id": "a2bdeb34-8c45-4c54-8e7b-0e29877d1922",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.245Z"
+    },
+    {
+      "id": "98847f58-6716-41d3-b23f-88ec79270098",
+      "property_id": "aae730c6-06ff-40f2-96c7-8dbff16c10d9",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.246Z"
+    },
+    {
+      "id": "6f7967c8-2f64-4182-9dc7-5443a2fc39e5",
+      "property_id": "bcad1dc8-6a1e-4f48-986c-3b85fabbe482",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.247Z"
+    },
+    {
+      "id": "ee66a6c7-42c3-40af-8d32-9be74b1398c3",
+      "property_id": "53b8d137-d39c-4641-b301-f6fa902ebc0f",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.248Z"
+    },
+    {
+      "id": "940e1d78-0baa-490f-9bba-cd66e6cfafcf",
+      "property_id": "783673da-824f-4345-80ef-3d5b49210ef4",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.249Z"
+    },
+    {
+      "id": "f44edc9c-a4c6-47d4-b50b-718181c18f9e",
+      "property_id": "ce037a18-8bdb-41d2-9582-03c239f7f5aa",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.250Z"
+    },
+    {
+      "id": "c92b8b6e-57c4-47c5-b41b-48f986761452",
+      "property_id": "2b1563ee-4b08-4934-a5d5-10c0632b78f8",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.251Z"
+    },
+    {
+      "id": "7d91e9ac-9ac8-40b8-9c66-bdf61ff58839",
+      "property_id": "7bbd953f-ac89-4a94-bdeb-651fc6cfa710",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.252Z"
+    },
+    {
+      "id": "57ae5807-94b4-4870-8620-ad79c98540b2",
+      "property_id": "a8bd8261-631d-41dc-ad20-35ad3ae29c75",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.252Z"
+    },
+    {
+      "id": "cf989a2a-a431-49b7-8804-cc645df2a770",
+      "property_id": "df40d733-95a4-446d-8043-59c277c93673",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.253Z"
+    },
+    {
+      "id": "8af86295-2013-4479-9e2f-33c45de1b972",
+      "property_id": "e9460db3-b50c-4bc2-b614-059f40d59436",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.254Z"
+    },
+    {
+      "id": "66e6ade8-69f1-47a7-b3c9-49a1239c7914",
+      "property_id": "18e2efea-55ea-4211-987d-bd4fb5d43f9a",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.255Z"
+    },
+    {
+      "id": "e32e00fb-2255-4d0a-b276-04b6268c71f5",
+      "property_id": "d3528a26-cd0f-45db-b246-5bc3967e4667",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.256Z"
+    },
+    {
+      "id": "91a457d2-8b10-4ac2-aeba-29f63f21dda2",
+      "property_id": "c4f854fb-526a-4eb0-801c-698982e622fa",
+      "group_id": "98864ba6-db78-4b73-a3c9-7f045cf8c70b",
+      "created_at": "2026-01-13T13:25:19.257Z"
+    },
+    {
+      "id": "658e906c-a8c2-4dc6-8cfb-2cac2024b255",
+      "property_id": "69df24d7-170c-44f1-bef6-9fabf100f25a",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.258Z"
+    },
+    {
+      "id": "cc9c66ea-59eb-4000-80ec-de7edc8e5158",
+      "property_id": "598cde40-b577-4e57-a2da-4cecb5fd4f4c",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.259Z"
+    },
+    {
+      "id": "a2892133-75f3-486b-a74d-0cf65c9c33e5",
+      "property_id": "a859cdf4-ca24-4c53-81c2-91098dbeed5f",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.260Z"
+    },
+    {
+      "id": "9abaf19d-c923-4131-9eb3-fb86dc24400d",
+      "property_id": "662346bd-c90b-4c47-85cb-c84e50b968db",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.260Z"
+    },
+    {
+      "id": "fd5b0b0e-f25e-4f99-b69d-fd86f199c15b",
+      "property_id": "6d8f60d0-0132-4035-8fd8-073cb0fac766",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.261Z"
+    },
+    {
+      "id": "9e7e8870-e2a9-4a3d-9d2d-c406aa9ef00d",
+      "property_id": "af458f34-4a10-4f19-b265-e3a8176b7e39",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.262Z"
+    },
+    {
+      "id": "844af596-906e-4fb0-a3d0-16fff520d60e",
+      "property_id": "2e9b1dad-a350-4760-96dc-52bdc44a228f",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.263Z"
+    },
+    {
+      "id": "029af38e-ffea-4543-8c9d-a55ce90bc64a",
+      "property_id": "6218212a-8efa-4ec4-9970-b5cf94c7815b",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.264Z"
+    },
+    {
+      "id": "1c2908d2-5cd8-4f34-824d-354109bf404c",
+      "property_id": "380cad69-d553-45b9-a931-e86806ebb1b1",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.265Z"
+    },
+    {
+      "id": "52e0a116-4a28-45ab-9ab3-ea17824c3cf2",
+      "property_id": "f5681e64-b65c-4e0c-8558-5adda9168b64",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.266Z"
+    },
+    {
+      "id": "9852018d-e9ac-4657-a516-bb8dfadfb7b2",
+      "property_id": "b3fc565c-3e13-4bf0-87c1-54699522d751",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.266Z"
+    },
+    {
+      "id": "646322ba-b907-4166-9d03-05db7e3e2628",
+      "property_id": "20ff7d5d-a491-4a25-9d4b-f840fdab9cf5",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.267Z"
+    },
+    {
+      "id": "416171d1-7182-4b11-83b9-e97cec3bc160",
+      "property_id": "4e3c6349-fd4c-49e5-89e7-54159bce6766",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.268Z"
+    },
+    {
+      "id": "0abffac3-5afd-420e-bfae-dda2835f6e04",
+      "property_id": "592e91b7-9943-499d-b933-b61d0b843201",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.269Z"
+    },
+    {
+      "id": "f9128eb4-3c75-4450-8ce7-75379239ea3e",
+      "property_id": "116443b9-8a97-48b1-af56-0ce1e75ad2ae",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4",
+      "created_at": "2026-01-13T13:25:19.270Z"
+    }
+  ]
+}
