@@ -39,6 +39,10 @@ if (isFlyIO) {
   console.log('💻 Local environment detected - using project root')
 }
 
+// Log port configuration for debugging
+console.log(`🔌 PORT environment variable: ${process.env.PORT || 'not set'}`)
+console.log(`🔌 Using port: ${PORT}`)
+
 // Ensure directories exist
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true })
