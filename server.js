@@ -25,15 +25,21 @@ const isProduction = process.env.NODE_ENV === 'production'
 // Fly.io sets PORT=8080 in fly.toml, but we ensure it's 8080 if not set
 const PORT = process.env.PORT || (isFlyIO ? 8080 : 8083)
 
-// Data directory - use Fly.io volume if available, otherwise project root
+// Data directory - use Fly.io volume if available, otherwise use /tmp (ephemeral) or project root
 let dataDir, dataFile, photosDir
 
 if (isFlyIO) {
-  // Fly.io: use mounted volume at /data
-  dataDir = '/data'
+  // Fly.io: try /data volume first, fallback to /tmp if volume not mounted
+  if (fs.existsSync('/data')) {
+    dataDir = '/data'
+    console.log('🌐 Fly.io environment detected - using /data volume (persistent)')
+  } else {
+    dataDir = '/tmp/app-data'
+    console.log('🌐 Fly.io environment detected - using /tmp/app-data (ephemeral - data will be lost on restart)')
+    console.log('⚠️  WARNING: For persistent storage, create volume: fly volumes create data_volume --region cdg --size 10')
+  }
   dataFile = path.join(dataDir, 'data.json')
   photosDir = path.join(dataDir, 'photos')
-  console.log('🌐 Fly.io environment detected - using /data volume')
 } else {
   // Local: use project root
   dataDir = process.cwd()

@@ -54,6 +54,8 @@ primary_region = 'cdg'
     restart_limit = 0
     timeout = "2s"
 
-[[mounts]]
-  source = "data_volume"
-  destination = "/data"
+# Volume mount - optional (comment out if you can't create volumes on free tier)
+# Uncomment and create volume with: fly volumes create data_volume --region cdg --size 10
+# [[mounts]]
+#   source = "data_volume"
+#   destination = "/data"
