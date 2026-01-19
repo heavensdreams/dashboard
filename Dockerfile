@@ -31,9 +31,8 @@ RUN npm ci --only=production
 COPY --from=builder /app/frontend/dist ./frontend/dist
 COPY server.js ./
 
-# Copy initialization script (for first-time setup)
-COPY .fly/init-data.sh ./.fly/init-data.sh
-RUN chmod +x ./.fly/init-data.sh
+# Note: /data directory will be mounted as volume on Fly.io
+# The server.js will create directories and data.json if they don't exist
 
 # Note: /data directory will be mounted as volume on Fly.io
 # We don't create it here - the volume mount will handle it
