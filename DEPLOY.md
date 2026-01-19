@@ -22,13 +22,18 @@ This app is configured to deploy to Fly.io as a single unified server that:
 
 ## Deployment Steps
 
-### 1. Create the App
+### 1. Verify/Use Existing App
 
+The app `dubai-real-estate` already exists on Fly.io. You can verify:
+
+```bash
+fly apps list
+```
+
+If you need to create it (shouldn't be necessary):
 ```bash
 fly apps create dubai-real-estate
 ```
-
-If the app already exists, you can skip this step.
 
 ### 2. Create Persistent Volume
 
