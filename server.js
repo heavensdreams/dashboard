@@ -16,9 +16,15 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// Detect environment: Fly.io has /data mounted, local uses project root
-// Fly.io sets FLY_APP_NAME automatically - this is the most reliable check
-const isFlyIO = !!process.env.FLY_APP_NAME || (fs.existsSync('/data') && process.env.DATA_DIR === '/data')
+// Detect environment: Fly.io sets several env vars
+// FLY_APP_NAME is the most reliable check (always set on Fly.io)
+// FLY_REGION is also always set on Fly.io
+// Also check if PORT is 8080 (Fly.io default) and we're in production
+const isFlyIO = !!(
+  process.env.FLY_APP_NAME || 
+  process.env.FLY_REGION || 
+  (process.env.NODE_ENV === 'production' && process.env.PORT === '8080' && !fs.existsSync('/mnt/ramdisk'))
+)
 const isProduction = process.env.NODE_ENV === 'production'
 
 // PORT: On Fly.io, always use 8080 (or env var if set). Local dev uses 8083
