@@ -47,7 +47,13 @@ frontend/photos/
 *.bak
 
 # Fly.io
-.fly/
+# .fly/ directory - but keep default-data.json and default-photos for initialization
+.fly/*
+!.fly/default-data.json
+!.fly/default-photos/
+!.fly/default-photos/**
+!.fly/init-data.sh
+!.fly/README.md
 fly.toml.bak
 
 
