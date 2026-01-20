@@ -27,9 +27,9 @@ const isFlyIO = !!(
 )
 const isProduction = process.env.NODE_ENV === 'production'
 
-// PORT: On Fly.io, always use 8080 (or env var if set). Local dev uses 8083
-// Fly.io sets PORT=8080 in fly.toml, but we ensure it's 8080 if not set
-const PORT = process.env.PORT || (isFlyIO ? 8080 : 8083)
+// PORT: On Fly.io, always use 8080 (set in fly.toml). Local dev uses 8083
+// If PORT env var is set, use it. Otherwise, default based on environment
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : (isFlyIO ? 8080 : 8083)
 
 // Data directory - use Fly.io volume if available, otherwise use /tmp (ephemeral) or project root
 let dataDir, dataFile, photosDir
@@ -54,8 +54,13 @@ if (isFlyIO) {
   console.log('💻 Local environment detected - using project root')
 }
 
-// Log port configuration for debugging
-console.log(`🔌 PORT environment variable: ${process.env.PORT || 'not set'}`)
+// Log environment detection for debugging
+console.log(`🔍 Environment detection:`)
+console.log(`   FLY_APP_NAME: ${process.env.FLY_APP_NAME || 'not set'}`)
+console.log(`   FLY_REGION: ${process.env.FLY_REGION || 'not set'}`)
+console.log(`   NODE_ENV: ${process.env.NODE_ENV || 'not set'}`)
+console.log(`   PORT env: ${process.env.PORT || 'not set'}`)
+console.log(`   Detected as Fly.io: ${isFlyIO}`)
 console.log(`🔌 Using port: ${PORT}`)
 
 // Ensure directories exist
