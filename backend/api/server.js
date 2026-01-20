@@ -2,7 +2,8 @@
 // This file is kept for backward compatibility with existing scripts
 // The main server is at the root: server.js
 
-// Set port to 8083 for local development (root server defaults to 8083)
+// Set LOCAL=true and port to 8083 for local development
+process.env.LOCAL = 'true'
 process.env.PORT = process.env.PORT || '8083'
 
 // Import and run the unified server from root

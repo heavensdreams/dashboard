@@ -16,15 +16,11 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// Detect environment: Fly.io sets several env vars
-// FLY_APP_NAME is the most reliable check (always set on Fly.io)
-// FLY_REGION is also always set on Fly.io
-// Also check if PORT is 8080 (Fly.io default) and we're in production
-const isFlyIO = !!(
-  process.env.FLY_APP_NAME || 
-  process.env.FLY_REGION || 
-  (process.env.NODE_ENV === 'production' && process.env.PORT === '8080' && !fs.existsSync('/mnt/ramdisk'))
-)
+// Detect environment: Use explicit LOCAL=true for local development
+// If LOCAL=true is set, we're in local dev mode
+// Otherwise, assume Fly.io (production)
+const isLocal = process.env.LOCAL === 'true'
+const isFlyIO = !isLocal
 const isProduction = process.env.NODE_ENV === 'production'
 
 // PORT: On Fly.io, always use 8080 (set in fly.toml). Local dev uses 8083
