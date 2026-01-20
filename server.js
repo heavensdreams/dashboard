@@ -52,11 +52,10 @@ if (isFlyIO) {
 
 // Log environment detection for debugging
 console.log(`🔍 Environment detection:`)
-console.log(`   FLY_APP_NAME: ${process.env.FLY_APP_NAME || 'not set'}`)
-console.log(`   FLY_REGION: ${process.env.FLY_REGION || 'not set'}`)
+console.log(`   LOCAL: ${process.env.LOCAL || 'not set'}`)
 console.log(`   NODE_ENV: ${process.env.NODE_ENV || 'not set'}`)
 console.log(`   PORT env: ${process.env.PORT || 'not set'}`)
-console.log(`   Detected as Fly.io: ${isFlyIO}`)
+console.log(`   Detected as: ${isLocal ? 'LOCAL DEVELOPMENT' : 'FLY.IO'}`)
 console.log(`🔌 Using port: ${PORT}`)
 
 // Ensure directories exist
