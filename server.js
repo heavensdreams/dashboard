@@ -93,6 +93,17 @@ console.log('Using data directory:', dataDir)
 console.log('Using data file:', dataFile)
 console.log('Using photos directory:', photosDir)
 
+// Initialize data on startup (ensures empty volume gets default data)
+if (isFlyIO) {
+  console.log('🔍 Initializing data on startup...')
+  try {
+    readData() // This will load default data if volume is empty
+    console.log('✅ Data initialization check complete')
+  } catch (error) {
+    console.error('⚠️  Data initialization error:', error.message)
+  }
+}
+
 // Multer setup for photo uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
