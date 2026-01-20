@@ -66,6 +66,28 @@ if (!fs.existsSync(photosDir)) {
   fs.mkdirSync(photosDir, { recursive: true })
 }
 
+// On Fly.io, copy default photos from repo if photos directory is empty
+if (isFlyIO && fs.existsSync(photosDir)) {
+  const defaultPhotosDir = path.join(__dirname, '.fly', 'default-photos')
+  try {
+    const photos = fs.readdirSync(photosDir).filter(f => !f.startsWith('.'))
+    if (photos.length === 0 && fs.existsSync(defaultPhotosDir)) {
+      console.log('📸 Copying default photos from repo...')
+      const defaultPhotos = fs.readdirSync(defaultPhotosDir).filter(f => !f.startsWith('.'))
+      for (const photo of defaultPhotos) {
+        const src = path.join(defaultPhotosDir, photo)
+        const dest = path.join(photosDir, photo)
+        if (fs.statSync(src).isFile()) {
+          fs.copyFileSync(src, dest)
+        }
+      }
+      console.log(`✅ Copied ${defaultPhotos.length} default photos`)
+    }
+  } catch (err) {
+    console.warn('⚠️  Failed to copy default photos:', err.message)
+  }
+}
+
 console.log('Environment:', isFlyIO ? 'Fly.io' : 'Local')
 console.log('Using data directory:', dataDir)
 console.log('Using data file:', dataFile)
@@ -94,6 +116,19 @@ const upload = multer({
 function readData() {
   try {
     if (!fs.existsSync(dataFile)) {
+      // Try to load default data from repo if on Fly.io
+      const defaultDataPath = path.join(__dirname, '.fly', 'default-data.json')
+      if (isFlyIO && fs.existsSync(defaultDataPath)) {
+        console.log('📋 Loading default data.json from repo...')
+        try {
+          const defaultData = JSON.parse(fs.readFileSync(defaultDataPath, 'utf8'))
+          writeData(defaultData)
+          console.log('✅ Initialized with default data.json')
+          return defaultData
+        } catch (err) {
+          console.warn('⚠️  Failed to load default data, using empty structure:', err.message)
+        }
+      }
       // Return empty structure if file doesn't exist
       const emptyData = {
         users: [],
