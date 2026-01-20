@@ -31,12 +31,14 @@ RUN npm ci --only=production
 COPY --from=builder /app/frontend/dist ./frontend/dist
 COPY server.js ./
 
-# Note: /data directory will be mounted as volume on Fly.io
-# The server.js will create directories and data.json if they don't exist
+# Copy default data and photos for initialization
+COPY .fly/default-data.json ./.fly/default-data.json
+COPY .fly/default-photos ./.fly/default-photos/
+COPY .fly/init-data.sh ./.fly/init-data.sh
 
-# Note: /data directory will be mounted as volume on Fly.io
-# We don't create it here - the volume mount will handle it
-# The server.js will create directories if they don't exist
+# Note: /data directory will be mounted as volume on Fly.io (if volume exists)
+# Otherwise, server.js uses /tmp/app-data (ephemeral)
+# Server.js will auto-initialize with default data.json and photos on first run
 
 # Expose port
 EXPOSE 8080
