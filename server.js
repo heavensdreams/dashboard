@@ -324,6 +324,7 @@ app.get('/api/public/properties/:ids', (req, res) => {
         address: apartment.address,
         extra_info: apartment.extra_info,
         roi_info: apartment.roi_info || null,
+        roi_chart: apartment.roi_chart || null,
         photos: apartment.photos || [],
         bookings: propertyBookings,
         availability: availability

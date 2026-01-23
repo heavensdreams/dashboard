@@ -29,6 +29,7 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
   const [selectedGroups, setSelectedGroups] = useState<string[]>([])
   const [linkCopied, setLinkCopied] = useState(false)
   const [localPhotos, setLocalPhotos] = useState<string[]>([])
+  const [roiChart, setRoiChart] = useState<string | null>(null)
 
   const canEdit = currentUser?.role === 'admin' || currentUser?.role === 'normal'
   const isCustomer = currentUser?.role === 'customer'
@@ -41,6 +42,7 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
         setAddress(apartment.address || '')
         setExtraInfo(apartment.extra_info || '')
         setRoiInfo(apartment.roi_info || '')
+        setRoiChart(apartment.roi_chart || null)
         setLocalPhotos(apartment.photos || [])
         setSelectedGroups(apartment.groups || [])
       }
@@ -85,6 +87,7 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
                   address, 
                   extra_info: extraInfo, 
                   roi_info: roiInfo,
+                  roi_chart: roiChart,
                   photos: localPhotos,
                   groups: selectedGroups
                 }
@@ -147,6 +150,14 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
     setLocalPhotos(localPhotos.filter(p => p !== md5))
   }
 
+  const handleRoiChartUpload = (md5: string) => {
+    setRoiChart(md5)
+  }
+
+  const handleRemoveRoiChart = () => {
+    setRoiChart(null)
+  }
+
   const getPublicLink = () => {
     if (!propertyId) return ''
     const baseUrl = window.location.origin
@@ -197,6 +208,16 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
               <div>
                 <Label>ROI Information</Label>
                 <p className="text-muted-foreground whitespace-pre-wrap">{roiInfo}</p>
+              </div>
+            )}
+            {roiChart && (
+              <div>
+                <Label>ROI Chart</Label>
+                <img
+                  src={`/photos/${roiChart}.jpg`}
+                  alt="ROI Chart"
+                  className="w-full max-w-md mt-2 rounded"
+                />
               </div>
             )}
             <div>
@@ -306,6 +327,35 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
                 rows={8}
               />
             </div>
+
+            {canEdit && (
+              <div>
+                <Label>ROI Chart (Single Image)</Label>
+                <div className="mt-2">
+                  {roiChart ? (
+                    <div className="relative inline-block">
+                      <img
+                        src={`/photos/${roiChart}.jpg`}
+                        alt="ROI Chart"
+                        className="w-full max-w-md rounded border-2 border-gray-200"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleRemoveRoiChart}
+                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm hover:bg-red-600"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ) : (
+                    <PhotoUpload onUpload={handleRoiChartUpload} multiple={false} />
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Upload a single chart/image for ROI visualization
+                </p>
+              </div>
+            )}
 
             {canEdit && (
               <>
