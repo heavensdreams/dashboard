@@ -27,7 +27,6 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
   const updateData = useDataStore(state => state.updateData)
   
   const [selectedGroups, setSelectedGroups] = useState<string[]>([])
-  const [linkCopied, setLinkCopied] = useState(false)
   const [localPhotos, setLocalPhotos] = useState<string[]>([])
   const [roiChart, setRoiChart] = useState<string | null>(null)
 
@@ -158,27 +157,6 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
     setRoiChart(null)
   }
 
-  const getPublicLink = () => {
-    if (!propertyId) return ''
-    const baseUrl = window.location.origin
-    return `${baseUrl}/view/${propertyId}`
-  }
-
-  const handleCopyLink = async () => {
-    const link = getPublicLink()
-    if (!link) return
-    
-    try {
-      await navigator.clipboard.writeText(link)
-      setLinkCopied(true)
-      setTimeout(() => setLinkCopied(false), 2000)
-    } catch (err) {
-      console.error('Failed to copy link:', err)
-      setLinkCopied(true)
-      setTimeout(() => setLinkCopied(false), 2000)
-    }
-  }
-
   return (
     <Modal
       isOpen={true}
@@ -272,29 +250,6 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
               />
             </div>
 
-            {canEdit && propertyId && (
-              <div className="border-t pt-4">
-                <Label>Client Link</Label>
-                <div className="flex items-center gap-2 mt-2">
-                  <div className="flex-1 px-3 py-2 bg-muted rounded-md text-sm font-mono text-muted-foreground break-all">
-                    {getPublicLink()}
-                  </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={handleCopyLink}
-                    className="flex-shrink-0"
-                  >
-                    {linkCopied ? 'Copied!' : 'Copy'}
-                  </Button>
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Share this link with clients for read-only access
-                </p>
-              </div>
-            )}
-
             <div>
               <Label htmlFor="address">Address *</Label>
               <Input
@@ -359,27 +314,29 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
 
             {canEdit && (
               <>
-                <div>
-                  <Label>Groups</Label>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {groups.map((group: any) => (
-                      <label key={group.id} className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={selectedGroups.includes(group.name)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedGroups([...selectedGroups, group.name])
-                            } else {
-                              setSelectedGroups(selectedGroups.filter(name => name !== group.name))
-                            }
-                          }}
-                        />
-                        <span>{group.name}</span>
-                      </label>
-                    ))}
+                {!isCustomer && (
+                  <div>
+                    <Label>Groups</Label>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {groups.map((group: any) => (
+                        <label key={group.id} className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={selectedGroups.includes(group.name)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedGroups([...selectedGroups, group.name])
+                              } else {
+                                setSelectedGroups(selectedGroups.filter(name => name !== group.name))
+                              }
+                            }}
+                          />
+                          <span>{group.name}</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div>
                   <Label>Photos</Label>

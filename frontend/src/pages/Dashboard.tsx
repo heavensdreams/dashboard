@@ -7,20 +7,10 @@ import { useUserStore } from '@/stores/userStore'
 import { PropertyDetail } from '@/components/PropertyDetail/PropertyDetail'
 import { filterBookingsForCustomer } from '@/utils/filtering'
 
-interface Property {
-  id: string
-  name: string
-  address: string
-  status: 'occupied' | 'available'
-  next_booking: {
-    start_date: string
-    end_date: string
-  } | null
-}
-
 export function Dashboard() {
   const apartments = useDataStore(state => state.apartments)
   const groups = useDataStore(state => state.groups)
+  const userGroups = useDataStore(state => state.user_groups || [])
   
   const [selectedGroup, setSelectedGroup] = useState<string>('all')
   const [selectedProperty, setSelectedProperty] = useState<string | null>(null)
@@ -28,15 +18,35 @@ export function Dashboard() {
   const { currentUser } = useUserStore()
   const isCustomer = currentUser?.role === 'customer'
 
+  // Get customer's group_id
+  const customerGroupId = useMemo(() => {
+    if (!isCustomer || !currentUser?.id) return null
+    const userGroup = userGroups.find((ug: any) => ug.user_id === currentUser.id)
+    return userGroup?.group_id || null
+  }, [isCustomer, currentUser?.id, userGroups])
+
+  // Get customer's group name (for filtering, but don't show to customer)
+  const customerGroupName = useMemo(() => {
+    if (!customerGroupId) return null
+    const group = groups.find((g: any) => g.id === customerGroupId)
+    return group?.name || null
+  }, [customerGroupId, groups])
+
   // Calculate apartments with status
   const propertiesWithStatus = useMemo(() => {
     let filteredApartments = [...apartments]
     
+    // For customers: filter by their group only
+    if (isCustomer && customerGroupName) {
+      filteredApartments = filteredApartments.filter(apt => 
+        apt.groups && apt.groups.includes(customerGroupName)
+      )
+    }
     // Filter by group (admin/normal users only)
-    if (!isCustomer && selectedGroup !== 'all') {
+    else if (!isCustomer && selectedGroup !== 'all') {
       const group = groups.find((g: any) => g.name === selectedGroup)
       if (group) {
-        filteredApartments = filteredApartments.filter(apt => apt.groups.includes(group.name))
+        filteredApartments = filteredApartments.filter(apt => apt.groups && apt.groups.includes(group.name))
       }
     }
     
@@ -75,38 +85,31 @@ export function Dashboard() {
         } : null
       }
     })
-  }, [apartments, groups, selectedGroup, today, isCustomer])
+  }, [apartments, groups, selectedGroup, today, isCustomer, customerGroupName])
 
-  const getPropertyStatus = (property: Property) => {
-    if (property.status === 'occupied') {
-      return { text: 'Booked', color: 'bg-red-500', textColor: 'text-white' }
+  // Calculate stats
+  const stats = useMemo(() => {
+    const totalProperties = propertiesWithStatus.length
+    const occupiedProperties = propertiesWithStatus.filter(p => p.status === 'occupied').length
+    const availableProperties = totalProperties - occupiedProperties
+    const totalBookings = propertiesWithStatus.reduce((sum, p) => {
+      const bookings = p.bookings || []
+      return sum + (isCustomer ? filterBookingsForCustomer(bookings).length : bookings.length)
+    }, 0)
+
+    return {
+      totalProperties,
+      occupiedProperties,
+      availableProperties,
+      totalBookings
     }
-    
-    if (property.next_booking) {
-      const nextDate = new Date(property.next_booking.start_date)
-      const todayDate = new Date(today)
-      const daysUntil = Math.ceil((nextDate.getTime() - todayDate.getTime()) / (1000 * 60 * 60 * 24))
-      
-      if (daysUntil <= 0) {
-        return { text: 'Booked', color: 'bg-red-500', textColor: 'text-white' }
-      }
-      
-      return { 
-        text: `Booked in ${daysUntil} day${daysUntil !== 1 ? 's' : ''}`, 
-        color: 'bg-yellow-500', 
-        textColor: 'text-white' 
-      }
-    }
-    
-    return { text: 'No booking', color: 'bg-green-500', textColor: 'text-white' }
-  }
+  }, [propertiesWithStatus, isCustomer])
 
   const getGroupBookingStatus = () => {
     if (isCustomer) {
       return null
     }
 
-    // For now, show status for all properties (user groups not implemented in new structure)
     if (propertiesWithStatus.length === 0) {
       return { text: 'No properties found', color: 'bg-gray-500', textColor: 'text-white' }
     }
@@ -124,6 +127,7 @@ export function Dashboard() {
   }
 
   const groupStatus = getGroupBookingStatus()
+
 
   return (
     <div className="space-y-6">
@@ -168,58 +172,88 @@ export function Dashboard() {
         </Card>
       )}
 
-      {/* Properties Grid */}
-      <div>
-        <h3 className="text-xl font-semibold mb-4">Properties</h3>
-        {propertiesWithStatus.length === 0 ? (
-          <Card>
-            <CardContent className="py-8 text-center text-muted-foreground">
-              No properties found{selectedGroup !== 'all' ? ' in selected group' : ''}
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {propertiesWithStatus.map((property) => {
-              const status = getPropertyStatus(property)
-              return (
-                <Card 
-                  key={property.id} 
-                  className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-                  onClick={() => setSelectedProperty(property.id)}
-                >
-                  <CardContent className="p-0">
-                    <div className={`${status.color} ${status.textColor} px-4 py-2 text-center font-semibold`}>
-                      {status.text}
-                    </div>
-                    <div className="p-4">
-                      <h4 className="font-bold text-lg mb-2">{property.name}</h4>
-                      <p className="text-sm text-muted-foreground">{property.address}</p>
-                      {!isCustomer && property.groups && property.groups.length > 0 && (
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Groups: {property.groups.join(', ')}
-                        </p>
-                      )}
-                      {property.next_booking && (
-                        <p className="text-xs text-muted-foreground mt-2">
-                          Next: {new Date(property.next_booking.start_date).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric'
-                          })} - {new Date(property.next_booking.end_date).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric'
-                          })}
-                        </p>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              )
-            })}
-          </div>
-        )}
+      {/* Dashboard Landing Page - Stats and Navigation */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <Card>
+          <CardContent className="p-6">
+            <div className="text-3xl font-bold mb-2">{stats.totalProperties}</div>
+            <div className="text-sm text-muted-foreground">Total Properties</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="text-3xl font-bold mb-2 text-green-600">{stats.availableProperties}</div>
+            <div className="text-sm text-muted-foreground">Available</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="text-3xl font-bold mb-2 text-red-600">{stats.occupiedProperties}</div>
+            <div className="text-sm text-muted-foreground">Occupied</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="text-3xl font-bold mb-2">{stats.totalBookings}</div>
+            <div className="text-sm text-muted-foreground">Total Bookings</div>
+          </CardContent>
+        </Card>
       </div>
+
+      {/* Navigation Buttons */}
+      <Card>
+        <CardContent className="p-6">
+          <h2 className="text-2xl font-semibold mb-4">Quick Navigation</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Button
+              variant="outline"
+              size="lg"
+              className="h-24 flex flex-col items-center justify-center"
+              onClick={() => {
+                const event = new CustomEvent('navigate', { detail: 'properties' })
+                window.dispatchEvent(event)
+              }}
+            >
+              <span className="text-2xl mb-2">🏠</span>
+              <span>View Properties</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="h-24 flex flex-col items-center justify-center"
+              onClick={() => {
+                const event = new CustomEvent('navigate', { detail: 'bookings' })
+                window.dispatchEvent(event)
+                // Also set calendar view
+                setTimeout(() => {
+                  const calendarEvent = new CustomEvent('setBookingView', { detail: 'calendar' })
+                  window.dispatchEvent(calendarEvent)
+                }, 100)
+              }}
+            >
+              <span className="text-2xl mb-2">📅</span>
+              <span>View Calendar</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="h-24 flex flex-col items-center justify-center"
+              onClick={() => {
+                const event = new CustomEvent('navigate', { detail: 'bookings' })
+                window.dispatchEvent(event)
+                // Also set list view
+                setTimeout(() => {
+                  const listEvent = new CustomEvent('setBookingView', { detail: 'list' })
+                  window.dispatchEvent(listEvent)
+                }, 100)
+              }}
+            >
+              <span className="text-2xl mb-2">📋</span>
+              <span>View Bookings</span>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Property Detail Modal */}
       {selectedProperty && (

@@ -7,7 +7,6 @@ import { Bookings } from './pages/Bookings'
 import { Users } from './pages/Users'
 import { Groups } from './pages/Groups'
 import { Logs } from './pages/Logs'
-import { PublicPropertyView } from './pages/PublicPropertyView'
 import { Button } from './components/ui/button'
 import { Login } from './components/Login'
 
@@ -23,21 +22,40 @@ function App() {
     loadData()
   }, [loadData])
 
-  // Check for public view route (/view/*)
+  // Handle navigation events from Dashboard
   useEffect(() => {
-    const pathMatch = window.location.pathname.match(/^\/view\/(.+)$/)
-    if (pathMatch) {
-      // Public view - don't initialize electric or show login
-      return
+    const handleNavigate = (e: CustomEvent) => {
+      const page = e.detail as Page
+      if (['dashboard', 'properties', 'bookings', 'users', 'groups', 'logs'].includes(page)) {
+        setCurrentPage(page as Page)
+      }
+    }
+
+    const handleSetBookingView = (e: CustomEvent) => {
+      const view = e.detail as 'calendar' | 'list'
+      if (view === 'calendar' || view === 'list') {
+        setCurrentPage('bookings')
+        // The Bookings component will handle the view change via event listener
+      }
+    }
+
+    window.addEventListener('navigate', handleNavigate as EventListener)
+    window.addEventListener('setBookingView', handleSetBookingView as EventListener)
+
+    return () => {
+      window.removeEventListener('navigate', handleNavigate as EventListener)
+      window.removeEventListener('setBookingView', handleSetBookingView as EventListener)
     }
   }, [])
 
-  // Check if public view route
-  const pathMatch = window.location.pathname.match(/^\/view\/(.+)$/)
-  if (pathMatch) {
-    const ids = pathMatch[1].split(',').filter(id => id.trim())
-    return <PublicPropertyView propertyIds={ids} />
-  }
+  // Redirect public view routes to login (all access requires login)
+  useEffect(() => {
+    const pathMatch = window.location.pathname.match(/^\/view\/(.+)$/)
+    if (pathMatch && !currentUser) {
+      // Redirect to home to show login
+      window.history.replaceState({}, '', '/')
+    }
+  }, [currentUser])
 
   if (loading) {
     return (
@@ -53,6 +71,7 @@ function App() {
   }
 
   const isAdmin = currentUser?.role === 'admin'
+  const isCustomer = currentUser?.role === 'customer'
 
   return (
     <div className="min-h-screen bg-background">
@@ -107,6 +126,11 @@ function App() {
                   Logs
                 </Button>
               </>
+            )}
+            {isCustomer && (
+              <span className="px-2 py-1 text-xs font-semibold rounded bg-green-500 text-white">
+                Customer
+              </span>
             )}
           </div>
           <div className="flex items-center gap-4">

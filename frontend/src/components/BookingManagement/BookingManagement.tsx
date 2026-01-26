@@ -13,6 +13,8 @@ import { getAllBookings, type Booking } from '@/utils/apartmentHelpers'
 
 export function BookingManagement() {
   const apartments = useDataStore(state => state.apartments)
+  const groups = useDataStore(state => state.groups)
+  const userGroups = useDataStore(state => state.user_groups || [])
   const users = useDataStore(state => state.users)
   const updateData = useDataStore(state => state.updateData)
   
@@ -20,8 +22,25 @@ export function BookingManagement() {
   const canEdit = currentUser?.role === 'admin' || currentUser?.role === 'normal'
   const isCustomer = currentUser?.role === 'customer'
 
-  // Extract all bookings from apartments
-  const allBookings = useMemo(() => getAllBookings(apartments), [apartments])
+  // Get customer's group name
+  const customerGroupName = useMemo(() => {
+    if (!isCustomer || !currentUser?.id) return null
+    const userGroup = userGroups.find((ug: any) => ug.user_id === currentUser.id)
+    if (!userGroup) return null
+    const group = groups.find((g: any) => g.id === userGroup.group_id)
+    return group?.name || null
+  }, [isCustomer, currentUser?.id, userGroups, groups])
+
+  // Filter apartments by customer group
+  const filteredApartments = useMemo(() => {
+    if (isCustomer && customerGroupName) {
+      return apartments.filter(apt => apt.groups && apt.groups.includes(customerGroupName))
+    }
+    return apartments
+  }, [apartments, isCustomer, customerGroupName])
+
+  // Extract all bookings from filtered apartments
+  const allBookings = useMemo(() => getAllBookings(filteredApartments), [filteredApartments])
 
   // Filter bookings for customers and enrich with property/user names
   const bookings = useMemo(() => {
@@ -34,7 +53,7 @@ export function BookingManagement() {
     // Enrich with property names and user emails
     return filtered.map(booking => ({
       ...booking,
-      property_name: apartments.find((a: any) => 
+      property_name: filteredApartments.find((a: any) => 
         a.bookings && a.bookings.some((b: any) => b.id === booking.id)
       )?.name || 'Unknown Property',
       user_email: users.find((u: any) => u.id === booking.user_id)?.email
@@ -43,7 +62,7 @@ export function BookingManagement() {
       const dateB = new Date(b.start_date).getTime()
       return dateB - dateA // Newest first
     })
-  }, [allBookings, apartments, users, isCustomer])
+  }, [allBookings, filteredApartments, users, isCustomer])
 
   const [editingBooking, setEditingBooking] = useState<Booking | null>(null)
   const [editStartDate, setEditStartDate] = useState('')

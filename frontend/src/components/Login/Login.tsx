@@ -34,11 +34,12 @@ export function Login() {
       
       const user = await response.json()
       
-      // Set current user
+      // Set current user (includes group_id if present)
       setCurrentUser({
         id: user.id,
         email: user.email,
-        role: user.role
+        role: user.role,
+        group_id: user.group_id || undefined
       })
     } catch (error) {
       console.error('Login error:', error)

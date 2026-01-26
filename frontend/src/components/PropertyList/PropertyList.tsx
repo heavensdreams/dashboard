@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useDataStore } from '@/stores/dataStore'
+import { useUserStore } from '@/stores/userStore'
 import { isApartmentOccupied, getNextBooking, type Apartment } from '@/utils/apartmentHelpers'
 
 interface PropertyListProps {
@@ -13,6 +14,18 @@ interface PropertyListProps {
 export function PropertyList({ onSelectProperty }: PropertyListProps) {
   const apartments = useDataStore(state => state.apartments) as Apartment[]
   const groups = useDataStore(state => state.groups)
+  const userGroups = useDataStore(state => state.user_groups || [])
+  const { currentUser } = useUserStore()
+  const isCustomer = currentUser?.role === 'customer'
+
+  // Get customer's group name
+  const customerGroupName = useMemo(() => {
+    if (!isCustomer || !currentUser?.id) return null
+    const userGroup = userGroups.find((ug: any) => ug.user_id === currentUser.id)
+    if (!userGroup) return null
+    const group = groups.find((g: any) => g.id === userGroup.group_id)
+    return group?.name || null
+  }, [isCustomer, currentUser?.id, userGroups, groups])
   
   // Filters
   const [searchTerm, setSearchTerm] = useState('')
@@ -44,11 +57,15 @@ export function PropertyList({ onSelectProperty }: PropertyListProps) {
   const filteredApartments = useMemo(() => {
     let filtered = [...apartmentsWithStatus]
 
-    // Group filter
-    if (groupFilter !== 'all') {
+    // For customers: filter by their group only
+    if (isCustomer && customerGroupName) {
+      filtered = filtered.filter(apt => apt.groups && apt.groups.includes(customerGroupName))
+    }
+    // Group filter (admin/normal users only)
+    else if (!isCustomer && groupFilter !== 'all') {
       const group = groups.find((g: any) => g.name === groupFilter)
       if (group) {
-        filtered = filtered.filter(apt => apt.groups.includes(group.name))
+        filtered = filtered.filter(apt => apt.groups && apt.groups.includes(group.name))
       }
     }
 
@@ -90,7 +107,7 @@ export function PropertyList({ onSelectProperty }: PropertyListProps) {
     })
 
     return filtered
-  }, [apartmentsWithStatus, searchTerm, statusFilter, groupFilter, sortBy, sortOrder, groups])
+  }, [apartmentsWithStatus, searchTerm, statusFilter, groupFilter, sortBy, sortOrder, groups, isCustomer, customerGroupName])
 
   // Get unique group names from all apartments
   const allGroupNames = useMemo(() => {
@@ -128,28 +145,30 @@ export function PropertyList({ onSelectProperty }: PropertyListProps) {
                 <option value="occupied">Occupied</option>
               </select>
             </div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <Label className="text-sm font-medium whitespace-nowrap">Group:</Label>
-              <div className="flex gap-2 flex-wrap">
-                <Button
-                  variant={groupFilter === 'all' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setGroupFilter('all')}
-                >
-                  All
-                </Button>
-                {allGroupNames.map((groupName) => (
+            {!isCustomer && (
+              <div className="flex items-center gap-2 flex-wrap">
+                <Label className="text-sm font-medium whitespace-nowrap">Group:</Label>
+                <div className="flex gap-2 flex-wrap">
                   <Button
-                    key={groupName}
-                    variant={groupFilter === groupName ? 'default' : 'outline'}
+                    variant={groupFilter === 'all' ? 'default' : 'outline'}
                     size="sm"
-                    onClick={() => setGroupFilter(groupName)}
+                    onClick={() => setGroupFilter('all')}
                   >
-                    {groupName}
+                    All
                   </Button>
-                ))}
+                  {allGroupNames.map((groupName) => (
+                    <Button
+                      key={groupName}
+                      variant={groupFilter === groupName ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setGroupFilter(groupName)}
+                    >
+                      {groupName}
+                    </Button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             <div>
               <select
                 value={sortBy}
@@ -203,19 +222,9 @@ export function PropertyList({ onSelectProperty }: PropertyListProps) {
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      const link = `${window.location.origin}/view/${apartment.id}`
-                      window.open(link, '_blank')
-                    }}
-                  >
-                    View
-                  </Button>
-                  <Button
-                    variant="outline"
                     onClick={() => onSelectProperty(apartment.id)}
                   >
-                    Edit
+                    {isCustomer ? 'View' : 'Edit'}
                   </Button>
                 </div>
               </div>
@@ -224,7 +233,7 @@ export function PropertyList({ onSelectProperty }: PropertyListProps) {
               <p className="text-sm text-muted-foreground mb-2">
                 {apartment.address}
               </p>
-              {apartment.groups.length > 0 && (
+              {!isCustomer && apartment.groups && apartment.groups.length > 0 && (
                 <p className="text-xs text-muted-foreground mb-2">
                   Groups: {apartment.groups.join(', ')}
                 </p>

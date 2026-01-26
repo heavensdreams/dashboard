@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/Calendar/Calendar'
 import { BookingManagement } from '@/components/BookingManagement/BookingManagement'
@@ -7,6 +7,21 @@ import { useUserStore } from '@/stores/userStore'
 
 export function Bookings() {
   const [view, setView] = useState<'calendar' | 'list'>('calendar')
+
+  // Listen for view change events from Dashboard
+  useEffect(() => {
+    const handleSetBookingView = (e: CustomEvent) => {
+      const newView = e.detail as 'calendar' | 'list'
+      if (newView === 'calendar' || newView === 'list') {
+        setView(newView)
+      }
+    }
+
+    window.addEventListener('setBookingView', handleSetBookingView as EventListener)
+    return () => {
+      window.removeEventListener('setBookingView', handleSetBookingView as EventListener)
+    }
+  }, [])
   const [showBookingForm, setShowBookingForm] = useState(false)
   const { currentUser } = useUserStore()
   const canEdit = currentUser?.role === 'admin' || currentUser?.role === 'normal'

@@ -24,13 +24,32 @@ interface EnrichedBooking {
 
 export function Calendar() {
   const apartments = useDataStore(state => state.apartments)
+  const groups = useDataStore(state => state.groups)
+  const userGroups = useDataStore(state => state.user_groups || [])
   const users = useDataStore(state => state.users)
   const { currentUser } = useUserStore()
   const canEdit = currentUser?.role === 'admin' || currentUser?.role === 'normal'
   const isCustomer = currentUser?.role === 'customer'
+
+  // Get customer's group name
+  const customerGroupName = useMemo(() => {
+    if (!isCustomer || !currentUser?.id) return null
+    const userGroup = userGroups.find((ug: any) => ug.user_id === currentUser.id)
+    if (!userGroup) return null
+    const group = groups.find((g: any) => g.id === userGroup.group_id)
+    return group?.name || null
+  }, [isCustomer, currentUser?.id, userGroups, groups])
+
+  // Filter apartments by customer group
+  const filteredApartments = useMemo(() => {
+    if (isCustomer && customerGroupName) {
+      return apartments.filter(apt => apt.groups && apt.groups.includes(customerGroupName))
+    }
+    return apartments
+  }, [apartments, isCustomer, customerGroupName])
   
-  // Extract all bookings from apartments
-  const allBookings = useMemo(() => getAllBookings(apartments), [apartments])
+  // Extract all bookings from filtered apartments
+  const allBookings = useMemo(() => getAllBookings(filteredApartments), [filteredApartments])
   
   // Filter bookings for customers and enrich with property names and user emails
   const enrichedBookings = useMemo(() => {
@@ -61,7 +80,7 @@ export function Calendar() {
     }
     
     return enriched
-  }, [allBookings, apartments, users, isCustomer])
+  }, [allBookings, filteredApartments, users, isCustomer])
   
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)

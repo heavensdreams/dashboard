@@ -6,6 +6,8 @@ export interface AppData {
   groups: any[]
   apartments: any[]
   logs?: any[]
+  user_groups?: any[]
+  property_groups?: any[]
 }
 
 // Load all data (passwords excluded by backend)
@@ -28,6 +30,14 @@ export async function loadAllData(): Promise<AppData> {
   // Initialize logs if missing
   if (!Array.isArray(data.logs)) {
     data.logs = []
+  }
+  // Initialize user_groups if missing
+  if (!Array.isArray(data.user_groups)) {
+    data.user_groups = []
+  }
+  // Initialize property_groups if missing
+  if (!Array.isArray(data.property_groups)) {
+    data.property_groups = []
   }
   
   return data as AppData

@@ -7,13 +7,17 @@ interface DataStore extends AppData {
   loadData: () => Promise<void>
   saveData: () => Promise<void>
   updateData: (updater: (data: AppData) => AppData) => Promise<void>
+  user_groups?: any[]
+  property_groups?: any[]
 }
 
 const initialData: AppData = {
   users: [],
   groups: [],
   apartments: [],
-  logs: []
+  logs: [],
+  user_groups: [],
+  property_groups: []
 }
 
 export const useDataStore = create<DataStore>((set, get) => ({
@@ -39,7 +43,9 @@ export const useDataStore = create<DataStore>((set, get) => ({
       users: state.users,
       groups: state.groups,
       apartments: state.apartments,
-      logs: state.logs || []
+      logs: state.logs || [],
+      user_groups: state.user_groups || [],
+      property_groups: state.property_groups || []
     }
     
     try {
@@ -59,7 +65,9 @@ export const useDataStore = create<DataStore>((set, get) => ({
       users: state.users,
       groups: state.groups,
       apartments: state.apartments,
-      logs: state.logs || []
+      logs: state.logs || [],
+      user_groups: state.user_groups || [],
+      property_groups: state.property_groups || []
     }
     
     const updatedData = updater(currentData)

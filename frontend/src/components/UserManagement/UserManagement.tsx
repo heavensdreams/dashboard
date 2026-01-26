@@ -17,18 +17,27 @@ interface User {
 
 export function UserManagement() {
   const users = useDataStore(state => state.users) as User[]
+  const groups = useDataStore(state => state.groups)
+  const userGroups = useDataStore(state => state.user_groups || [])
   const updateData = useDataStore(state => state.updateData)
   const [showUserModal, setShowUserModal] = useState(false)
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [newUserEmail, setNewUserEmail] = useState('')
   const [newUserPassword, setNewUserPassword] = useState('')
   const [newUserRole, setNewUserRole] = useState<'admin' | 'normal' | 'customer'>('normal')
+  const [selectedGroupId, setSelectedGroupId] = useState<string>('')
 
   const { currentUser } = useUserStore()
 
   const handleCreateUser = async () => {
     if (!newUserEmail || !newUserPassword) {
       alert('Please fill in all fields')
+      return
+    }
+
+    // Validate customer must have a group
+    if (newUserRole === 'customer' && !selectedGroupId) {
+      alert('Customer users must be assigned to a group')
       return
     }
 
@@ -40,10 +49,25 @@ export function UserManagement() {
         role: newUserRole
       }
 
-      await updateData((data) => ({
-        ...data,
-        users: [...data.users, newUser]
-      }))
+      await updateData((data) => {
+        const updatedUsers = [...data.users, newUser]
+        const updatedUserGroups = [...(data.user_groups || [])]
+        
+        // If customer, add to user_groups
+        if (newUserRole === 'customer' && selectedGroupId) {
+          updatedUserGroups.push({
+            id: crypto.randomUUID(),
+            user_id: newUser.id,
+            group_id: selectedGroupId
+          })
+        }
+
+        return {
+          ...data,
+          users: updatedUsers,
+          user_groups: updatedUserGroups
+        }
+      })
 
       if (currentUser) {
         await logChange({
@@ -58,6 +82,7 @@ export function UserManagement() {
       setNewUserEmail('')
       setNewUserPassword('')
       setNewUserRole('normal')
+      setSelectedGroupId('')
     } catch (error) {
       console.error('Failed to create user:', error)
       alert('Failed to create user')
@@ -69,6 +94,13 @@ export function UserManagement() {
     setNewUserEmail(user.email)
     setNewUserRole(user.role)
     setNewUserPassword('')
+    // Load user's group if customer
+    if (user.role === 'customer') {
+      const userGroup = userGroups.find((ug: any) => ug.user_id === user.id)
+      setSelectedGroupId(userGroup?.group_id || '')
+    } else {
+      setSelectedGroupId('')
+    }
     setShowUserModal(true)
   }
 
@@ -78,12 +110,17 @@ export function UserManagement() {
       return
     }
 
+    // Validate customer must have a group
+    if (newUserRole === 'customer' && !selectedGroupId) {
+      alert('Customer users must be assigned to a group')
+      return
+    }
+
     try {
       const oldUser = editingUser
       
-      await updateData((data) => ({
-        ...data,
-        users: data.users.map(u => 
+      await updateData((data) => {
+        const updatedUsers = data.users.map(u => 
           u.id === editingUser.id
             ? {
                 ...u,
@@ -93,7 +130,28 @@ export function UserManagement() {
               }
             : u
         )
-      }))
+
+        // Update user_groups for customer users
+        let updatedUserGroups = [...(data.user_groups || [])]
+        
+        // Remove existing user_groups for this user
+        updatedUserGroups = updatedUserGroups.filter((ug: any) => ug.user_id !== editingUser.id)
+        
+        // If customer, add new user_group
+        if (newUserRole === 'customer' && selectedGroupId) {
+          updatedUserGroups.push({
+            id: crypto.randomUUID(),
+            user_id: editingUser.id,
+            group_id: selectedGroupId
+          })
+        }
+
+        return {
+          ...data,
+          users: updatedUsers,
+          user_groups: updatedUserGroups
+        }
+      })
 
       if (currentUser) {
         await logChange({
@@ -111,6 +169,7 @@ export function UserManagement() {
       setNewUserEmail('')
       setNewUserPassword('')
       setNewUserRole('normal')
+      setSelectedGroupId('')
     } catch (error) {
       console.error('Failed to update user:', error)
       alert('Failed to update user')
@@ -158,6 +217,7 @@ export function UserManagement() {
     setNewUserEmail('')
     setNewUserPassword('')
     setNewUserRole('normal')
+    setSelectedGroupId('')
   }
 
   return (
@@ -206,7 +266,12 @@ export function UserManagement() {
             <select
               id="role"
               value={newUserRole}
-              onChange={(e) => setNewUserRole(e.target.value as 'admin' | 'normal' | 'customer')}
+              onChange={(e) => {
+                setNewUserRole(e.target.value as 'admin' | 'normal' | 'customer')
+                if (e.target.value !== 'customer') {
+                  setSelectedGroupId('')
+                }
+              }}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             >
               <option value="normal">Normal</option>
@@ -214,6 +279,28 @@ export function UserManagement() {
               <option value="customer">Customer</option>
             </select>
           </div>
+          {newUserRole === 'customer' && (
+            <div>
+              <Label htmlFor="group">Group * (Required for customers)</Label>
+              <select
+                id="group"
+                value={selectedGroupId}
+                onChange={(e) => setSelectedGroupId(e.target.value)}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                required
+              >
+                <option value="">Select a group</option>
+                {groups.map((group: any) => (
+                  <option key={group.id} value={group.id}>
+                    {group.name}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-muted-foreground mt-1">
+                Customer users can only access properties in their assigned group
+              </p>
+            </div>
+          )}
           <div className="flex justify-end gap-2 pt-4 border-t">
             <Button variant="outline" onClick={() => {
               setShowUserModal(false)

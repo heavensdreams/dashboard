@@ -145,7 +145,9 @@ function readData() {
         users: [],
         groups: [],
         apartments: [],
-        logs: []
+        logs: [],
+        user_groups: [],
+        property_groups: []
       }
       // Create file with empty data
       writeData(emptyData)
@@ -172,6 +174,14 @@ function writeData(data) {
     // Initialize logs if missing
     if (!Array.isArray(data.logs)) {
       data.logs = []
+    }
+    // Initialize user_groups if missing
+    if (!Array.isArray(data.user_groups)) {
+      data.user_groups = []
+    }
+    // Initialize property_groups if missing
+    if (!Array.isArray(data.property_groups)) {
+      data.property_groups = []
     }
     
     // Write to temp file first, then rename (atomic operation)
@@ -201,9 +211,22 @@ app.post('/api/login', (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' })
     }
     
+    // Get user's group_id if customer role
+    let group_id = null
+    if (user.role === 'customer' && Array.isArray(data.user_groups)) {
+      const userGroup = data.user_groups.find(ug => ug.user_id === user.id)
+      if (userGroup) {
+        group_id = userGroup.group_id
+      }
+    }
+    
     // Return user without password
     const { password: _, ...userWithoutPassword } = user
-    res.json(userWithoutPassword)
+    const response = { ...userWithoutPassword }
+    if (group_id) {
+      response.group_id = group_id
+    }
+    res.json(response)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -235,6 +258,14 @@ app.post('/api/data', (req, res) => {
     // Initialize logs if missing
     if (!Array.isArray(data.logs)) {
       data.logs = []
+    }
+    // Initialize user_groups if missing
+    if (!Array.isArray(data.user_groups)) {
+      data.user_groups = []
+    }
+    // Initialize property_groups if missing
+    if (!Array.isArray(data.property_groups)) {
+      data.property_groups = []
     }
     
     // Write data
