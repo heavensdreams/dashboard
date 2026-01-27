@@ -20,12 +20,6 @@
       "role": "normal",
       "created_at": "2026-01-13T13:25:19.219Z",
       "password": "password123"
-    },
-    {
-      "id": "5be96c59-4cc3-4a82-9d42-9004cb186f9a",
-      "email": "demo@example.com",
-      "password": "Password123",
-      "role": "customer"
     }
   ],
   "groups": [
@@ -2650,6 +2644,36 @@
   ],
   "logs": [
     {
+      "id": "7c9c229a-56c9-45e1-8031-66511fa999f0",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Deleted user",
+      "entity_type": "user",
+      "entity_id": null,
+      "old_value": "demo@example.com",
+      "new_value": null,
+      "timestamp": "2026-01-27T00:40:41.822Z"
+    },
+    {
+      "id": "a68cd018-414c-4619-afb4-f1ecbab0019d",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Updated user",
+      "entity_type": "user",
+      "entity_id": "5be96c59-4cc3-4a82-9d42-9004cb186f9a",
+      "old_value": "demo@example.com",
+      "new_value": "demo@example.com",
+      "timestamp": "2026-01-27T00:39:56.797Z"
+    },
+    {
+      "id": "09385835-58c6-48c0-9b25-f4f4393f4acf",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Updated user",
+      "entity_type": "user",
+      "entity_id": "5be96c59-4cc3-4a82-9d42-9004cb186f9a",
+      "old_value": "demo@example.com",
+      "new_value": "demo@example.com",
+      "timestamp": "2026-01-27T00:39:25.386Z"
+    },
+    {
       "id": "f263e4ae-e2b6-4257-a422-2adb8ad10e0d",
       "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
       "action": "Created user",
@@ -2662,9 +2686,9 @@
   ],
   "user_groups": [
     {
-      "id": "eedb762d-a49c-4c6d-b49f-43e74a584aae",
+      "id": "d639e825-c32a-45dc-9982-5806fc5adc04",
       "user_id": "5be96c59-4cc3-4a82-9d42-9004cb186f9a",
-      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4"
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12"
     }
   ],
   "property_groups": []

@@ -211,7 +211,7 @@ app.post('/api/login', (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' })
     }
     
-    // Get user's group_id if customer role
+    // Get user's group_id if customer role (optional - customers can have no group)
     let group_id = null
     if (user.role === 'customer' && Array.isArray(data.user_groups)) {
       const userGroup = data.user_groups.find(ug => ug.user_id === user.id)

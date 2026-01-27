@@ -31,13 +31,20 @@ export function BookingManagement() {
     return group?.name || null
   }, [isCustomer, currentUser?.id, userGroups, groups])
 
-  // Filter apartments by customer group
+  // Filter apartments by customer email (direct assignment) OR customer group name
   const filteredApartments = useMemo(() => {
-    if (isCustomer && customerGroupName) {
-      return apartments.filter(apt => apt.groups && apt.groups.includes(customerGroupName))
+    if (isCustomer && currentUser?.email) {
+      return apartments.filter(apt => {
+        if (!apt.groups || apt.groups.length === 0) return false
+        // Check if property is assigned directly to customer's email
+        if (apt.groups.includes(currentUser.email)) return true
+        // Check if property is assigned to customer's group (if they have one)
+        if (customerGroupName && apt.groups.includes(customerGroupName)) return true
+        return false
+      })
     }
     return apartments
-  }, [apartments, isCustomer, customerGroupName])
+  }, [apartments, isCustomer, currentUser?.email, customerGroupName])
 
   // Extract all bookings from filtered apartments
   const allBookings = useMemo(() => getAllBookings(filteredApartments), [filteredApartments])

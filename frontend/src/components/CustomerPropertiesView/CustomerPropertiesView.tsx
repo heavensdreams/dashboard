@@ -39,9 +39,16 @@ export function CustomerPropertiesView() {
     return group?.name || null
   }, [currentUser?.id, userGroups, groups])
 
-  // Filter apartments by customer group and transform to Property format
+  // Filter apartments by customer email (direct assignment) OR customer group name
   const properties = useMemo(() => {
-    let filtered = apartments.filter(apt => apt.groups && apt.groups.includes(customerGroupName || ''))
+    let filtered = apartments.filter(apt => {
+      if (!apt.groups || apt.groups.length === 0) return false
+      // Check if property is assigned directly to customer's email
+      if (currentUser?.email && apt.groups.includes(currentUser.email)) return true
+      // Check if property is assigned to customer's group (if they have one)
+      if (customerGroupName && apt.groups.includes(customerGroupName)) return true
+      return false
+    })
     
     return filtered.map(apartment => {
       // Filter bookings for customer (remove personal info)

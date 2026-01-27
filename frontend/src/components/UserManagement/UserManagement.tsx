@@ -35,11 +35,7 @@ export function UserManagement() {
       return
     }
 
-    // Validate customer must have a group
-    if (newUserRole === 'customer' && !selectedGroupId) {
-      alert('Customer users must be assigned to a group')
-      return
-    }
+    // Group assignment is optional for customers (they can be assigned directly to properties)
 
     try {
       const newUser: User = {
@@ -110,11 +106,7 @@ export function UserManagement() {
       return
     }
 
-    // Validate customer must have a group
-    if (newUserRole === 'customer' && !selectedGroupId) {
-      alert('Customer users must be assigned to a group')
-      return
-    }
+    // Group assignment is optional for customers (they can be assigned directly to properties)
 
     try {
       const oldUser = editingUser
@@ -281,15 +273,14 @@ export function UserManagement() {
           </div>
           {newUserRole === 'customer' && (
             <div>
-              <Label htmlFor="group">Group * (Required for customers)</Label>
+              <Label htmlFor="group">Group (Optional)</Label>
               <select
                 id="group"
                 value={selectedGroupId}
                 onChange={(e) => setSelectedGroupId(e.target.value)}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                required
               >
-                <option value="">Select a group</option>
+                <option value="">No group (assign properties directly)</option>
                 {groups.map((group: any) => (
                   <option key={group.id} value={group.id}>
                     {group.name}
@@ -297,7 +288,7 @@ export function UserManagement() {
                 ))}
               </select>
               <p className="text-xs text-muted-foreground mt-1">
-                Customer users can only access properties in their assigned group
+                Customer users can be assigned to a group OR have properties assigned directly to their email
               </p>
             </div>
           )}

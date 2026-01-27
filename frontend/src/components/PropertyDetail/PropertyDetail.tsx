@@ -24,6 +24,7 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
   const { currentUser } = useUserStore()
   const apartments = useDataStore(state => state.apartments)
   const groups = useDataStore(state => state.groups)
+  const users = useDataStore(state => state.users)
   const updateData = useDataStore(state => state.updateData)
   
   const [selectedGroups, setSelectedGroups] = useState<string[]>([])
@@ -348,24 +349,57 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
               <>
                 {!isCustomer && (
                   <div>
-                    <Label>Groups</Label>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {groups.map((group: any) => (
-                        <label key={group.id} className="flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={selectedGroups.includes(group.name)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedGroups([...selectedGroups, group.name])
-                              } else {
-                                setSelectedGroups(selectedGroups.filter(name => name !== group.name))
-                              }
-                            }}
-                          />
-                          <span>{group.name}</span>
-                        </label>
-                      ))}
+                    <Label>Groups or Customer Emails</Label>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      Assign to groups or directly to customer users by email
+                    </p>
+                    <div className="space-y-3">
+                      {/* Groups */}
+                      <div>
+                        <Label className="text-sm font-medium mb-2 block">Groups:</Label>
+                        <div className="flex flex-wrap gap-2">
+                          {groups.map((group: any) => (
+                            <label key={group.id} className="flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={selectedGroups.includes(group.name)}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedGroups([...selectedGroups, group.name])
+                                  } else {
+                                    setSelectedGroups(selectedGroups.filter(name => name !== group.name))
+                                  }
+                                }}
+                              />
+                              <span>{group.name}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                      {/* Customer Emails */}
+                      <div>
+                        <Label className="text-sm font-medium mb-2 block">Customer Emails:</Label>
+                        <div className="flex flex-wrap gap-2">
+                          {users
+                            .filter((u: any) => u.role === 'customer')
+                            .map((customer: any) => (
+                              <label key={customer.id} className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={selectedGroups.includes(customer.email)}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      setSelectedGroups([...selectedGroups, customer.email])
+                                    } else {
+                                      setSelectedGroups(selectedGroups.filter(email => email !== customer.email))
+                                    }
+                                  }}
+                                />
+                                <span>{customer.email}</span>
+                              </label>
+                            ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}

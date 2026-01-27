@@ -15,6 +15,7 @@ interface Group {
 
 export function GroupManagement() {
   const groups = useDataStore(state => state.groups) as Group[]
+  const users = useDataStore(state => state.users)
   const apartments = useDataStore(state => state.apartments)
   const updateData = useDataStore(state => state.updateData)
   const [showGroupModal, setShowGroupModal] = useState(false)
@@ -25,6 +26,16 @@ export function GroupManagement() {
 
   const getGroupApartments = (groupName: string) => {
     return apartments.filter((apt: any) => apt.groups && apt.groups.includes(groupName))
+  }
+
+  // Get customer users who have properties assigned directly to them (by email)
+  const getCustomerUsersWithProperties = () => {
+    const customerUsers = users.filter((u: any) => u.role === 'customer')
+    return customerUsers.filter((customer: any) => {
+      return apartments.some((apt: any) => 
+        apt.groups && apt.groups.includes(customer.email)
+      )
+    })
   }
 
 
@@ -192,54 +203,96 @@ export function GroupManagement() {
       </Modal>
 
       <div className="space-y-2">
-        {groups.length === 0 ? (
+        {/* Normal Groups */}
+        {groups.length === 0 && getCustomerUsersWithProperties().length === 0 ? (
           <Card>
             <CardContent className="py-8 text-center text-muted-foreground">
-              No groups found
+              No groups or customer assignments found
             </CardContent>
           </Card>
         ) : (
-          groups.map((group) => {
-            const groupApts = getGroupApartments(group.name)
-            const apartmentCount = groupApts.length
-            
-            return (
-              <Card key={group.id}>
-                <CardContent className="py-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <p className="font-semibold">{group.name}</p>
-                        <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
-                          {apartmentCount} {apartmentCount === 1 ? 'apartment' : 'apartments'}
-                        </span>
+          <>
+            {groups.map((group) => {
+              const groupApts = getGroupApartments(group.name)
+              const apartmentCount = groupApts.length
+              
+              return (
+                <Card key={group.id}>
+                  <CardContent className="py-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="font-semibold">{group.name}</p>
+                          <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                            {apartmentCount} {apartmentCount === 1 ? 'apartment' : 'apartments'}
+                          </span>
+                        </div>
+                        {apartmentCount > 0 && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {apartmentCount <= 10 ? (
+                              groupApts.map((a: any) => a.name).join(', ')
+                            ) : (
+                              <>
+                                {groupApts.slice(0, 10).map((a: any) => a.name).join(', ')}, ... (Total: {apartmentCount})
+                              </>
+                            )}
+                          </p>
+                        )}
+                        {apartmentCount === 0 && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            No apartments assigned
+                          </p>
+                        )}
                       </div>
-                      {apartmentCount > 0 && (
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {apartmentCount <= 10 ? (
-                            groupApts.map((a: any) => a.name).join(', ')
-                          ) : (
-                            <>
-                              {groupApts.slice(0, 10).map((a: any) => a.name).join(', ')}, ... (Total: {apartmentCount})
-                            </>
-                          )}
-                        </p>
-                      )}
-                      {apartmentCount === 0 && (
-                        <p className="text-sm text-muted-foreground mt-1">
-                          No apartments assigned
-                        </p>
-                      )}
+                      <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => handleEditGroup(group)}>Edit</Button>
+                        <Button variant="destructive" onClick={() => handleDeleteGroup(group.id, group.name)}>Delete</Button>
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" onClick={() => handleEditGroup(group)}>Edit</Button>
-                      <Button variant="destructive" onClick={() => handleDeleteGroup(group.id, group.name)}>Delete</Button>
+                  </CardContent>
+                </Card>
+              )
+            })}
+            
+            {/* Customer Users with Direct Property Assignments */}
+            {getCustomerUsersWithProperties().map((customer: any) => {
+              const customerApts = apartments.filter((apt: any) => 
+                apt.groups && apt.groups.includes(customer.email)
+              )
+              const apartmentCount = customerApts.length
+              
+              return (
+                <Card key={`customer-${customer.id}`}>
+                  <CardContent className="py-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="font-semibold">{customer.email}</p>
+                          <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                            Customer
+                          </span>
+                          <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                            {apartmentCount} {apartmentCount === 1 ? 'apartment' : 'apartments'}
+                          </span>
+                        </div>
+                        {apartmentCount > 0 && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {apartmentCount <= 10 ? (
+                              customerApts.map((a: any) => a.name).join(', ')
+                            ) : (
+                              <>
+                                {customerApts.slice(0, 10).map((a: any) => a.name).join(', ')}, ... (Total: {apartmentCount})
+                              </>
+                            )}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )
-          })
+                  </CardContent>
+                </Card>
+              )
+            })}
+          </>
         )}
       </div>
     </div>

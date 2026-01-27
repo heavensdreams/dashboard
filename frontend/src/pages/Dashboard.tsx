@@ -34,11 +34,16 @@ export function Dashboard() {
   const propertiesWithStatus = useMemo(() => {
     let filteredApartments = [...apartments]
     
-    // For customers: filter by their group only
-    if (isCustomer && customerGroupName) {
-      filteredApartments = filteredApartments.filter(apt => 
-        apt.groups && apt.groups.includes(customerGroupName)
-      )
+    // For customers: filter by their email (direct assignment) OR their group name
+    if (isCustomer && currentUser?.email) {
+      filteredApartments = filteredApartments.filter(apt => {
+        if (!apt.groups || apt.groups.length === 0) return false
+        // Check if property is assigned directly to customer's email
+        if (apt.groups.includes(currentUser.email)) return true
+        // Check if property is assigned to customer's group (if they have one)
+        if (customerGroupName && apt.groups.includes(customerGroupName)) return true
+        return false
+      })
     }
     // Filter by group (admin/normal users only)
     else if (!isCustomer && selectedGroup !== 'all') {
