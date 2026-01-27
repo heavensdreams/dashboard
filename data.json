@@ -20,6 +20,12 @@
       "role": "normal",
       "created_at": "2026-01-13T13:25:19.219Z",
       "password": "password123"
+    },
+    {
+      "id": "5be96c59-4cc3-4a82-9d42-9004cb186f9a",
+      "email": "demo@example.com",
+      "password": "Password123",
+      "role": "customer"
     }
   ],
   "groups": [
@@ -2641,5 +2647,25 @@
         "a3a48f3b901967c1ed5c628760262a3b"
       ]
     }
-  ]
+  ],
+  "logs": [
+    {
+      "id": "f263e4ae-e2b6-4257-a422-2adb8ad10e0d",
+      "user_id": "959087b6-fff4-4ffa-b795-9813221cfc7f",
+      "action": "Created user",
+      "entity_type": "user",
+      "entity_id": null,
+      "old_value": null,
+      "new_value": "demo@example.com",
+      "timestamp": "2026-01-27T00:11:17.658Z"
+    }
+  ],
+  "user_groups": [
+    {
+      "id": "eedb762d-a49c-4c6d-b49f-43e74a584aae",
+      "user_id": "5be96c59-4cc3-4a82-9d42-9004cb186f9a",
+      "group_id": "235b9ef2-931c-44d4-a66d-850a356796f4"
+    }
+  ],
+  "property_groups": []
 }

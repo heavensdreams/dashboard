@@ -1,5 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, parseISO } from 'date-fns'
+import { useDataStore } from '@/stores/dataStore'
+import { useUserStore } from '@/stores/userStore'
+import { filterBookingsForCustomer } from '@/utils/filtering'
 
 interface Property {
   id: string
@@ -16,30 +19,68 @@ interface Property {
   availability: Record<string, 'booked' | 'available'>
 }
 
-interface PublicPropertyViewProps {
-  propertyIds: string[]
-}
-
-export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
-  const [properties, setProperties] = useState<Property[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+export function CustomerPropertiesView() {
+  const apartments = useDataStore(state => state.apartments)
+  const groups = useDataStore(state => state.groups)
+  const userGroups = useDataStore(state => state.user_groups || [])
+  const { currentUser } = useUserStore()
+  
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<{ propertyId: string; index: number } | null>(null)
   const [currentMonth, setCurrentMonth] = useState<Record<string, Date>>({})
   const [visibleProperties, setVisibleProperties] = useState<Set<string>>(new Set())
-  const [menuOpen, setMenuOpen] = useState(false)
   const [expandedPropertyId, setExpandedPropertyId] = useState<string | null>(null)
+
+  // Get customer's group name
+  const customerGroupName = useMemo(() => {
+    if (!currentUser?.id) return null
+    const userGroup = userGroups.find((ug: any) => ug.user_id === currentUser.id)
+    if (!userGroup) return null
+    const group = groups.find((g: any) => g.id === userGroup.group_id)
+    return group?.name || null
+  }, [currentUser?.id, userGroups, groups])
+
+  // Filter apartments by customer group and transform to Property format
+  const properties = useMemo(() => {
+    let filtered = apartments.filter(apt => apt.groups && apt.groups.includes(customerGroupName || ''))
+    
+    return filtered.map(apartment => {
+      // Filter bookings for customer (remove personal info)
+      let apartmentBookings = apartment.bookings || []
+      apartmentBookings = filterBookingsForCustomer(apartmentBookings)
+      
+      // Build availability map
+      const availability: Record<string, 'booked' | 'available'> = {}
+      apartmentBookings.forEach((booking: any) => {
+        const start = new Date(booking.start_date)
+        const end = new Date(booking.end_date)
+        const days = eachDayOfInterval({ start, end })
+        days.forEach(day => {
+          availability[day.toISOString().split('T')[0]] = 'booked'
+        })
+      })
+      
+      return {
+        id: apartment.id,
+        name: apartment.name,
+        address: apartment.address,
+        extra_info: apartment.extra_info || '',
+        roi_info: apartment.roi_info || null,
+        roi_chart: apartment.roi_chart || null,
+        photos: apartment.photos || [],
+        bookings: apartmentBookings.map((b: any) => ({
+          start_date: b.start_date,
+          end_date: b.end_date
+        })),
+        availability
+      } as Property
+    })
+  }, [apartments, customerGroupName])
 
   const isMultipleProperties = properties.length > 1
   const shouldShowCollapsed = isMultipleProperties
-  const isSingleProperty = properties.length === 1
 
   useEffect(() => {
-    loadProperties()
-  }, [propertyIds.join(',')])
-
-  useEffect(() => {
-    // Fade-in animation for properties on initial load only
+    // Fade-in animation for properties on initial load
     properties.forEach((prop, index) => {
       setTimeout(() => {
         setVisibleProperties(prev => new Set([...prev, prop.id]))
@@ -51,31 +92,11 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
       months[prop.id] = new Date()
     })
     setCurrentMonth(months)
-    // If single property, always expand it and keep it expanded
+    // If single property, expand it by default
     if (properties.length === 1) {
       setExpandedPropertyId(properties[0].id)
     }
   }, [properties])
-
-  const loadProperties = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const idsParam = propertyIds.join(',')
-      const response = await fetch(`/api/public/properties/${idsParam}`)
-      
-      if (!response.ok) {
-        throw new Error('Failed to load properties')
-      }
-      
-      const data = await response.json()
-      setProperties(data.properties || [])
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load properties')
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const getPhotoUrl = (md5: string) => {
     return `/photos/${md5}`
@@ -110,53 +131,12 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
     return upcoming[0] || null
   }
 
-  const scrollToROI = (propertyId: string) => {
-    const element = document.getElementById(`roi-${propertyId}`)
-    if (element) {
-      // If property is collapsed, expand it first
-      if (expandedPropertyId !== propertyId) {
-        setExpandedPropertyId(propertyId)
-        setTimeout(() => {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        }, 300)
-      } else {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-[#FAFAFA] via-[#FFF8E7] to-white flex items-center justify-center px-4">
-        <div className="text-center">
-          <div className="relative w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6">
-            <div className="absolute inset-0 border-3 sm:border-4 border-[#D4AF37]/20 rounded-full"></div>
-            <div className="absolute inset-0 border-3 sm:border-4 border-[#D4AF37] border-t-transparent rounded-full animate-spin"></div>
-          </div>
-          <p className="text-[#4A5D23] font-light text-base sm:text-lg tracking-wide">Loading properties...</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-[#FAFAFA] via-[#FFF8E7] to-white flex items-center justify-center px-4">
-        <div className="text-center max-w-md">
-          <div className="text-5xl sm:text-6xl mb-3 sm:mb-4">⚠️</div>
-          <h1 className="text-2xl sm:text-3xl font-light text-[#2C3E1F] mb-2 sm:mb-3 tracking-wide">Error</h1>
-          <p className="text-[#6B7C4A] font-light text-base sm:text-lg">{error}</p>
-        </div>
-      </div>
-    )
-  }
-
   if (properties.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#FAFAFA] via-[#FFF8E7] to-white flex items-center justify-center px-4">
         <div className="text-center max-w-md">
           <h1 className="text-2xl sm:text-3xl font-light text-[#2C3E1F] mb-2 sm:mb-3 tracking-wide">No Properties Found</h1>
-          <p className="text-[#6B7C4A] font-light text-base sm:text-lg">The requested properties could not be found.</p>
+          <p className="text-[#6B7C4A] font-light text-base sm:text-lg">No properties are available in your assigned group.</p>
         </div>
       </div>
     )
@@ -227,7 +207,7 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
       )
     }
 
-    // Expanded view
+    // Expanded view - reuse the full expanded card from PublicPropertyView
     return (
       <div
         key={property.id}
@@ -242,7 +222,6 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
-                  {/* Left: Name and Address */}
                   <div>
                     <h2 className="text-xl sm:text-3xl lg:text-5xl xl:text-6xl font-light text-[#2C3E1F] mb-3 sm:mb-4 lg:mb-6 tracking-wide gold-text-gradient leading-tight">{property.name}</h2>
                     <div className="flex items-start gap-2 sm:gap-3">
@@ -253,7 +232,6 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
                       <p className="text-xs sm:text-base lg:text-lg text-[#6B7C4A] font-light leading-relaxed">{property.address}</p>
                     </div>
                   </div>
-                  {/* Right: Description */}
                   {property.extra_info && (
                     <div className="flex items-start pt-2 sm:pt-0">
                       <p className="text-xs sm:text-sm lg:text-base xl:text-lg text-[#4A5D23] leading-relaxed sm:leading-loose whitespace-pre-wrap font-light">{property.extra_info}</p>
@@ -261,8 +239,7 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
                   )}
                 </div>
               </div>
-              {/* Only show collapse button for multiple properties */}
-              {shouldShowCollapsed && !isSingleProperty && (
+              {shouldShowCollapsed && (
                 <button
                   onClick={() => handlePropertyClick(property.id)}
                   className="ml-4 p-2 hover:bg-[#D4AF37]/10 rounded-full transition-colors touch-manipulation"
@@ -304,9 +281,6 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
                       </svg>
                     </div>
-                  </div>
-                  <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-gradient-to-br from-[#D4AF37] to-[#F4D03F] text-white text-xs font-semibold px-2 py-1 sm:px-3 sm:py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
-                    View
                   </div>
                 </div>
               ))}
@@ -501,214 +475,8 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#FAFAFA] via-[#FFF8E7] to-white">
-      {/* Header with Logo */}
-      <header className="bg-white/95 backdrop-blur-md border-b-2 border-[#D4AF37]/30 sticky top-0 z-40 shadow-lg">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-4 lg:py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
-              {/* Logo */}
-              <div className="flex items-center gap-2 sm:gap-3">
-                <img 
-                  src="https://framerusercontent.com/images/SYXEfWLXQTVuo97yIbacWB2oOIw.png?width=581&height=440" 
-                  alt="Heaven's Dreams Logo" 
-                  className="h-8 sm:h-10 lg:h-14 w-auto object-contain"
-                />
-                <div className="hidden sm:block">
-                  <h1 className="text-lg sm:text-xl lg:text-2xl font-light text-[#2C3E1F] tracking-wide">Heaven's Dreams</h1>
-                  <p className="text-xs text-[#6B7C4A] font-light">Luxury Holiday Homes</p>
-                </div>
-              </div>
-            </div>
-            <div className="hidden lg:flex items-center gap-6 text-sm text-[#6B7C4A] font-light">
-              {isSingleProperty ? (
-                // For single property, show only ROI link if available
-                (() => {
-                  const propertyWithROI = properties.find(p => p.roi_info || p.roi_chart)
-                  if (propertyWithROI) {
-                    return (
-                      <a 
-                        href="#roi" 
-                        onClick={(e) => {
-                          e.preventDefault()
-                          scrollToROI(propertyWithROI.id)
-                        }}
-                        className="hover:text-[#D4AF37] transition-colors duration-300 relative group"
-                      >
-                        ROI
-                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] group-hover:w-full transition-all duration-300"></span>
-                      </a>
-                    )
-                  }
-                  return null
-                })()
-              ) : (
-                // For multiple properties, show all navigation links
-                <>
-                  <a href="#properties" className="hover:text-[#D4AF37] transition-colors duration-300 relative group">
-                    Properties
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] group-hover:w-full transition-all duration-300"></span>
-                  </a>
-                  <a href="#availability" className="hover:text-[#D4AF37] transition-colors duration-300 relative group">
-                    Availability
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] group-hover:w-full transition-all duration-300"></span>
-                  </a>
-                  <a 
-                    href="#roi" 
-                    onClick={(e) => {
-                      e.preventDefault()
-                      const propertyWithROI = properties.find(p => p.roi_info || p.roi_chart)
-                      if (propertyWithROI) {
-                        scrollToROI(propertyWithROI.id)
-                      }
-                    }}
-                    className="hover:text-[#D4AF37] transition-colors duration-300 relative group"
-                  >
-                    ROI
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] group-hover:w-full transition-all duration-300"></span>
-                  </a>
-                  <a 
-                    href="#contact" 
-                    onClick={(e) => {
-                      e.preventDefault()
-                      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
-                    }}
-                    className="hover:text-[#D4AF37] transition-colors duration-300 relative group"
-                  >
-                    Contact
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] group-hover:w-full transition-all duration-300"></span>
-                  </a>
-                </>
-              )}
-            </div>
-            {/* Menu Button - Only visible on mobile/tablet */}
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="lg:hidden p-2 text-[#6B7C4A] hover:text-[#D4AF37] transition-colors touch-manipulation"
-              aria-label="Menu"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {menuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Slide-out Menu - Only on mobile/tablet */}
-      <div
-        className={`fixed top-0 right-0 h-full w-64 sm:w-80 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
-          menuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        <div className="p-6 border-b-2 border-[#D4AF37]/30">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-light text-[#2C3E1F] tracking-wide">Menu</h2>
-            <button
-              onClick={() => setMenuOpen(false)}
-              className="p-2 text-[#6B7C4A] hover:text-[#D4AF37] transition-colors"
-              aria-label="Close menu"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        <nav className="p-6 space-y-4">
-          {isSingleProperty ? (
-            // For single property, show only ROI link if available
-            (() => {
-              const propertyWithROI = properties.find(p => p.roi_info || p.roi_chart)
-              if (propertyWithROI) {
-                return (
-                  <a
-                    href="#roi"
-                    onClick={() => {
-                      setMenuOpen(false)
-                      setTimeout(() => {
-                        scrollToROI(propertyWithROI.id)
-                      }, 100)
-                    }}
-                    className="block text-lg font-light text-[#2C3E1F] hover:text-[#D4AF37] transition-colors duration-300 py-2 border-b border-[#E8E8E8]"
-                  >
-                    ROI
-                  </a>
-                )
-              }
-              return null
-            })()
-          ) : (
-            // For multiple properties, show all navigation links
-            <>
-              <a
-                href="#properties"
-                onClick={() => {
-                  setMenuOpen(false)
-                  setTimeout(() => {
-                    document.getElementById('properties')?.scrollIntoView({ behavior: 'smooth' })
-                  }, 100)
-                }}
-                className="block text-lg font-light text-[#2C3E1F] hover:text-[#D4AF37] transition-colors duration-300 py-2 border-b border-[#E8E8E8]"
-              >
-                Properties
-              </a>
-              <a
-                href="#availability"
-                onClick={() => {
-                  setMenuOpen(false)
-                  setTimeout(() => {
-                    document.getElementById('availability')?.scrollIntoView({ behavior: 'smooth' })
-                  }, 100)
-                }}
-                className="block text-lg font-light text-[#2C3E1F] hover:text-[#D4AF37] transition-colors duration-300 py-2 border-b border-[#E8E8E8]"
-              >
-                Availability
-              </a>
-              <a
-                href="#roi"
-                onClick={() => {
-                  setMenuOpen(false)
-                  setTimeout(() => {
-                    const propertyWithROI = properties.find(p => p.roi_info || p.roi_chart)
-                    if (propertyWithROI) {
-                      scrollToROI(propertyWithROI.id)
-                    }
-                  }, 100)
-                }}
-                className="block text-lg font-light text-[#2C3E1F] hover:text-[#D4AF37] transition-colors duration-300 py-2 border-b border-[#E8E8E8]"
-              >
-                ROI
-              </a>
-              <a
-                href="#contact"
-                onClick={() => {
-                  setMenuOpen(false)
-                  setTimeout(() => {
-                    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
-                  }, 100)
-                }}
-                className="block text-lg font-light text-[#2C3E1F] hover:text-[#D4AF37] transition-colors duration-300 py-2 border-b border-[#E8E8E8]"
-              >
-                Contact
-              </a>
-            </>
-          )}
-        </nav>
-      </div>
-      {/* Menu Overlay - Only on mobile/tablet */}
-      {menuOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setMenuOpen(false)}
-        ></div>
-      )}
-
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8 lg:py-16" id="properties">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8 lg:py-16">
         {properties.map((property) => renderPropertyCard(property, expandedPropertyId === property.id))}
       </main>
 
@@ -745,43 +513,6 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
           })()}
         </div>
       )}
-
-      {/* Footer with Gold Background */}
-      <footer id="contact" className="bg-gradient-to-br from-[#D4AF37] via-[#F4D03F] to-[#D4AF37] mt-8 sm:mt-12 lg:mt-16 xl:mt-20 border-t-4 border-[#B8941F] shadow-2xl">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8 lg:py-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-4 sm:mb-6 lg:mb-8">
-            <div>
-              <h4 className="text-base sm:text-lg lg:text-xl font-light mb-2 sm:mb-3 lg:mb-4 tracking-wide text-[#2C3E1F]">Heaven's Dreams</h4>
-              <p className="text-[#2C3E1F]/80 font-light text-xs sm:text-sm leading-relaxed">
-                Luxury holiday homes in Dubai's most prestigious locations. Experience elegance and comfort.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-base sm:text-lg lg:text-xl font-light mb-2 sm:mb-3 lg:mb-4 tracking-wide text-[#2C3E1F]">Contact</h4>
-              <p className="text-[#2C3E1F]/80 font-light text-xs sm:text-sm leading-relaxed">
-                Office: 1010 Bayswater Tower<br />
-                Marasi Dr - Business Bay - Dubai
-              </p>
-              <p className="text-[#2C3E1F]/80 font-light text-xs sm:text-sm mt-2">
-                <a href="mailto:info@heavensdream.com" className="hover:text-[#1A2414] transition-colors duration-300 font-medium break-all">
-                  info@heavensdream.com
-                </a>
-              </p>
-            </div>
-            <div>
-              <h4 className="text-base sm:text-lg lg:text-xl font-light mb-2 sm:mb-3 lg:mb-4 tracking-wide text-[#2C3E1F]">Follow Us</h4>
-              <p className="text-[#2C3E1F]/80 font-light text-xs sm:text-sm">
-                Instagram: <a href="https://instagram.com/_heavensdreams" target="_blank" rel="noopener noreferrer" className="hover:text-[#1A2414] transition-colors duration-300 font-medium">@_heavensdreams</a>
-              </p>
-            </div>
-          </div>
-          <div className="border-t border-[#B8941F]/50 pt-4 sm:pt-6 lg:pt-8">
-            <p className="text-center text-[#2C3E1F]/70 text-xs sm:text-sm font-light px-2">
-              © {new Date().getFullYear()} HEAVENS DREAMS HOLIDAY HOMES RENTAL L.L.C. All Rights Reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
 
       {/* Custom CSS for animations and gold effects */}
       <style>{`

@@ -20,37 +20,13 @@ export function GroupManagement() {
   const [showGroupModal, setShowGroupModal] = useState(false)
   const [editingGroup, setEditingGroup] = useState<Group | null>(null)
   const [newGroupName, setNewGroupName] = useState('')
-  const [copiedGroupId, setCopiedGroupId] = useState<string | null>(null)
 
   const { currentUser } = useUserStore()
-  const canEdit = currentUser?.role === 'admin' || currentUser?.role === 'normal'
 
   const getGroupApartments = (groupName: string) => {
     return apartments.filter((apt: any) => apt.groups && apt.groups.includes(groupName))
   }
 
-  const getGroupPublicLink = (groupName: string) => {
-    const groupApts = getGroupApartments(groupName)
-    if (groupApts.length === 0) return ''
-    const apartmentIds = groupApts.map((a: any) => a.id).join(',')
-    const baseUrl = window.location.origin
-    return `${baseUrl}/view/${apartmentIds}`
-  }
-
-  const handleCopyGroupLink = async (groupName: string, groupId: string) => {
-    const link = getGroupPublicLink(groupName)
-    if (!link) return
-    
-    try {
-      await navigator.clipboard.writeText(link)
-      setCopiedGroupId(groupId)
-      setTimeout(() => setCopiedGroupId(null), 2000)
-    } catch (err) {
-      console.error('Failed to copy link:', err)
-      setCopiedGroupId(groupId)
-      setTimeout(() => setCopiedGroupId(null), 2000)
-    }
-  }
 
   const handleCreateGroup = async () => {
     if (!newGroupName) {
@@ -253,25 +229,6 @@ export function GroupManagement() {
                         <p className="text-sm text-muted-foreground mt-1">
                           No apartments assigned
                         </p>
-                      )}
-                      {canEdit && apartmentCount > 0 && (
-                        <div className="mt-3 pt-3 border-t">
-                          <Label className="text-xs text-muted-foreground mb-1">Client Link</Label>
-                          <div className="flex items-center gap-2">
-                            <div className="flex-1 px-2 py-1.5 bg-muted rounded text-xs font-mono text-muted-foreground break-all">
-                              {getGroupPublicLink(group.name)}
-                            </div>
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleCopyGroupLink(group.name, group.id)}
-                              className="flex-shrink-0 h-8"
-                            >
-                              {copiedGroupId === group.id ? 'Copied!' : 'Copy'}
-                            </Button>
-                          </div>
-                        </div>
                       )}
                     </div>
                     <div className="flex gap-2">

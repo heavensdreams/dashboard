@@ -1,7 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
-import { Button } from '@/components/ui/button'
 import { useDataStore } from '@/stores/dataStore'
 import { useUserStore } from '@/stores/userStore'
 import { PropertyDetail } from '@/components/PropertyDetail/PropertyDetail'
@@ -130,135 +128,105 @@ export function Dashboard() {
 
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sm:space-y-8 lg:space-y-12">
       {/* Group Filter - Hidden for customers */}
       {!isCustomer && (
-        <Card>
-          <CardContent className="py-4">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border-2 border-[#D4AF37]/20">
+          <div className="px-4 sm:px-6 py-4 sm:py-6">
             <div className="flex items-center gap-4 flex-wrap">
-              <Label className="font-semibold">Filter by Group:</Label>
+              <Label className="font-light text-[#2C3E1F] text-base sm:text-lg">Filter by Group:</Label>
               <div className="flex gap-2 flex-wrap">
-                <Button
-                  variant={selectedGroup === 'all' ? 'default' : 'outline'}
-                  size="sm"
+                <button
                   onClick={() => setSelectedGroup('all')}
+                  className={`px-4 py-2 rounded-lg text-sm font-light transition-all duration-300 ${
+                    selectedGroup === 'all'
+                      ? 'bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] text-[#2C3E1F] shadow-md'
+                      : 'bg-white border-2 border-[#D4AF37]/30 text-[#6B7C4A] hover:border-[#D4AF37] hover:text-[#D4AF37]'
+                  }`}
                 >
                   All
-                </Button>
+                </button>
                 {groups.map((group: any) => (
-                  <Button
+                  <button
                     key={group.id}
-                    variant={selectedGroup === group.name ? 'default' : 'outline'}
-                    size="sm"
                     onClick={() => setSelectedGroup(group.name)}
+                    className={`px-4 py-2 rounded-lg text-sm font-light transition-all duration-300 ${
+                      selectedGroup === group.name
+                        ? 'bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] text-[#2C3E1F] shadow-md'
+                        : 'bg-white border-2 border-[#D4AF37]/30 text-[#6B7C4A] hover:border-[#D4AF37] hover:text-[#D4AF37]'
+                    }`}
                   >
                     {group.name}
-                  </Button>
+                  </button>
                 ))}
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
       {/* Group Booking Status - Admin/Normal only */}
       {!isCustomer && groupStatus && (
-        <Card>
-          <CardContent className="py-4">
-            <div className={`${groupStatus.color} ${groupStatus.textColor} px-4 py-2 text-center font-semibold rounded`}>
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border-2 border-[#D4AF37]/20">
+          <div className="px-4 sm:px-6 py-4 sm:py-6">
+            <div className={`${groupStatus.color} ${groupStatus.textColor} px-4 py-3 text-center font-light text-base sm:text-lg rounded-lg`}>
               {groupStatus.text}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
       {/* Dashboard Landing Page - Stats and Navigation */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-3xl font-bold mb-2">{stats.totalProperties}</div>
-            <div className="text-sm text-muted-foreground">Total Properties</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-3xl font-bold mb-2 text-green-600">{stats.availableProperties}</div>
-            <div className="text-sm text-muted-foreground">Available</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-3xl font-bold mb-2 text-red-600">{stats.occupiedProperties}</div>
-            <div className="text-sm text-muted-foreground">Occupied</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-3xl font-bold mb-2">{stats.totalBookings}</div>
-            <div className="text-sm text-muted-foreground">Total Bookings</div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border-2 border-[#D4AF37]/20 hover:shadow-xl transition-all duration-300">
+          <div className="p-6 sm:p-8">
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-light text-[#2C3E1F] mb-2 tracking-wide">{stats.totalProperties}</div>
+            <div className="text-sm sm:text-base text-[#6B7C4A] font-light">Total Properties</div>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border-2 border-[#D4AF37]/20 hover:shadow-xl transition-all duration-300">
+          <div className="p-6 sm:p-8">
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-light text-[#4A5D23] mb-2 tracking-wide">{stats.availableProperties}</div>
+            <div className="text-sm sm:text-base text-[#6B7C4A] font-light">Available</div>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border-2 border-[#D4AF37]/20 hover:shadow-xl transition-all duration-300">
+          <div className="p-6 sm:p-8">
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-light text-[#8B4513] mb-2 tracking-wide">{stats.occupiedProperties}</div>
+            <div className="text-sm sm:text-base text-[#6B7C4A] font-light">Occupied</div>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border-2 border-[#D4AF37]/20 hover:shadow-xl transition-all duration-300">
+          <div className="p-6 sm:p-8">
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-light text-[#2C3E1F] mb-2 tracking-wide">{stats.totalBookings}</div>
+            <div className="text-sm sm:text-base text-[#6B7C4A] font-light">Total Bookings</div>
+          </div>
+        </div>
       </div>
 
       {/* Navigation Buttons */}
-      <Card>
-        <CardContent className="p-6">
-          <h2 className="text-2xl font-semibold mb-4">Quick Navigation</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button
-              variant="outline"
-              size="lg"
-              className="h-24 flex flex-col items-center justify-center"
+      <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border-2 border-[#D4AF37]/20">
+        <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#2C3E1F] mb-6 sm:mb-8 tracking-wide gold-text-gradient">Quick Navigation</h2>
+          <div className="flex justify-center">
+            <button
               onClick={() => {
                 const event = new CustomEvent('navigate', { detail: 'properties' })
                 window.dispatchEvent(event)
               }}
+              className="w-full max-w-md h-24 sm:h-28 flex flex-col items-center justify-center bg-gradient-to-br from-[#D4AF37]/10 via-[#F4D03F]/10 to-[#D4AF37]/10 border-2 border-[#D4AF37]/30 rounded-xl sm:rounded-2xl hover:border-[#D4AF37] hover:shadow-xl transition-all duration-300 group"
             >
-              <span className="text-2xl mb-2">🏠</span>
-              <span>View Properties</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="h-24 flex flex-col items-center justify-center"
-              onClick={() => {
-                const event = new CustomEvent('navigate', { detail: 'bookings' })
-                window.dispatchEvent(event)
-                // Also set calendar view
-                setTimeout(() => {
-                  const calendarEvent = new CustomEvent('setBookingView', { detail: 'calendar' })
-                  window.dispatchEvent(calendarEvent)
-                }, 100)
-              }}
-            >
-              <span className="text-2xl mb-2">📅</span>
-              <span>View Calendar</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="h-24 flex flex-col items-center justify-center"
-              onClick={() => {
-                const event = new CustomEvent('navigate', { detail: 'bookings' })
-                window.dispatchEvent(event)
-                // Also set list view
-                setTimeout(() => {
-                  const listEvent = new CustomEvent('setBookingView', { detail: 'list' })
-                  window.dispatchEvent(listEvent)
-                }, 100)
-              }}
-            >
-              <span className="text-2xl mb-2">📋</span>
-              <span>View Bookings</span>
-            </Button>
+              <span className="text-3xl sm:text-4xl mb-2 group-hover:scale-110 transition-transform duration-300">🏠</span>
+              <span className="text-base sm:text-lg font-light text-[#2C3E1F] group-hover:text-[#D4AF37] transition-colors duration-300">View Properties</span>
+            </button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Property Detail Modal */}
       {selectedProperty && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-background rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl sm:rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border-2 border-[#D4AF37]/20">
             <PropertyDetail
               propertyId={selectedProperty}
               onClose={() => setSelectedProperty(null)}
@@ -266,6 +234,16 @@ export function Dashboard() {
           </div>
         </div>
       )}
+
+      {/* Custom CSS for gold text gradient */}
+      <style>{`
+        .gold-text-gradient {
+          background: linear-gradient(135deg, #2C3E1F 0%, #4A5D23 40%, #D4AF37 60%, #F4D03F 80%, #D4AF37 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+      `}</style>
     </div>
   )
 }

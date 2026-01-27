@@ -312,6 +312,38 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
               </div>
             )}
 
+            {canEdit && propertyId && (
+              <div className="border-t pt-4">
+                <Label>Guest Link (No Password Required)</Label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  Share this link for read-only access to this property
+                </p>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 px-3 py-2 bg-muted rounded-md text-sm font-mono text-muted-foreground break-all">
+                    {`${window.location.origin}/view/${propertyId}`}
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={async () => {
+                      const link = `${window.location.origin}/view/${propertyId}`
+                      try {
+                        await navigator.clipboard.writeText(link)
+                        alert('Link copied to clipboard!')
+                      } catch (err) {
+                        console.error('Failed to copy link:', err)
+                        alert('Failed to copy link')
+                      }
+                    }}
+                    className="flex-shrink-0"
+                  >
+                    Copy
+                  </Button>
+                </div>
+              </div>
+            )}
+
             {canEdit && (
               <>
                 {!isCustomer && (

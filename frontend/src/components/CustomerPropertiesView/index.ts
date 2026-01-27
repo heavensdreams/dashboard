@@ -1,0 +1,1 @@
+export { CustomerPropertiesView } from './CustomerPropertiesView'
