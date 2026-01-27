@@ -20,6 +20,13 @@
       "role": "normal",
       "created_at": "2026-01-13T13:25:19.219Z",
       "password": "password123"
+    },
+    {
+      "id": "demo-customer-001-2026-01-23",
+      "email": "demo@example.com",
+      "role": "customer",
+      "created_at": "2026-01-23T00:00:00.000Z",
+      "password": "password123"
     }
   ],
   "groups": [
@@ -2641,5 +2648,13 @@
         "a3a48f3b901967c1ed5c628760262a3b"
       ]
     }
-  ]
+  ],
+  "user_groups": [
+    {
+      "id": "demo-user-group-001",
+      "user_id": "demo-customer-001-2026-01-23",
+      "group_id": "18d7dead-6680-425b-bd94-68545bbebb12"
+    }
+  ],
+  "property_groups": []
 }

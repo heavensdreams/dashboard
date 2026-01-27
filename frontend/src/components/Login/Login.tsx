@@ -151,6 +151,11 @@ export function Login() {
                     <span className="font-medium">User:</span> jane.smith@example.com / password123
                   </p>
                 </div>
+                <div className="bg-gradient-to-r from-[#FFF8E7] to-[#FFF4D6] rounded-lg px-4 py-2 border border-[#D4AF37]/30">
+                  <p className="text-xs sm:text-sm text-[#4A5D23] font-light">
+                    <span className="font-medium">Customer:</span> demo@example.com / password123
+                  </p>
+                </div>
               </div>
             </div>
           </div>
