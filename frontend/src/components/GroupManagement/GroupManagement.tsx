@@ -156,25 +156,30 @@ export function GroupManagement() {
         })
       } else if (editingCustomerEmail) {
         // Editing a customer email assignment
+        // CRITICAL: Remove any group that has the same name as the customer email FIRST
+        // Customer emails should only exist in apartments' groups arrays, not as groups
+        const customerEmail = editingCustomerEmail
+        
         await updateData((data) => {
-          // Remove any group that has the same name as the customer email
-          // Customer emails should only exist in apartments' groups arrays, not as groups
-          const cleanedGroups = data.groups.filter((g: any) => g.name !== editingCustomerEmail)
+          // Step 1: Remove any group with the customer email name (prevent hidden groups)
+          const cleanedGroups = data.groups.filter((g: any) => g.name !== customerEmail)
           
+          // Step 2: Update all apartments based on selection
           const updatedApartments = data.apartments.map(apt => {
             const isSelected = selectedPropertyIds.has(apt.id)
-            const currentlyHasEmail = apt.groups && apt.groups.includes(editingCustomerEmail)
+            const currentlyHasEmail = apt.groups && apt.groups.includes(customerEmail)
             
             let updatedGroups = [...(apt.groups || [])]
             
             // If property is selected but doesn't have the email, add it
             if (isSelected && !currentlyHasEmail) {
-              updatedGroups.push(editingCustomerEmail)
+              updatedGroups.push(customerEmail)
             }
             // If property is not selected but has the email, remove it
             else if (!isSelected && currentlyHasEmail) {
-              updatedGroups = updatedGroups.filter((g: string) => g !== editingCustomerEmail)
+              updatedGroups = updatedGroups.filter((g: string) => g !== customerEmail)
             }
+            // Note: If selected and already has email, or not selected and doesn't have email, no change needed
             
             return {
               ...apt,
@@ -182,31 +187,37 @@ export function GroupManagement() {
             }
           })
           
+          // Step 3: Verify no group was created - double check
+          const finalCleanedGroups = cleanedGroups.filter((g: any) => g.name !== customerEmail)
+          
           return {
             ...data,
-            groups: cleanedGroups,
+            groups: finalCleanedGroups, // Ensure customer email is never a group
             apartments: updatedApartments
           }
         })
         
+        // Log the change after successful save
         if (currentUser) {
           await logChange({
             user_id: currentUser.id,
             action: 'Updated customer property assignments',
             entity_type: 'user',
-            new_value: editingCustomerEmail
+            new_value: customerEmail
           })
         }
       }
 
+      // Only close modal and reset if no error occurred
       setShowGroupModal(false)
       setEditingGroup(null)
       setEditingCustomerEmail(null)
       setNewGroupName('')
       setSelectedPropertyIds(new Set())
     } catch (error) {
+      // Error already handled in individual blocks, just log here
       console.error('Failed to update:', error)
-      alert('Failed to update')
+      // Don't close modal on error so user can retry
     }
   }
 
