@@ -21,6 +21,7 @@ export function GroupManagement() {
   const [showGroupModal, setShowGroupModal] = useState(false)
   const [editingGroup, setEditingGroup] = useState<Group | null>(null)
   const [newGroupName, setNewGroupName] = useState('')
+  const [selectedPropertyIds, setSelectedPropertyIds] = useState<Set<string>>(new Set())
 
   const { currentUser } = useUserStore()
 
@@ -76,6 +77,11 @@ export function GroupManagement() {
   const handleEditGroup = (group: Group) => {
     setEditingGroup(group)
     setNewGroupName(group.name)
+    // Load currently assigned properties
+    const assignedProperties = apartments.filter((apt: any) => 
+      apt.groups && apt.groups.includes(group.name)
+    )
+    setSelectedPropertyIds(new Set(assignedProperties.map((apt: any) => apt.id)))
     setShowGroupModal(true)
   }
 
@@ -89,18 +95,41 @@ export function GroupManagement() {
       const oldGroup = editingGroup
       const oldName = oldGroup.name
       
-      // Update group name in groups array
-      await updateData((data) => ({
-        ...data,
-        groups: data.groups.map(g => 
-          g.id === editingGroup.id ? { ...g, name: newGroupName } : g
-        ),
-        // Update group name in all apartments that reference it
-        apartments: data.apartments.map(apt => ({
-          ...apt,
-          groups: apt.groups.map((g: string) => g === oldName ? newGroupName : g)
-        }))
-      }))
+      // Update group name in groups array and update property assignments
+      await updateData((data) => {
+        const updatedApartments = data.apartments.map(apt => {
+          const isSelected = selectedPropertyIds.has(apt.id)
+          const currentlyHasGroup = apt.groups && apt.groups.includes(oldName)
+          
+          let updatedGroups = [...(apt.groups || [])]
+          
+          // If property is selected but doesn't have the group, add it
+          if (isSelected && !currentlyHasGroup) {
+            updatedGroups.push(newGroupName)
+          }
+          // If property is not selected but has the group, remove it
+          else if (!isSelected && currentlyHasGroup) {
+            updatedGroups = updatedGroups.filter((g: string) => g !== oldName)
+          }
+          // If property is selected and has the old name, update to new name
+          else if (isSelected && currentlyHasGroup) {
+            updatedGroups = updatedGroups.map((g: string) => g === oldName ? newGroupName : g)
+          }
+          
+          return {
+            ...apt,
+            groups: updatedGroups
+          }
+        })
+        
+        return {
+          ...data,
+          groups: data.groups.map(g => 
+            g.id === editingGroup.id ? { ...g, name: newGroupName } : g
+          ),
+          apartments: updatedApartments
+        }
+      })
 
       if (currentUser) {
         await logChange({
@@ -161,6 +190,17 @@ export function GroupManagement() {
   const resetForm = () => {
     setEditingGroup(null)
     setNewGroupName('')
+    setSelectedPropertyIds(new Set())
+  }
+  
+  const handlePropertyToggle = (propertyId: string) => {
+    const newSelected = new Set(selectedPropertyIds)
+    if (newSelected.has(propertyId)) {
+      newSelected.delete(propertyId)
+    } else {
+      newSelected.add(propertyId)
+    }
+    setSelectedPropertyIds(newSelected)
   }
 
   return (
@@ -179,7 +219,7 @@ export function GroupManagement() {
           resetForm()
         }}
         title={editingGroup ? 'Edit Group' : 'New Group'}
-        size="md"
+        size="lg"
       >
         <div className="space-y-4">
           <div>
@@ -192,6 +232,43 @@ export function GroupManagement() {
               required
             />
           </div>
+          
+          {editingGroup && (
+            <div>
+              <Label>Assigned Properties</Label>
+              <p className="text-xs text-muted-foreground mb-2">
+                Select properties to assign to this group
+              </p>
+              <div className="border rounded-md p-4 max-h-96 overflow-y-auto">
+                {apartments.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-4">No properties found</p>
+                ) : (
+                  <div className="space-y-2">
+                    {apartments.map((apt: any) => (
+                      <label key={apt.id} className="flex items-center gap-2 cursor-pointer hover:bg-muted/50 p-2 rounded">
+                        <input
+                          type="checkbox"
+                          checked={selectedPropertyIds.has(apt.id)}
+                          onChange={() => handlePropertyToggle(apt.id)}
+                          className="cursor-pointer"
+                        />
+                        <div className="flex-1">
+                          <span className="text-sm font-medium">{apt.name}</span>
+                          {apt.address && (
+                            <p className="text-xs text-muted-foreground">{apt.address}</p>
+                          )}
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                {selectedPropertyIds.size} of {apartments.length} properties selected
+              </p>
+            </div>
+          )}
+          
           <div className="flex justify-end gap-2 pt-4 border-t">
             <Button variant="outline" onClick={() => {
               setShowGroupModal(false)

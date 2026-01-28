@@ -18,6 +18,7 @@ interface User {
 export function UserManagement() {
   const users = useDataStore(state => state.users) as User[]
   const groups = useDataStore(state => state.groups)
+  const apartments = useDataStore(state => state.apartments)
   const userGroups = useDataStore(state => state.user_groups || [])
   const updateData = useDataStore(state => state.updateData)
   const [showUserModal, setShowUserModal] = useState(false)
@@ -26,6 +27,7 @@ export function UserManagement() {
   const [newUserPassword, setNewUserPassword] = useState('')
   const [newUserRole, setNewUserRole] = useState<'admin' | 'normal' | 'customer'>('normal')
   const [selectedGroupId, setSelectedGroupId] = useState<string>('')
+  const [selectedPropertyIds, setSelectedPropertyIds] = useState<Set<string>>(new Set())
 
   const { currentUser } = useUserStore()
 
@@ -94,8 +96,23 @@ export function UserManagement() {
     if (user.role === 'customer') {
       const userGroup = userGroups.find((ug: any) => ug.user_id === user.id)
       setSelectedGroupId(userGroup?.group_id || '')
+      
+      // Load currently assigned properties (direct email assignment OR via group)
+      const userGroupObj = userGroup ? groups.find((g: any) => g.id === userGroup.group_id) : null
+      const userGroupName = userGroupObj?.name || null
+      
+      const assignedProperties = apartments.filter((apt: any) => {
+        if (!apt.groups || apt.groups.length === 0) return false
+        // Check direct email assignment
+        if (apt.groups.includes(user.email)) return true
+        // Check group assignment
+        if (userGroupName && apt.groups.includes(userGroupName)) return true
+        return false
+      })
+      setSelectedPropertyIds(new Set(assignedProperties.map((apt: any) => apt.id)))
     } else {
       setSelectedGroupId('')
+      setSelectedPropertyIds(new Set())
     }
     setShowUserModal(true)
   }
@@ -137,11 +154,72 @@ export function UserManagement() {
             group_id: selectedGroupId
           })
         }
+        
+        // Update property assignments for customer users
+        let updatedApartments = data.apartments
+        if (newUserRole === 'customer' && editingUser) {
+          const customerEmail = newUserEmail
+          const oldCustomerEmail = editingUser.email
+          const customerUserGroup = selectedGroupId 
+            ? groups.find((g: any) => g.id === selectedGroupId)
+            : null
+          const customerGroupName = customerUserGroup?.name || null
+          
+          // Get old group name if user had one
+          const oldUserGroup = userGroups.find((ug: any) => ug.user_id === editingUser.id)
+          const oldUserGroupObj = oldUserGroup ? groups.find((g: any) => g.id === oldUserGroup.group_id) : null
+          const oldGroupName = oldUserGroupObj?.name || null
+          
+          updatedApartments = data.apartments.map(apt => {
+            const isSelected = selectedPropertyIds.has(apt.id)
+            const currentlyHasOldEmail = apt.groups && apt.groups.includes(oldCustomerEmail)
+            const currentlyHasNewEmail = apt.groups && apt.groups.includes(customerEmail)
+            const currentlyHasOldGroup = oldGroupName && apt.groups && apt.groups.includes(oldGroupName)
+            const currentlyHasNewGroup = customerGroupName && apt.groups && apt.groups.includes(customerGroupName)
+            
+            let updatedGroups = [...(apt.groups || [])]
+            
+            if (isSelected) {
+              // Property should be assigned
+              // Remove old email if email changed
+              if (oldCustomerEmail !== customerEmail && currentlyHasOldEmail) {
+                updatedGroups = updatedGroups.filter((g: string) => g !== oldCustomerEmail)
+              }
+              // Add new email if not present
+              if (!currentlyHasNewEmail) {
+                updatedGroups.push(customerEmail)
+              }
+              // Remove old group if group changed
+              if (oldGroupName && oldGroupName !== customerGroupName && currentlyHasOldGroup) {
+                updatedGroups = updatedGroups.filter((g: string) => g !== oldGroupName)
+              }
+              // Add new group if user has one and it's not present
+              if (customerGroupName && !currentlyHasNewGroup) {
+                updatedGroups.push(customerGroupName)
+              }
+            } else {
+              // Property should not be assigned - remove both old and new email
+              updatedGroups = updatedGroups.filter((g: string) => 
+                g !== oldCustomerEmail && g !== customerEmail
+              )
+              // Remove old group if present
+              if (oldGroupName && currentlyHasOldGroup) {
+                updatedGroups = updatedGroups.filter((g: string) => g !== oldGroupName)
+              }
+            }
+            
+            return {
+              ...apt,
+              groups: updatedGroups
+            }
+          })
+        }
 
         return {
           ...data,
           users: updatedUsers,
-          user_groups: updatedUserGroups
+          user_groups: updatedUserGroups,
+          apartments: updatedApartments
         }
       })
 
@@ -210,6 +288,17 @@ export function UserManagement() {
     setNewUserPassword('')
     setNewUserRole('normal')
     setSelectedGroupId('')
+    setSelectedPropertyIds(new Set())
+  }
+  
+  const handlePropertyToggle = (propertyId: string) => {
+    const newSelected = new Set(selectedPropertyIds)
+    if (newSelected.has(propertyId)) {
+      newSelected.delete(propertyId)
+    } else {
+      newSelected.add(propertyId)
+    }
+    setSelectedPropertyIds(newSelected)
   }
 
   return (
@@ -228,7 +317,7 @@ export function UserManagement() {
           resetForm()
         }}
         title={editingUser ? 'Edit User' : 'New User'}
-        size="md"
+        size={newUserRole === 'customer' && editingUser ? 'lg' : 'md'}
       >
         <div className="space-y-4">
           <div>
@@ -292,6 +381,43 @@ export function UserManagement() {
               </p>
             </div>
           )}
+          
+          {editingUser && newUserRole === 'customer' && (
+            <div>
+              <Label>Assigned Properties</Label>
+              <p className="text-xs text-muted-foreground mb-2">
+                Select properties to assign to this customer (direct email assignment)
+              </p>
+              <div className="border rounded-md p-4 max-h-96 overflow-y-auto">
+                {apartments.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-4">No properties found</p>
+                ) : (
+                  <div className="space-y-2">
+                    {apartments.map((apt: any) => (
+                      <label key={apt.id} className="flex items-center gap-2 cursor-pointer hover:bg-muted/50 p-2 rounded">
+                        <input
+                          type="checkbox"
+                          checked={selectedPropertyIds.has(apt.id)}
+                          onChange={() => handlePropertyToggle(apt.id)}
+                          className="cursor-pointer"
+                        />
+                        <div className="flex-1">
+                          <span className="text-sm font-medium">{apt.name}</span>
+                          {apt.address && (
+                            <p className="text-xs text-muted-foreground">{apt.address}</p>
+                          )}
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                {selectedPropertyIds.size} of {apartments.length} properties selected
+              </p>
+            </div>
+          )}
+          
           <div className="flex justify-end gap-2 pt-4 border-t">
             <Button variant="outline" onClick={() => {
               setShowUserModal(false)
