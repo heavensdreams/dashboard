@@ -78,6 +78,16 @@ export function GroupManagement() {
   }
 
   const handleEditGroup = (group: Group) => {
+    // Check if this group name matches a customer email
+    // If so, treat it as a customer assignment, not a group edit
+    const customerEmails = users.filter((u: any) => u.role === 'customer').map((u: any) => u.email)
+    if (customerEmails.includes(group.name)) {
+      // This is actually a customer email, not a real group
+      // Redirect to customer email editing
+      handleEditCustomerEmail(group.name)
+      return
+    }
+    
     setEditingGroup(group)
     setEditingCustomerEmail(null)
     setNewGroupName(group.name)
@@ -114,13 +124,59 @@ export function GroupManagement() {
 
     try {
       if (editingGroup) {
-        // Editing a regular group
-        const oldGroup = editingGroup
-        const oldName = oldGroup.name
-        const newName = newGroupName
-        
-        // Update group name in groups array and update property assignments
-        await updateData((data) => {
+        // Check if this group name matches a customer email
+        // If so, treat it as a customer assignment instead
+        const customerEmails = users.filter((u: any) => u.role === 'customer').map((u: any) => u.email)
+        if (customerEmails.includes(editingGroup.name)) {
+          // This is actually a customer email, redirect to customer assignment logic
+          const customerEmail = editingGroup.name
+          
+          await updateData((data) => {
+            // Remove the group with customer email name
+            const cleanedGroups = data.groups.filter((g: any) => g.name !== customerEmail)
+            
+            // Update apartments based on selection
+            const updatedApartments = data.apartments.map(apt => {
+              const isSelected = selectedPropertyIds.has(apt.id)
+              const currentlyHasEmail = apt.groups && apt.groups.includes(customerEmail)
+              
+              let updatedGroups = [...(apt.groups || [])]
+              
+              if (isSelected && !currentlyHasEmail) {
+                updatedGroups.push(customerEmail)
+              } else if (!isSelected && currentlyHasEmail) {
+                updatedGroups = updatedGroups.filter((g: string) => g !== customerEmail)
+              }
+              
+              return {
+                ...apt,
+                groups: updatedGroups
+              }
+            })
+            
+            return {
+              ...data,
+              groups: cleanedGroups,
+              apartments: updatedApartments
+            }
+          })
+          
+          if (currentUser) {
+            await logChange({
+              user_id: currentUser.id,
+              action: 'Updated customer property assignments',
+              entity_type: 'user',
+              new_value: customerEmail
+            })
+          }
+        } else {
+          // Editing a regular group
+          const oldGroup = editingGroup
+          const oldName = oldGroup.name
+          const newName = newGroupName
+          
+          // Update group name in groups array and update property assignments
+          await updateData((data) => {
           const updatedApartments = data.apartments.map(apt => {
             const isSelected = selectedPropertyIds.has(apt.id)
             const currentlyHasGroup = apt.groups && apt.groups.includes(oldName)
@@ -154,6 +210,7 @@ export function GroupManagement() {
             apartments: updatedApartments
           }
         })
+        }
       } else if (editingCustomerEmail) {
         // Editing a customer email assignment
         // CRITICAL: Remove any group that has the same name as the customer email FIRST
