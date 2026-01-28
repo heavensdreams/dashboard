@@ -30,14 +30,9 @@ export function GroupManagement() {
     return apartments.filter((apt: any) => apt.groups && apt.groups.includes(groupName))
   }
 
-  // Get customer users who have properties assigned directly to them (by email)
-  const getCustomerUsersWithProperties = () => {
-    const customerUsers = users.filter((u: any) => u.role === 'customer')
-    return customerUsers.filter((customer: any) => {
-      return apartments.some((apt: any) => 
-        apt.groups && apt.groups.includes(customer.email)
-      )
-    })
+  // Get all customer users (show all, even if they have 0 properties assigned)
+  const getAllCustomerUsers = () => {
+    return users.filter((u: any) => u.role === 'customer')
   }
 
 
@@ -239,32 +234,6 @@ export function GroupManagement() {
     }
   }
 
-  const handleDeleteCustomerEmail = async (customerEmail: string) => {
-    if (!confirm(`Remove all property assignments for ${customerEmail}? This will remove the email from all apartments.`)) return
-
-    try {
-      await updateData((data) => ({
-        ...data,
-        // Remove customer email from all apartments' groups arrays
-        apartments: data.apartments.map(apt => ({
-          ...apt,
-          groups: apt.groups.filter((g: string) => g !== customerEmail)
-        }))
-      }))
-
-      if (currentUser) {
-        await logChange({
-          user_id: currentUser.id,
-          action: 'Deleted customer email assignments',
-          entity_type: 'user',
-          old_value: customerEmail
-        })
-      }
-    } catch (error) {
-      console.error('Failed to delete customer email assignments:', error)
-      alert('Failed to delete customer email assignments')
-    }
-  }
 
   const resetForm = () => {
     setEditingGroup(null)
@@ -375,10 +344,10 @@ export function GroupManagement() {
 
       <div className="space-y-2">
         {/* Normal Groups */}
-        {groups.length === 0 && getCustomerUsersWithProperties().length === 0 ? (
+        {groups.length === 0 && getAllCustomerUsers().length === 0 ? (
           <Card>
             <CardContent className="py-8 text-center text-muted-foreground">
-              No groups or customer assignments found
+              No groups or customers found
             </CardContent>
           </Card>
         ) : (
@@ -425,8 +394,8 @@ export function GroupManagement() {
               )
             })}
             
-            {/* Customer Users with Direct Property Assignments */}
-            {getCustomerUsersWithProperties().map((customer: any) => {
+            {/* All Customer Users (show all, even with 0 properties) */}
+            {getAllCustomerUsers().map((customer: any) => {
               const customerApts = apartments.filter((apt: any) => 
                 apt.groups && apt.groups.includes(customer.email)
               )
@@ -457,10 +426,14 @@ export function GroupManagement() {
                             )}
                           </p>
                         )}
+                        {apartmentCount === 0 && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            No apartments assigned
+                          </p>
+                        )}
                       </div>
                       <div className="flex gap-2">
                         <Button variant="outline" onClick={() => handleEditCustomerEmail(customer.email)}>Edit</Button>
-                        <Button variant="destructive" onClick={() => handleDeleteCustomerEmail(customer.email)}>Delete</Button>
                       </div>
                     </div>
                   </CardContent>
