@@ -265,11 +265,11 @@ export function CustomerPropertiesView() {
         {property.photos.length > 0 && (
           <div className="px-3 sm:px-4 lg:px-12 py-6 sm:py-8 lg:py-12 bg-gradient-to-b from-white to-[#FAFAFA]">
             <h3 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#2C3E1F] mb-4 sm:mb-6 lg:mb-10 tracking-wide gold-text-gradient">Gallery</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+            <div className="flex gap-3 sm:gap-4 lg:gap-6 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-[#D4AF37] scrollbar-track-gray-200" style={{ scrollbarWidth: 'thin', scrollbarColor: '#D4AF37 #f3f4f6' }}>
               {property.photos.map((photo, index) => (
                 <div
                   key={index}
-                  className="relative aspect-[4/3] overflow-hidden cursor-pointer group rounded-lg sm:rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.02] border-2 border-transparent hover:border-[#D4AF37]/50 active:scale-95"
+                  className="relative flex-shrink-0 w-64 sm:w-80 lg:w-96 aspect-[4/3] overflow-hidden cursor-pointer group rounded-lg sm:rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.02] border-2 border-transparent hover:border-[#D4AF37]/50 active:scale-95"
                   onClick={() => setSelectedPhotoIndex({ propertyId: property.id, index })}
                 >
                   <img

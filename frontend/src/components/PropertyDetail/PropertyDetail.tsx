@@ -203,16 +203,17 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
             )}
             <div>
               <Label>Photos</Label>
-              <div className="flex gap-2 flex-wrap mt-2">
+              <div className="flex gap-2 overflow-x-auto pb-2 mt-2 scrollbar-thin scrollbar-thumb-[#D4AF37] scrollbar-track-gray-200" style={{ scrollbarWidth: 'thin', scrollbarColor: '#D4AF37 #f3f4f6' }}>
                 {localPhotos.length > 0 ? (
                   localPhotos.map((md5) => (
-                    <img
-                      key={md5}
-                      src={getPhotoUrl(md5)}
-                      alt="Apartment"
-                      className="w-32 h-32 object-cover rounded"
-                      onError={(e) => handlePhotoError(e, md5)}
-                    />
+                    <div key={md5} className="flex-shrink-0">
+                      <img
+                        src={getPhotoUrl(md5)}
+                        alt="Apartment"
+                        className="w-32 h-32 object-cover rounded"
+                        onError={(e) => handlePhotoError(e, md5)}
+                      />
+                    </div>
                   ))
                 ) : (
                   <p className="text-sm text-muted-foreground">No photos available</p>
