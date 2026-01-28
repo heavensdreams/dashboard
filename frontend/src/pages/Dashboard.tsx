@@ -8,9 +8,10 @@ import { filterBookingsForCustomer } from '@/utils/filtering'
 export function Dashboard() {
   const apartments = useDataStore(state => state.apartments)
   const groups = useDataStore(state => state.groups)
+  const users = useDataStore(state => state.users)
   const userGroups = useDataStore(state => state.user_groups || [])
   
-  const [selectedGroup, setSelectedGroup] = useState<string>('all')
+  const [selectedGroupOrEmail, setSelectedGroupOrEmail] = useState<string>('all')
   const [selectedProperty, setSelectedProperty] = useState<string | null>(null)
   const [today] = useState(() => new Date().toISOString())
   const { currentUser } = useUserStore()
@@ -46,11 +47,40 @@ export function Dashboard() {
         return false
       })
     }
-    // Filter by group (admin/normal users only)
-    else if (!isCustomer && selectedGroup !== 'all') {
-      const group = groups.find((g: any) => g.name === selectedGroup)
-      if (group) {
-        filteredApartments = filteredApartments.filter(apt => apt.groups && apt.groups.includes(group.name))
+    // Combined Group/Email filter (admin/normal users only)
+    else if (!isCustomer && selectedGroupOrEmail !== 'all') {
+      // Check if it's a group name or customer email
+      const isGroup = groups.some((g: any) => g.name === selectedGroupOrEmail)
+      
+      if (isGroup) {
+        // Filter by group name
+        filteredApartments = filteredApartments.filter(apt => apt.groups && apt.groups.includes(selectedGroupOrEmail))
+      } else {
+        // Filter by customer email - show properties assigned to this customer
+        const filterEmail = selectedGroupOrEmail
+        const filterUser = users.find((u: any) => u.email === filterEmail && u.role === 'customer')
+        
+        if (filterUser) {
+          // Find the user's group if they have one
+          let filterUserGroupName: string | null = null
+          const filterUserGroup = userGroups.find((ug: any) => ug.user_id === filterUser.id)
+          if (filterUserGroup) {
+            const filterUserGroupObj = groups.find((g: any) => g.id === filterUserGroup.group_id)
+            filterUserGroupName = filterUserGroupObj?.name || null
+          }
+          
+          filteredApartments = filteredApartments.filter(apt => {
+            if (!apt.groups || apt.groups.length === 0) return false
+            // Check if property is assigned directly to the customer's email
+            if (apt.groups.includes(filterEmail)) return true
+            // Check if property is assigned to the customer's group (if they have one)
+            if (filterUserGroupName && apt.groups.includes(filterUserGroupName)) return true
+            return false
+          })
+        } else {
+          // Email not found, show nothing
+          filteredApartments = []
+        }
       }
     }
     
@@ -89,7 +119,7 @@ export function Dashboard() {
         } : null
       }
     })
-  }, [apartments, groups, selectedGroup, today, isCustomer, customerGroupName, currentUser?.email])
+  }, [apartments, groups, users, userGroups, selectedGroupOrEmail, today, isCustomer, customerGroupName, currentUser?.email])
 
   // Calculate stats
   const stats = useMemo(() => {
@@ -132,37 +162,78 @@ export function Dashboard() {
 
   const groupStatus = getGroupBookingStatus()
 
+  // Get all groups (from groups table)
+  const allGroups = useMemo(() => {
+    return groups.map((g: any) => g.name).sort()
+  }, [groups])
+
+  // Get customer emails that have properties assigned
+  const customerEmailsWithProperties = useMemo(() => {
+    if (isCustomer) return []
+    const customerUsers = users.filter((u: any) => u.role === 'customer')
+    return customerUsers
+      .filter((customer: any) => {
+        // Check if any property is assigned to this customer's email or their group
+        return apartments.some((apt: any) => {
+          if (!apt.groups || apt.groups.length === 0) return false
+          // Direct email assignment
+          if (apt.groups.includes(customer.email)) return true
+          // Group assignment
+          const customerUserGroup = userGroups.find((ug: any) => ug.user_id === customer.id)
+          if (customerUserGroup) {
+            const customerGroup = groups.find((g: any) => g.id === customerUserGroup.group_id)
+            if (customerGroup && apt.groups.includes(customerGroup.name)) return true
+          }
+          return false
+        })
+      })
+      .map((u: any) => u.email)
+      .sort()
+  }, [users, apartments, userGroups, groups, isCustomer])
 
   return (
     <div className="space-y-6 sm:space-y-8 lg:space-y-12">
-      {/* Group Filter - Hidden for customers */}
+      {/* Group/Email Filter - Hidden for customers */}
       {!isCustomer && (
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border-2 border-[#D4AF37]/20">
           <div className="px-4 sm:px-6 py-4 sm:py-6">
             <div className="flex items-center gap-4 flex-wrap">
-              <Label className="font-light text-[#2C3E1F] text-base sm:text-lg">Filter by Group:</Label>
+              <Label className="font-light text-[#2C3E1F] text-base sm:text-lg">Filter:</Label>
               <div className="flex gap-2 flex-wrap">
                 <button
-                  onClick={() => setSelectedGroup('all')}
+                  onClick={() => setSelectedGroupOrEmail('all')}
                   className={`px-4 py-2 rounded-lg text-sm font-light transition-all duration-300 ${
-                    selectedGroup === 'all'
+                    selectedGroupOrEmail === 'all'
                       ? 'bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] text-[#2C3E1F] shadow-md'
                       : 'bg-white border-2 border-[#D4AF37]/30 text-[#6B7C4A] hover:border-[#D4AF37] hover:text-[#D4AF37]'
                   }`}
                 >
                   All
                 </button>
-                {groups.map((group: any) => (
+                {allGroups.map((groupName) => (
                   <button
-                    key={group.id}
-                    onClick={() => setSelectedGroup(group.name)}
+                    key={groupName}
+                    onClick={() => setSelectedGroupOrEmail(groupName)}
                     className={`px-4 py-2 rounded-lg text-sm font-light transition-all duration-300 ${
-                      selectedGroup === group.name
+                      selectedGroupOrEmail === groupName
                         ? 'bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] text-[#2C3E1F] shadow-md'
                         : 'bg-white border-2 border-[#D4AF37]/30 text-[#6B7C4A] hover:border-[#D4AF37] hover:text-[#D4AF37]'
                     }`}
                   >
-                    {group.name}
+                    {groupName}
+                  </button>
+                ))}
+                {customerEmailsWithProperties.map((email) => (
+                  <button
+                    key={email}
+                    onClick={() => setSelectedGroupOrEmail(email)}
+                    className={`px-4 py-2 rounded-lg text-sm font-light transition-all duration-300 ${
+                      selectedGroupOrEmail === email
+                        ? 'bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] text-[#2C3E1F] shadow-md'
+                        : 'bg-white border-2 border-[#D4AF37]/30 text-[#6B7C4A] hover:border-[#D4AF37] hover:text-[#D4AF37]'
+                    }`}
+                  >
+                    {email}
                   </button>
                 ))}
               </div>
