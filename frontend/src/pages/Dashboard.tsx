@@ -35,6 +35,7 @@ export function Dashboard() {
     let filteredApartments = [...apartments]
     
     // For customers: filter by their email (direct assignment) OR their group name
+    // IMPORTANT: This must match CustomerPropertiesView filtering logic exactly
     if (isCustomer && currentUser?.email) {
       filteredApartments = filteredApartments.filter(apt => {
         if (!apt.groups || apt.groups.length === 0) return false

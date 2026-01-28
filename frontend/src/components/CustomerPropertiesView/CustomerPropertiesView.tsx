@@ -41,11 +41,16 @@ export function CustomerPropertiesView() {
   }, [currentUser?.id, userGroups, groups])
 
   // Filter apartments by customer email (direct assignment) OR customer group name
+  // IMPORTANT: This must match Dashboard filtering logic exactly
   const properties = useMemo(() => {
+    if (!currentUser?.email) {
+      return []
+    }
+    
     let filtered = apartments.filter(apt => {
       if (!apt.groups || apt.groups.length === 0) return false
       // Check if property is assigned directly to customer's email
-      if (currentUser?.email && apt.groups.includes(currentUser.email)) return true
+      if (apt.groups.includes(currentUser.email)) return true
       // Check if property is assigned to customer's group (if they have one)
       if (customerGroupName && apt.groups.includes(customerGroupName)) return true
       return false
