@@ -191,46 +191,6 @@ export function GroupManagement() {
           })
         }
       }
-      
-      if (editingCustomerEmail && !editingGroup) {
-        // Editing a customer email assignment
-        await updateData((data) => {
-          const updatedApartments = data.apartments.map(apt => {
-            const isSelected = selectedPropertyIds.has(apt.id)
-            const currentlyHasEmail = apt.groups && apt.groups.includes(editingCustomerEmail)
-            
-            let updatedGroups = [...(apt.groups || [])]
-            
-            // If property is selected but doesn't have the email, add it
-            if (isSelected && !currentlyHasEmail) {
-              updatedGroups.push(editingCustomerEmail)
-            }
-            // If property is not selected but has the email, remove it
-            else if (!isSelected && currentlyHasEmail) {
-              updatedGroups = updatedGroups.filter((g: string) => g !== editingCustomerEmail)
-            }
-            
-            return {
-              ...apt,
-              groups: updatedGroups
-            }
-          })
-          
-          return {
-            ...data,
-            apartments: updatedApartments
-          }
-        })
-        
-        if (currentUser) {
-          await logChange({
-            user_id: currentUser.id,
-            action: 'Updated customer property assignments',
-            entity_type: 'user',
-            new_value: editingCustomerEmail
-          })
-        }
-      }
 
       setShowGroupModal(false)
       setEditingGroup(null)
