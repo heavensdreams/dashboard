@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, parseISO } from 'date-fns'
+import { getPhotoUrl, handlePhotoError } from '@/utils/photoHelpers'
 
 interface Property {
   id: string
@@ -75,10 +76,6 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
     } finally {
       setLoading(false)
     }
-  }
-
-  const getPhotoUrl = (md5: string) => {
-    return `/photos/${md5}`
   }
 
   const getDateStatus = (date: Date, property: Property): 'booked' | 'available' => {
@@ -184,10 +181,7 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
                   src={getPhotoUrl(property.photos[0])}
                   alt={property.name}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    target.src = `https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80`
-                  }}
+                    onError={(e) => handlePhotoError(e, property.photos[0])}
                 />
               </div>
             )}
@@ -292,10 +286,7 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
                     src={getPhotoUrl(photo)}
                     alt={`${property.name} - Photo ${index + 1}`}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement
-                      target.src = `https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80&sig=${index}`
-                    }}
+                    onError={(e) => handlePhotoError(e, photo)}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -478,10 +469,7 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
                     src={getPhotoUrl(property.roi_chart)}
                     alt="ROI Chart"
                     className="w-full h-auto rounded-lg shadow-md"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement
-                      target.src = `https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80`
-                    }}
+                    onError={(e) => handlePhotoError(e, property.roi_chart || '')}
                   />
                 </div>
               )}
@@ -736,10 +724,7 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
                 alt={`${property.name} - Photo ${selectedPhotoIndex.index + 1}`}
                 className="max-w-full max-h-full object-contain animate-scale-in"
                 onClick={(e) => e.stopPropagation()}
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement
-                  target.src = `https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80`
-                }}
+                onError={(e) => handlePhotoError(e, property.photos[selectedPhotoIndex.index])}
               />
             )
           })()}

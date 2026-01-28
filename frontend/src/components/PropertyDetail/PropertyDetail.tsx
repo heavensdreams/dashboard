@@ -415,13 +415,27 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
                         <img
                           src={getPhotoUrl(photoId)}
                           alt="Apartment"
-                          className="w-24 h-24 object-cover rounded"
-                          onError={(e) => handlePhotoError(e, photoId)}
+                          className="w-24 h-24 object-cover rounded border-2"
+                          onError={(e) => {
+                            handlePhotoError(e, photoId)
+                            // Mark as missing for deletion
+                            const target = e.target as HTMLImageElement
+                            if (target.getAttribute('data-photo-missing') === 'true') {
+                              target.parentElement?.classList.add('opacity-50', 'border-red-500')
+                            }
+                          }}
+                          onLoad={(e) => {
+                            // Photo loaded successfully - remove any missing markers
+                            const target = e.target as HTMLImageElement
+                            target.removeAttribute('data-photo-missing')
+                            target.parentElement?.classList.remove('opacity-50', 'border-red-500')
+                          }}
                         />
                         <button
                           type="button"
                           onClick={() => handleRemovePhoto(photoId)}
-                          className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+                          className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                          title="Delete photo"
                         >
                           ×
                         </button>
@@ -431,6 +445,9 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
                       <PhotoUpload onUpload={handlePhotoUpload} multiple />
                     </div>
                   </div>
+                  {localPhotos.length === 0 && (
+                    <p className="text-sm text-muted-foreground mt-2">No photos. Upload photos to replace placeholders.</p>
+                  )}
                 </div>
               </>
             )}
