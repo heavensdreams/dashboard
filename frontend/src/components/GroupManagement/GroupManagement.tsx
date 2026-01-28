@@ -239,6 +239,33 @@ export function GroupManagement() {
     }
   }
 
+  const handleDeleteCustomerEmail = async (customerEmail: string) => {
+    if (!confirm(`Remove all property assignments for ${customerEmail}? This will remove the email from all apartments.`)) return
+
+    try {
+      await updateData((data) => ({
+        ...data,
+        // Remove customer email from all apartments' groups arrays
+        apartments: data.apartments.map(apt => ({
+          ...apt,
+          groups: apt.groups.filter((g: string) => g !== customerEmail)
+        }))
+      }))
+
+      if (currentUser) {
+        await logChange({
+          user_id: currentUser.id,
+          action: 'Deleted customer email assignments',
+          entity_type: 'user',
+          old_value: customerEmail
+        })
+      }
+    } catch (error) {
+      console.error('Failed to delete customer email assignments:', error)
+      alert('Failed to delete customer email assignments')
+    }
+  }
+
   const resetForm = () => {
     setEditingGroup(null)
     setEditingCustomerEmail(null)
@@ -433,6 +460,7 @@ export function GroupManagement() {
                       </div>
                       <div className="flex gap-2">
                         <Button variant="outline" onClick={() => handleEditCustomerEmail(customer.email)}>Edit</Button>
+                        <Button variant="destructive" onClick={() => handleDeleteCustomerEmail(customer.email)}>Delete</Button>
                       </div>
                     </div>
                   </CardContent>
