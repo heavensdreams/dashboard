@@ -42,6 +42,13 @@ export function GroupManagement() {
       return
     }
 
+    // Prevent creating groups with customer email names
+    const customerEmails = users.filter((u: any) => u.role === 'customer').map((u: any) => u.email)
+    if (customerEmails.includes(newGroupName)) {
+      alert(`Cannot create a group with a customer email address. Use the customer's Edit button to assign properties instead.`)
+      return
+    }
+
     try {
       const newGroup: Group = {
         id: crypto.randomUUID(),
@@ -150,6 +157,10 @@ export function GroupManagement() {
       } else if (editingCustomerEmail) {
         // Editing a customer email assignment
         await updateData((data) => {
+          // Remove any group that has the same name as the customer email
+          // Customer emails should only exist in apartments' groups arrays, not as groups
+          const cleanedGroups = data.groups.filter((g: any) => g.name !== editingCustomerEmail)
+          
           const updatedApartments = data.apartments.map(apt => {
             const isSelected = selectedPropertyIds.has(apt.id)
             const currentlyHasEmail = apt.groups && apt.groups.includes(editingCustomerEmail)
@@ -173,6 +184,7 @@ export function GroupManagement() {
           
           return {
             ...data,
+            groups: cleanedGroups,
             apartments: updatedApartments
           }
         })
@@ -352,7 +364,14 @@ export function GroupManagement() {
           </Card>
         ) : (
           <>
-            {groups.map((group) => {
+            {groups
+              .filter((group) => {
+                // Filter out groups that have names matching customer emails
+                // These should only be shown as customers, not as groups
+                const customerEmails = users.filter((u: any) => u.role === 'customer').map((u: any) => u.email)
+                return !customerEmails.includes(group.name)
+              })
+              .map((group) => {
               const groupApts = getGroupApartments(group.name)
               const apartmentCount = groupApts.length
               
