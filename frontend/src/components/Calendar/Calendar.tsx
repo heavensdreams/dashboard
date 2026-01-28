@@ -131,9 +131,10 @@ export function Calendar() {
 
   // Get availability status for a date
   const getDateAvailabilityStatus = (date: Date): 'red' | 'yellow' | 'green' => {
+    // Use filteredApartments for customers, all apartments for admin/normal
     const apartmentsToCheck = propertyFilter === 'all' 
-      ? apartments 
-      : apartments.filter((a: any) => a.id === propertyFilter)
+      ? filteredApartments 
+      : filteredApartments.filter((a: any) => a.id === propertyFilter)
     
     if (apartmentsToCheck.length === 0) return 'green'
     
@@ -209,6 +210,29 @@ export function Calendar() {
           </div>
           <div className="text-sm text-muted-foreground">
             Showing {filteredBookings.length} of {enrichedBookings.length} bookings
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Calendar Legend */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Calendar Legend</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-4 flex-wrap">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded bg-red-100 border-2 border-red-300"></div>
+              <span className="text-sm">All rooms booked</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded bg-yellow-100 border-2 border-yellow-300"></div>
+              <span className="text-sm">Some rooms available</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded bg-green-100 border-2 border-green-300"></div>
+              <span className="text-sm">All rooms available</span>
+            </div>
           </div>
         </CardContent>
       </Card>

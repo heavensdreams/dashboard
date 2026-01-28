@@ -9,6 +9,7 @@ import { useDataStore } from '@/stores/dataStore'
 import { useUserStore } from '@/stores/userStore'
 import { logChange } from '@/utils/logging'
 import { filterBookingsForCustomer } from '@/utils/filtering'
+import { getPhotoUrl, handlePhotoError } from '@/utils/photoHelpers'
 
 interface PropertyDetailProps {
   propertyId: string | null
@@ -142,16 +143,16 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
     }
   }
 
-  const handlePhotoUpload = (md5: string) => {
-    setLocalPhotos([...localPhotos, md5])
+  const handlePhotoUpload = (filename: string) => {
+    setLocalPhotos([...localPhotos, filename])
   }
 
-  const handleRemovePhoto = (md5: string) => {
-    setLocalPhotos(localPhotos.filter(p => p !== md5))
+  const handleRemovePhoto = (photoId: string) => {
+    setLocalPhotos(localPhotos.filter(p => p !== photoId))
   }
 
-  const handleRoiChartUpload = (md5: string) => {
-    setRoiChart(md5)
+  const handleRoiChartUpload = (filename: string) => {
+    setRoiChart(filename)
   }
 
   const handleRemoveRoiChart = () => {
@@ -193,9 +194,10 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
               <div>
                 <Label>ROI Chart</Label>
                 <img
-                  src={`/photos/${roiChart}.jpg`}
+                  src={getPhotoUrl(roiChart)}
                   alt="ROI Chart"
                   className="w-full max-w-md mt-2 rounded"
+                  onError={(e) => handlePhotoError(e, roiChart || '')}
                 />
               </div>
             )}
@@ -206,9 +208,10 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
                   localPhotos.map((md5) => (
                     <img
                       key={md5}
-                      src={`/photos/${md5}.jpg`}
+                      src={getPhotoUrl(md5)}
                       alt="Apartment"
                       className="w-32 h-32 object-cover rounded"
+                      onError={(e) => handlePhotoError(e, md5)}
                     />
                   ))
                 ) : (
@@ -406,24 +409,27 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
 
                 <div>
                   <Label>Photos</Label>
-                  <div className="flex gap-2 flex-wrap mt-2">
-                    {localPhotos.map((md5) => (
-                      <div key={md5} className="relative">
+                  <div className="flex gap-2 overflow-x-auto pb-2 mt-2" style={{ scrollbarWidth: 'thin' }}>
+                    {localPhotos.map((photoId) => (
+                      <div key={photoId} className="relative flex-shrink-0">
                         <img
-                          src={`/photos/${md5}.jpg`}
+                          src={getPhotoUrl(photoId)}
                           alt="Apartment"
                           className="w-24 h-24 object-cover rounded"
+                          onError={(e) => handlePhotoError(e, photoId)}
                         />
                         <button
                           type="button"
-                          onClick={() => handleRemovePhoto(md5)}
+                          onClick={() => handleRemovePhoto(photoId)}
                           className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
                         >
                           ×
                         </button>
                       </div>
                     ))}
-                    <PhotoUpload onUpload={handlePhotoUpload} multiple />
+                    <div className="flex-shrink-0">
+                      <PhotoUpload onUpload={handlePhotoUpload} multiple />
+                    </div>
                   </div>
                 </div>
               </>

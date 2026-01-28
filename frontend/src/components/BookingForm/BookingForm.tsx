@@ -8,6 +8,7 @@ import { Modal } from '@/components/ui/modal'
 import { useDataStore } from '@/stores/dataStore'
 import { useUserStore } from '@/stores/userStore'
 import { logChange } from '@/utils/logging'
+import { getPhotoUrl, handlePhotoError } from '@/utils/photoHelpers'
 
 interface BookingFormProps {
   propertyId?: string
@@ -186,7 +187,8 @@ export function BookingForm({ propertyId: initialPropertyId, startDate, endDate,
             {photos.map((md5) => (
               <img
                 key={md5}
-                src={`/photos/${md5}.jpg`}
+                src={getPhotoUrl(md5)}
+                onError={(e) => handlePhotoError(e, md5)}
                 alt="Booking"
                 className="w-24 h-24 object-cover rounded"
               />

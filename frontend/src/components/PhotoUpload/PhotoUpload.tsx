@@ -30,7 +30,8 @@ export function PhotoUpload({ onUpload, multiple = false }: PhotoUploadProps) {
         }
 
         const data = await response.json()
-        onUpload(data.md5)
+        // Use filename if available (includes extension), otherwise fall back to md5
+        onUpload(data.filename || data.md5)
         
         if (!multiple) break
       }

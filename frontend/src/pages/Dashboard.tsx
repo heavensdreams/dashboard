@@ -88,7 +88,7 @@ export function Dashboard() {
         } : null
       }
     })
-  }, [apartments, groups, selectedGroup, today, isCustomer, customerGroupName])
+  }, [apartments, groups, selectedGroup, today, isCustomer, customerGroupName, currentUser?.email])
 
   // Calculate stats
   const stats = useMemo(() => {
