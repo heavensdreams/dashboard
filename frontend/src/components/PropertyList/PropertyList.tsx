@@ -31,8 +31,7 @@ export function PropertyList({ onSelectProperty }: PropertyListProps) {
   // Filters
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<'all' | 'available' | 'occupied'>('all')
-  const [groupFilter, setGroupFilter] = useState<string>('all')
-  const [emailFilter, setEmailFilter] = useState<string>('all')
+  const [groupOrEmailFilter, setGroupOrEmailFilter] = useState<string>('all')
   const [sortBy, setSortBy] = useState<'name' | 'address' | 'status'>('name')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
 
@@ -70,11 +69,40 @@ export function PropertyList({ onSelectProperty }: PropertyListProps) {
         return false
       })
     }
-    // Group filter (admin/normal users only)
-    else if (!isCustomer && groupFilter !== 'all') {
-      const group = groups.find((g: any) => g.name === groupFilter)
-      if (group) {
-        filtered = filtered.filter(apt => apt.groups && apt.groups.includes(group.name))
+    // Combined Group/Email filter (admin/normal users only)
+    else if (!isCustomer && groupOrEmailFilter !== 'all') {
+      // Check if it's a group name or customer email
+      const isGroup = groups.some((g: any) => g.name === groupOrEmailFilter)
+      
+      if (isGroup) {
+        // Filter by group name
+        filtered = filtered.filter(apt => apt.groups && apt.groups.includes(groupOrEmailFilter))
+      } else {
+        // Filter by customer email - show properties assigned to this customer
+        const filterEmail = groupOrEmailFilter
+        const filterUser = users.find((u: any) => u.email === filterEmail && u.role === 'customer')
+        
+        if (filterUser) {
+          // Find the user's group if they have one
+          let filterUserGroupName: string | null = null
+          const filterUserGroup = userGroups.find((ug: any) => ug.user_id === filterUser.id)
+          if (filterUserGroup) {
+            const filterUserGroupObj = groups.find((g: any) => g.id === filterUserGroup.group_id)
+            filterUserGroupName = filterUserGroupObj?.name || null
+          }
+          
+          filtered = filtered.filter(apt => {
+            if (!apt.groups || apt.groups.length === 0) return false
+            // Check if property is assigned directly to the customer's email
+            if (apt.groups.includes(filterEmail)) return true
+            // Check if property is assigned to the customer's group (if they have one)
+            if (filterUserGroupName && apt.groups.includes(filterUserGroupName)) return true
+            return false
+          })
+        } else {
+          // Email not found, show nothing
+          filtered = []
+        }
       }
     }
 
@@ -116,26 +144,14 @@ export function PropertyList({ onSelectProperty }: PropertyListProps) {
     })
 
     return filtered
-  }, [apartmentsWithStatus, searchTerm, statusFilter, groupFilter, emailFilter, sortBy, sortOrder, groups, users, userGroups, isCustomer, customerGroupName])
+  }, [apartmentsWithStatus, searchTerm, statusFilter, groupOrEmailFilter, sortBy, sortOrder, groups, users, userGroups, isCustomer, customerGroupName])
 
-  // Get unique group names from all apartments
-  const allGroupNames = useMemo(() => {
-    const groupNames = new Set<string>()
-    apartments.forEach(apt => {
-      if (apt.groups) {
-        apt.groups.forEach(g => {
-          // Only add group names (not emails)
-          const isEmail = g.includes('@')
-          if (!isEmail) {
-            groupNames.add(g)
-          }
-        })
-      }
-    })
-    return Array.from(groupNames).sort()
-  }, [apartments])
+  // Get all groups (from groups table, not from apartments)
+  const allGroups = useMemo(() => {
+    return groups.map((g: any) => g.name).sort()
+  }, [groups])
 
-  // Get customer emails that have properties assigned (for email filter)
+  // Get customer emails that have properties assigned
   const customerEmailsWithProperties = useMemo(() => {
     if (isCustomer) return []
     const customerUsers = users.filter((u: any) => u.role === 'customer')
@@ -187,44 +203,38 @@ export function PropertyList({ onSelectProperty }: PropertyListProps) {
               </select>
             </div>
             {!isCustomer && (
-              <>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <Label className="text-sm font-medium whitespace-nowrap">Group:</Label>
-                  <div className="flex gap-2 flex-wrap">
-                    <Button
-                      variant={groupFilter === 'all' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setGroupFilter('all')}
-                    >
-                      All
-                    </Button>
-                    {allGroupNames.map((groupName) => (
-                      <Button
-                        key={groupName}
-                        variant={groupFilter === groupName ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setGroupFilter(groupName)}
-                      >
-                        {groupName}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <select
-                    value={emailFilter}
-                    onChange={(e) => setEmailFilter(e.target.value)}
-                    className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm"
+              <div className="flex items-center gap-2 flex-wrap">
+                <Label className="text-sm font-medium whitespace-nowrap">Filter:</Label>
+                <div className="flex gap-2 flex-wrap">
+                  <Button
+                    variant={groupOrEmailFilter === 'all' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setGroupOrEmailFilter('all')}
                   >
-                    <option value="all">All Customers</option>
-                    {customerEmailsWithProperties.map((email) => (
-                      <option key={email} value={email}>
-                        {email}
-                      </option>
-                    ))}
-                  </select>
+                    All
+                  </Button>
+                  {allGroups.map((groupName) => (
+                    <Button
+                      key={groupName}
+                      variant={groupOrEmailFilter === groupName ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setGroupOrEmailFilter(groupName)}
+                    >
+                      {groupName}
+                    </Button>
+                  ))}
+                  {customerEmailsWithProperties.map((email) => (
+                    <Button
+                      key={email}
+                      variant={groupOrEmailFilter === email ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setGroupOrEmailFilter(email)}
+                    >
+                      {email}
+                    </Button>
+                  ))}
                 </div>
-              </>
+              </div>
             )}
             <div>
               <select
