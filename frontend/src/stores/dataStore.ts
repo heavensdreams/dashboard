@@ -4,6 +4,8 @@ import { loadAllData, saveAllData, type AppData } from '../lib/api'
 interface DataStore extends AppData {
   loading: boolean
   error: string | null
+  groupOrEmailFilter: string
+  setGroupOrEmailFilter: (filter: string) => void
   loadData: () => Promise<void>
   saveData: () => Promise<void>
   updateData: (updater: (data: AppData) => AppData) => Promise<void>
@@ -24,6 +26,8 @@ export const useDataStore = create<DataStore>((set, get) => ({
   ...initialData,
   loading: false,
   error: null,
+  groupOrEmailFilter: 'all',
+  setGroupOrEmailFilter: (filter: string) => set({ groupOrEmailFilter: filter }),
   
   loadData: async () => {
     set({ loading: true, error: null })

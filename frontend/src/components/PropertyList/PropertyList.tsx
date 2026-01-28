@@ -31,7 +31,8 @@ export function PropertyList({ onSelectProperty }: PropertyListProps) {
   // Filters
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<'all' | 'available' | 'occupied'>('all')
-  const [groupOrEmailFilter, setGroupOrEmailFilter] = useState<string>('all')
+  const groupOrEmailFilter = useDataStore(state => state.groupOrEmailFilter)
+  const setGroupOrEmailFilter = useDataStore(state => state.setGroupOrEmailFilter)
   const [sortBy, setSortBy] = useState<'name' | 'address' | 'status'>('name')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
 

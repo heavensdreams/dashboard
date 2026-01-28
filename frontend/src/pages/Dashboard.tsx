@@ -10,8 +10,8 @@ export function Dashboard() {
   const groups = useDataStore(state => state.groups)
   const users = useDataStore(state => state.users)
   const userGroups = useDataStore(state => state.user_groups || [])
-  
-  const [selectedGroupOrEmail, setSelectedGroupOrEmail] = useState<string>('all')
+  const selectedGroupOrEmail = useDataStore(state => state.groupOrEmailFilter)
+  const setSelectedGroupOrEmail = useDataStore(state => state.setGroupOrEmailFilter)
   const [selectedProperty, setSelectedProperty] = useState<string | null>(null)
   const [today] = useState(() => new Date().toISOString())
   const { currentUser } = useUserStore()
