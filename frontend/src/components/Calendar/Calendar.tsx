@@ -40,10 +40,16 @@ export function Calendar() {
     return group?.name || null
   }, [isCustomer, currentUser?.id, userGroups, groups])
 
+  const groupOrEmailFilter = useDataStore(state => state.groupOrEmailFilter)
+
   // Filter apartments by customer email (direct assignment) OR customer group name
+  // OR by shared filter for admin/normal users
   const filteredApartments = useMemo(() => {
+    let filtered = [...apartments]
+    
+    // For customers: filter by their email (direct assignment) OR their group name
     if (isCustomer && currentUser?.email) {
-      return apartments.filter(apt => {
+      filtered = filtered.filter(apt => {
         if (!apt.groups || apt.groups.length === 0) return false
         // Check if property is assigned directly to customer's email
         if (apt.groups.includes(currentUser.email)) return true
@@ -52,8 +58,45 @@ export function Calendar() {
         return false
       })
     }
-    return apartments
-  }, [apartments, isCustomer, currentUser?.email, customerGroupName])
+    // Combined Group/Email filter (admin/normal users only)
+    else if (!isCustomer && groupOrEmailFilter !== 'all') {
+      // Check if it's a group name or customer email
+      const isGroup = groups.some((g: any) => g.name === groupOrEmailFilter)
+      
+      if (isGroup) {
+        // Filter by group name
+        filtered = filtered.filter(apt => apt.groups && apt.groups.includes(groupOrEmailFilter))
+      } else {
+        // Filter by customer email - show properties assigned to this customer
+        const filterEmail = groupOrEmailFilter
+        const filterUser = users.find((u: any) => u.email === filterEmail && u.role === 'customer')
+        
+        if (filterUser) {
+          // Find the user's group if they have one
+          let filterUserGroupName: string | null = null
+          const filterUserGroup = userGroups.find((ug: any) => ug.user_id === filterUser.id)
+          if (filterUserGroup) {
+            const filterUserGroupObj = groups.find((g: any) => g.id === filterUserGroup.group_id)
+            filterUserGroupName = filterUserGroupObj?.name || null
+          }
+          
+          filtered = filtered.filter(apt => {
+            if (!apt.groups || apt.groups.length === 0) return false
+            // Check if property is assigned directly to the customer's email
+            if (apt.groups.includes(filterEmail)) return true
+            // Check if property is assigned to the customer's group (if they have one)
+            if (filterUserGroupName && apt.groups.includes(filterUserGroupName)) return true
+            return false
+          })
+        } else {
+          // Email not found, show nothing
+          filtered = []
+        }
+      }
+    }
+    
+    return filtered
+  }, [apartments, isCustomer, currentUser?.email, customerGroupName, groupOrEmailFilter, groups, users, userGroups])
   
   // Extract all bookings from filtered apartments
   const allBookings = useMemo(() => getAllBookings(filteredApartments), [filteredApartments])
