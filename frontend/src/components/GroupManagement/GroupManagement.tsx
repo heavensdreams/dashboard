@@ -42,35 +42,76 @@ export function GroupManagement() {
       return
     }
 
-    // Prevent creating groups with customer email names
-    const customerEmails = users.filter((u: any) => u.role === 'customer').map((u: any) => u.email)
-    if (customerEmails.includes(newGroupName)) {
-      alert(`Cannot create a group with a customer email address. Use the customer's Edit button to assign properties instead.`)
-      return
-    }
-
     try {
-      const newGroup: Group = {
-        id: crypto.randomUUID(),
-        name: newGroupName
-      }
-
-      await updateData((data) => ({
-        ...data,
-        groups: [...data.groups, newGroup]
-      }))
-
-      if (currentUser) {
-        await logChange({
-          user_id: currentUser.id,
-          action: 'Created group',
-          entity_type: 'group',
-          new_value: newGroupName
+      // Check if this is a customer email - if so, assign properties to customer instead
+      const customerEmails = users.filter((u: any) => u.role === 'customer').map((u: any) => u.email)
+      if (customerEmails.includes(newGroupName)) {
+        // This is a customer email - assign selected properties to this customer
+        const customerEmail = newGroupName
+        
+        await updateData((data) => {
+          // Remove any existing group with this customer email name
+          const cleanedGroups = data.groups.filter((g: any) => g.name !== customerEmail)
+          
+          // Assign selected properties to this customer
+          const updatedApartments = data.apartments.map(apt => {
+            const isSelected = selectedPropertyIds.has(apt.id)
+            const currentlyHasEmail = apt.groups && apt.groups.includes(customerEmail)
+            
+            let updatedGroups = [...(apt.groups || [])]
+            
+            if (isSelected && !currentlyHasEmail) {
+              updatedGroups.push(customerEmail)
+            } else if (!isSelected && currentlyHasEmail) {
+              updatedGroups = updatedGroups.filter((g: string) => g !== customerEmail)
+            }
+            
+            return {
+              ...apt,
+              groups: updatedGroups
+            }
+          })
+          
+          return {
+            ...data,
+            groups: cleanedGroups,
+            apartments: updatedApartments
+          }
         })
+        
+        if (currentUser) {
+          await logChange({
+            user_id: currentUser.id,
+            action: 'Assigned properties to customer',
+            entity_type: 'user',
+            new_value: customerEmail
+          })
+        }
+      } else {
+        // This is a regular group - create it normally
+        const newGroup: Group = {
+          id: crypto.randomUUID(),
+          name: newGroupName
+        }
+
+        await updateData((data) => ({
+          ...data,
+          groups: [...data.groups, newGroup]
+        }))
+
+        if (currentUser) {
+          await logChange({
+            user_id: currentUser.id,
+            action: 'Created group',
+            entity_type: 'group',
+            new_value: newGroupName
+          })
+        }
       }
 
       setShowGroupModal(false)
       setNewGroupName('')
+      setSelectedPropertyIds(new Set())
     } catch (error) {
       console.error('Failed to create group:', error)
       alert('Failed to create group')
@@ -83,7 +124,7 @@ export function GroupManagement() {
     const customerEmails = users.filter((u: any) => u.role === 'customer').map((u: any) => u.email)
     if (customerEmails.includes(group.name)) {
       // This is actually a customer email, not a real group
-      // Redirect to customer email editing
+      // Redirect to customer email editing (silently, no warning)
       handleEditCustomerEmail(group.name)
       return
     }
