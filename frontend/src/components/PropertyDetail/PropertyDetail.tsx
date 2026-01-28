@@ -408,14 +408,56 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
                 )}
 
                 <div>
-                  <Label>Photos</Label>
-                  <div className="flex gap-2 overflow-x-auto pb-2 mt-2" style={{ scrollbarWidth: 'thin' }}>
+                  <div className="flex items-center justify-between mb-3">
+                    <Label className="text-base font-medium">Photos</Label>
+                    <label className="relative inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] text-[#2C3E1F] rounded-lg font-medium cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                      </svg>
+                      <span>Choose Files</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        onChange={async (e) => {
+                          const files = e.target.files
+                          if (!files || files.length === 0) return
+                          
+                          try {
+                            for (const file of Array.from(files)) {
+                              const formData = new FormData()
+                              formData.append('photo', file)
+
+                              const response = await fetch('/api/upload', {
+                                method: 'POST',
+                                body: formData,
+                              })
+
+                              if (!response.ok) {
+                                throw new Error('Upload failed')
+                              }
+
+                              const data = await response.json()
+                              handlePhotoUpload(data.filename || data.md5)
+                            }
+                          } catch (error) {
+                            console.error('Upload error:', error)
+                            alert('Failed to upload photo')
+                          }
+                          // Reset input so same file can be selected again
+                          e.target.value = ''
+                        }}
+                      />
+                    </label>
+                  </div>
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                     {localPhotos.map((photoId) => (
-                      <div key={photoId} className="relative flex-shrink-0">
+                      <div key={photoId} className="relative aspect-square">
                         <img
                           src={getPhotoUrl(photoId)}
                           alt="Apartment"
-                          className="w-24 h-24 object-cover rounded border-2"
+                          className="w-full h-full object-cover rounded-lg border-2 border-gray-200"
                           onError={(e) => {
                             handlePhotoError(e, photoId)
                             // Mark as missing for deletion
@@ -434,16 +476,13 @@ export function PropertyDetail({ propertyId, onClose }: PropertyDetailProps) {
                         <button
                           type="button"
                           onClick={() => handleRemovePhoto(photoId)}
-                          className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                          className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm hover:bg-red-600 shadow-md transition-all"
                           title="Delete photo"
                         >
                           ×
                         </button>
                       </div>
                     ))}
-                    <div className="flex-shrink-0">
-                      <PhotoUpload onUpload={handlePhotoUpload} multiple />
-                    </div>
                   </div>
                   {localPhotos.length === 0 && (
                     <p className="text-sm text-muted-foreground mt-2">No photos. Upload photos to replace placeholders.</p>
