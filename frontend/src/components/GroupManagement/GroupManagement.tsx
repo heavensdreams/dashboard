@@ -20,6 +20,7 @@ export function GroupManagement() {
   const updateData = useDataStore(state => state.updateData)
   const [showGroupModal, setShowGroupModal] = useState(false)
   const [editingGroup, setEditingGroup] = useState<Group | null>(null)
+  const [editingCustomerEmail, setEditingCustomerEmail] = useState<string | null>(null)
   const [newGroupName, setNewGroupName] = useState('')
   const [selectedPropertyIds, setSelectedPropertyIds] = useState<Set<string>>(new Set())
 
@@ -76,6 +77,7 @@ export function GroupManagement() {
 
   const handleEditGroup = (group: Group) => {
     setEditingGroup(group)
+    setEditingCustomerEmail(null)
     setNewGroupName(group.name)
     // Load currently assigned properties
     const assignedProperties = apartments.filter((apt: any) => 
@@ -84,70 +86,160 @@ export function GroupManagement() {
     setSelectedPropertyIds(new Set(assignedProperties.map((apt: any) => apt.id)))
     setShowGroupModal(true)
   }
+  
+  const handleEditCustomerEmail = (customerEmail: string) => {
+    setEditingGroup(null)
+    setEditingCustomerEmail(customerEmail)
+    setNewGroupName(customerEmail) // Use email as display name
+    // Load currently assigned properties (direct email assignment)
+    const assignedProperties = apartments.filter((apt: any) => 
+      apt.groups && apt.groups.includes(customerEmail)
+    )
+    setSelectedPropertyIds(new Set(assignedProperties.map((apt: any) => apt.id)))
+    setShowGroupModal(true)
+  }
 
   const handleUpdateGroup = async () => {
-    if (!editingGroup || !newGroupName) {
+    if (!editingGroup && !editingCustomerEmail) {
+      alert('Please select a group or customer to edit')
+      return
+    }
+    
+    if (editingGroup && !newGroupName) {
       alert('Please enter a group name')
       return
     }
 
     try {
-      const oldGroup = editingGroup
-      const oldName = oldGroup.name
-      
-      // Update group name in groups array and update property assignments
-      await updateData((data) => {
-        const updatedApartments = data.apartments.map(apt => {
-          const isSelected = selectedPropertyIds.has(apt.id)
-          const currentlyHasGroup = apt.groups && apt.groups.includes(oldName)
-          
-          let updatedGroups = [...(apt.groups || [])]
-          
-          // If property is selected but doesn't have the group, add it
-          if (isSelected && !currentlyHasGroup) {
-            updatedGroups.push(newGroupName)
-          }
-          // If property is not selected but has the group, remove it
-          else if (!isSelected && currentlyHasGroup) {
-            updatedGroups = updatedGroups.filter((g: string) => g !== oldName)
-          }
-          // If property is selected and has the old name, update to new name
-          else if (isSelected && currentlyHasGroup) {
-            updatedGroups = updatedGroups.map((g: string) => g === oldName ? newGroupName : g)
-          }
+      if (editingGroup) {
+        // Editing a regular group
+        const oldGroup = editingGroup
+        const oldName = oldGroup.name
+        const newName = newGroupName
+        
+        // Update group name in groups array and update property assignments
+        await updateData((data) => {
+          const updatedApartments = data.apartments.map(apt => {
+            const isSelected = selectedPropertyIds.has(apt.id)
+            const currentlyHasGroup = apt.groups && apt.groups.includes(oldName)
+            
+            let updatedGroups = [...(apt.groups || [])]
+            
+            // If property is selected but doesn't have the group, add it
+            if (isSelected && !currentlyHasGroup) {
+              updatedGroups.push(newName)
+            }
+            // If property is not selected but has the group, remove it
+            else if (!isSelected && currentlyHasGroup) {
+              updatedGroups = updatedGroups.filter((g: string) => g !== oldName)
+            }
+            // If property is selected and has the old name, update to new name
+            else if (isSelected && currentlyHasGroup) {
+              updatedGroups = updatedGroups.map((g: string) => g === oldName ? newName : g)
+            }
+            
+            return {
+              ...apt,
+              groups: updatedGroups
+            }
+          })
           
           return {
-            ...apt,
-            groups: updatedGroups
+            ...data,
+            groups: data.groups.map(g => 
+              g.id === oldGroup.id ? { ...g, name: newName } : g
+            ),
+            apartments: updatedApartments
+          }
+        })
+      } else if (editingCustomerEmail) {
+        // Editing a customer email assignment
+        await updateData((data) => {
+          const updatedApartments = data.apartments.map(apt => {
+            const isSelected = selectedPropertyIds.has(apt.id)
+            const currentlyHasEmail = apt.groups && apt.groups.includes(editingCustomerEmail)
+            
+            let updatedGroups = [...(apt.groups || [])]
+            
+            // If property is selected but doesn't have the email, add it
+            if (isSelected && !currentlyHasEmail) {
+              updatedGroups.push(editingCustomerEmail)
+            }
+            // If property is not selected but has the email, remove it
+            else if (!isSelected && currentlyHasEmail) {
+              updatedGroups = updatedGroups.filter((g: string) => g !== editingCustomerEmail)
+            }
+            
+            return {
+              ...apt,
+              groups: updatedGroups
+            }
+          })
+          
+          return {
+            ...data,
+            apartments: updatedApartments
           }
         })
         
-        return {
-          ...data,
-          groups: data.groups.map(g => 
-            g.id === editingGroup.id ? { ...g, name: newGroupName } : g
-          ),
-          apartments: updatedApartments
+        if (currentUser) {
+          await logChange({
+            user_id: currentUser.id,
+            action: 'Updated customer property assignments',
+            entity_type: 'user',
+            new_value: editingCustomerEmail
+          })
         }
-      })
-
-      if (currentUser) {
-        await logChange({
-          user_id: currentUser.id,
-          action: 'Updated group',
-          entity_type: 'group',
-          entity_id: editingGroup.id,
-          old_value: oldName,
-          new_value: newGroupName
+      }
+      
+      if (editingCustomerEmail && !editingGroup) {
+        // Editing a customer email assignment
+        await updateData((data) => {
+          const updatedApartments = data.apartments.map(apt => {
+            const isSelected = selectedPropertyIds.has(apt.id)
+            const currentlyHasEmail = apt.groups && apt.groups.includes(editingCustomerEmail)
+            
+            let updatedGroups = [...(apt.groups || [])]
+            
+            // If property is selected but doesn't have the email, add it
+            if (isSelected && !currentlyHasEmail) {
+              updatedGroups.push(editingCustomerEmail)
+            }
+            // If property is not selected but has the email, remove it
+            else if (!isSelected && currentlyHasEmail) {
+              updatedGroups = updatedGroups.filter((g: string) => g !== editingCustomerEmail)
+            }
+            
+            return {
+              ...apt,
+              groups: updatedGroups
+            }
+          })
+          
+          return {
+            ...data,
+            apartments: updatedApartments
+          }
         })
+        
+        if (currentUser) {
+          await logChange({
+            user_id: currentUser.id,
+            action: 'Updated customer property assignments',
+            entity_type: 'user',
+            new_value: editingCustomerEmail
+          })
+        }
       }
 
       setShowGroupModal(false)
       setEditingGroup(null)
+      setEditingCustomerEmail(null)
       setNewGroupName('')
+      setSelectedPropertyIds(new Set())
     } catch (error) {
-      console.error('Failed to update group:', error)
-      alert('Failed to update group')
+      console.error('Failed to update:', error)
+      alert('Failed to update')
     }
   }
 
@@ -189,6 +281,7 @@ export function GroupManagement() {
 
   const resetForm = () => {
     setEditingGroup(null)
+    setEditingCustomerEmail(null)
     setNewGroupName('')
     setSelectedPropertyIds(new Set())
   }
@@ -218,22 +311,34 @@ export function GroupManagement() {
           setShowGroupModal(false)
           resetForm()
         }}
-        title={editingGroup ? 'Edit Group' : 'New Group'}
+        title={editingCustomerEmail ? `Edit Customer: ${editingCustomerEmail}` : (editingGroup ? 'Edit Group' : 'New Group')}
         size="lg"
       >
         <div className="space-y-4">
-          <div>
-            <Label htmlFor="name">Name *</Label>
-            <Input
-              id="name"
-              value={newGroupName}
-              onChange={(e) => setNewGroupName(e.target.value)}
-              placeholder="Group name"
-              required
-            />
-          </div>
-          
           {editingGroup && (
+            <div>
+              <Label htmlFor="name">Name *</Label>
+              <Input
+                id="name"
+                value={newGroupName}
+                onChange={(e) => setNewGroupName(e.target.value)}
+                placeholder="Group name"
+                required
+              />
+            </div>
+          )}
+          
+          {editingCustomerEmail && (
+            <div>
+              <Label>Customer Email</Label>
+              <p className="text-sm text-muted-foreground py-2">{editingCustomerEmail}</p>
+              <p className="text-xs text-muted-foreground">
+                Select properties to assign directly to this customer's email
+              </p>
+            </div>
+          )}
+          
+          {(editingGroup || editingCustomerEmail) && (
             <div>
               <Label>Assigned Properties</Label>
               <p className="text-xs text-muted-foreground mb-2">
@@ -274,7 +379,9 @@ export function GroupManagement() {
               setShowGroupModal(false)
               resetForm()
             }}>Cancel</Button>
-            <Button onClick={handleSaveGroup}>{editingGroup ? 'Update' : 'Create'}</Button>
+            <Button onClick={handleSaveGroup}>
+              {editingGroup || editingCustomerEmail ? 'Update' : 'Create'}
+            </Button>
           </div>
         </div>
       </Modal>
@@ -363,6 +470,9 @@ export function GroupManagement() {
                             )}
                           </p>
                         )}
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => handleEditCustomerEmail(customer.email)}>Edit</Button>
                       </div>
                     </div>
                   </CardContent>
