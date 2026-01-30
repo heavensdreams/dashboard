@@ -323,9 +323,24 @@ export function Calendar() {
               const finalBgColor = isToday ? 'bg-blue-50' : bgColor
               const finalBorderColor = isToday ? 'border-blue-300' : borderColor
               
-              return (
+              // Get tooltip content for the day (all bookings)
+              const tooltipContent = dayBookings.length > 0 ? (
+                <div className="text-left">
+                  {dayBookings.map(booking => {
+                    const propertyName = booking.property_name || 'Unknown Property'
+                    const guestName = booking.client_name || booking.extra_info || booking.user_email || 'Guest'
+                    return (
+                      <div key={booking.id} className="mb-1 last:mb-0">
+                        <div className="font-semibold">{propertyName}</div>
+                        <div className="text-xs opacity-90">{guestName}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              ) : null
+
+              const dateBoxContent = (
                 <div
-                  key={day.toISOString()}
                   className={`min-h-[80px] border-2 rounded p-2 ${finalBgColor} ${finalBorderColor} ${
                     canEdit ? 'cursor-pointer hover:opacity-80' : ''
                   }`}
@@ -337,20 +352,14 @@ export function Calendar() {
                   <div className="space-y-1">
                     {dayBookings.slice(0, 2).map(booking => {
                       const propertyName = booking.property_name || 'Unknown Property'
-                      // Show client_name if available, otherwise show extra_info, otherwise show user_email or 'Guest'
-                      const guestName = booking.client_name || booking.extra_info || booking.user_email || 'Guest'
                       return (
-                        <Tooltip
+                        <div
                           key={booking.id}
-                          content={guestName}
+                          className="text-xs bg-blue-100 text-blue-800 rounded px-1 py-0.5 truncate cursor-default"
+                          title={isCustomer ? `${propertyName}: Booked` : `${propertyName}`}
                         >
-                          <div
-                            className="text-xs bg-blue-100 text-blue-800 rounded px-1 py-0.5 truncate cursor-default"
-                            title={isCustomer ? `${propertyName}: Booked` : `${propertyName}`}
-                          >
-                            {propertyName}
-                          </div>
-                        </Tooltip>
+                          {propertyName}
+                        </div>
                       )
                     })}
                     {dayBookings.length > 2 && (
@@ -359,6 +368,19 @@ export function Calendar() {
                       </div>
                     )}
                   </div>
+                </div>
+              )
+
+              // Wrap entire date box with tooltip if there are bookings
+              return (
+                <div key={day.toISOString()}>
+                  {tooltipContent ? (
+                    <Tooltip content={tooltipContent}>
+                      {dateBoxContent}
+                    </Tooltip>
+                  ) : (
+                    dateBoxContent
+                  )}
                 </div>
               )
             })}
