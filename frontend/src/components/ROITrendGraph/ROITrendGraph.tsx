@@ -35,20 +35,17 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
       
       const occupancyRate = totalRooms > 0 ? bookedRooms / totalRooms : 0
       
-      // Calculate profit increment based on occupancy rate
-      // Full occupancy (all rooms booked) = steep rise (e.g., +3)
-      // Partial occupancy (some rooms booked) = small rise (e.g., +1)
-      // No bookings = flat (0)
+      // Calculate profit increment based on occupancy percentage
+      // The steeper the occupancy %, the steeper the rise
+      // Formula: profitIncrement = occupancyRate * maxIncrement
+      // This means:
+      // - 100% occupancy = maxIncrement (steepest)
+      // - 50% occupancy = maxIncrement * 0.5 (medium)
+      // - 25% occupancy = maxIncrement * 0.25 (small)
+      // - 0% occupancy = 0 (flat)
       
-      let profitIncrement = 0
-      if (bookedRooms === totalRooms && totalRooms > 0) {
-        // All rooms booked - steep rise
-        profitIncrement = 3
-      } else if (bookedRooms > 0) {
-        // Some rooms booked - small rise
-        profitIncrement = 1
-      }
-      // No bookings = 0 (flat)
+      const maxIncrement = 5 // Maximum profit increment for 100% occupancy
+      const profitIncrement = occupancyRate * maxIncrement
       
       cumulativeProfit += profitIncrement
       
