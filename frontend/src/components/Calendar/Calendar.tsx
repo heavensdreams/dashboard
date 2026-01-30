@@ -390,8 +390,6 @@ export function Calendar() {
           <CardContent>
             <div className="space-y-2">
               {filteredBookings.map(booking => {
-                // Show client_name if available, otherwise show extra_info
-                const displayInfo = booking.client_name || booking.extra_info
                 return (
                   <div key={booking.id} className="border-b pb-2 last:border-0">
                     <div className="flex items-center justify-between">

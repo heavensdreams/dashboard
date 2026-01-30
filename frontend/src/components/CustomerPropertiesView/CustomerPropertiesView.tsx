@@ -5,7 +5,6 @@ import { useUserStore } from '@/stores/userStore'
 import { filterBookingsForCustomer } from '@/utils/filtering'
 import { getPhotoUrl, handlePhotoError } from '@/utils/photoHelpers'
 import { ROITrendGraph } from '@/components/ROITrendGraph/ROITrendGraph'
-import { getAllBookings } from '@/utils/apartmentHelpers'
 
 interface Property {
   id: string
