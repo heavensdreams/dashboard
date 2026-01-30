@@ -101,9 +101,16 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
     return labels
   }, [graphData, graphWidth])
   
+  const currentYear = new Date().getFullYear()
+  
   return (
     <div className="w-full overflow-x-auto">
       <div className="min-w-[800px]">
+        <div className="text-center mb-4">
+          <h3 className="text-lg sm:text-xl font-light text-[#2C3E1F]">
+            {currentYear}
+          </h3>
+        </div>
         <svg width={width} height={height} className="w-full h-auto">
           {/* Grid lines */}
           {[0, 0.25, 0.5, 0.75, 1].map((ratio) => {

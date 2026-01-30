@@ -7,9 +7,11 @@ import { Bookings } from './pages/Bookings'
 import { Users } from './pages/Users'
 import { Groups } from './pages/Groups'
 import { Logs } from './pages/Logs'
+import { CustomerCalendar } from './pages/CustomerCalendar'
+import { CustomerROI } from './pages/CustomerROI'
 import { Login } from './components/Login'
 
-type Page = 'dashboard' | 'properties' | 'bookings' | 'users' | 'groups' | 'logs'
+type Page = 'dashboard' | 'properties' | 'bookings' | 'users' | 'groups' | 'logs' | 'calendar' | 'roi'
 
 function App() {
   const { currentUser, setCurrentUser } = useUserStore()
@@ -25,7 +27,7 @@ function App() {
   useEffect(() => {
     const handleNavigate = (e: CustomEvent) => {
       const page = e.detail as Page
-      if (['dashboard', 'properties', 'bookings', 'users', 'groups', 'logs'].includes(page)) {
+      if (['dashboard', 'properties', 'bookings', 'users', 'groups', 'logs', 'calendar', 'roi'].includes(page)) {
         setCurrentPage(page as Page)
       }
     }
@@ -117,6 +119,32 @@ function App() {
                     currentPage === 'properties' ? 'w-full' : 'w-0 group-hover:w-full'
                   }`}></span>
                 </button>
+                {isCustomer && (
+                  <>
+                    <button
+                      onClick={() => setCurrentPage('calendar')}
+                      className={`hover:text-[#D4AF37] transition-colors duration-300 relative group ${
+                        currentPage === 'calendar' ? 'text-[#D4AF37]' : ''
+                      }`}
+                    >
+                      Calendar
+                      <span className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] transition-all duration-300 ${
+                        currentPage === 'calendar' ? 'w-full' : 'w-0 group-hover:w-full'
+                      }`}></span>
+                    </button>
+                    <button
+                      onClick={() => setCurrentPage('roi')}
+                      className={`hover:text-[#D4AF37] transition-colors duration-300 relative group ${
+                        currentPage === 'roi' ? 'text-[#D4AF37]' : ''
+                      }`}
+                    >
+                      ROI
+                      <span className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] transition-all duration-300 ${
+                        currentPage === 'roi' ? 'w-full' : 'w-0 group-hover:w-full'
+                      }`}></span>
+                    </button>
+                  </>
+                )}
                 {!isCustomer && (
                   <>
                     <button
@@ -197,6 +225,8 @@ function App() {
         {currentPage === 'dashboard' && <Dashboard />}
         {currentPage === 'properties' && <Properties />}
         {currentPage === 'bookings' && <Bookings />}
+        {isCustomer && currentPage === 'calendar' && <CustomerCalendar />}
+        {isCustomer && currentPage === 'roi' && <CustomerROI />}
         {isAdmin && currentPage === 'users' && <Users />}
         {isAdmin && currentPage === 'groups' && <Groups />}
         {isAdmin && currentPage === 'logs' && <Logs />}

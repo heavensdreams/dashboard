@@ -446,47 +446,8 @@ export function CustomerPropertiesView() {
     )
   }
 
-  const scrollToROI = () => {
-    const element = document.getElementById('roi-section')
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#FAFAFA] via-[#FFF8E7] to-white">
-      {/* Navigation Bar */}
-      {properties.length > 0 && (
-        <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b-2 border-[#D4AF37]/20 shadow-sm">
-          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-4">
-            <nav className="flex items-center justify-center gap-4 sm:gap-6 lg:gap-8">
-              <a
-                href="#properties"
-                onClick={(e) => {
-                  e.preventDefault()
-                  window.scrollTo({ top: 0, behavior: 'smooth' })
-                }}
-                className="text-sm sm:text-base text-[#6B7C4A] font-light hover:text-[#D4AF37] transition-colors duration-300 relative group"
-              >
-                Properties
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] group-hover:w-full transition-all duration-300"></span>
-              </a>
-              <a
-                href="#roi"
-                onClick={(e) => {
-                  e.preventDefault()
-                  scrollToROI()
-                }}
-                className="text-sm sm:text-base text-[#6B7C4A] font-light hover:text-[#D4AF37] transition-colors duration-300 relative group"
-              >
-                ROI
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] group-hover:w-full transition-all duration-300"></span>
-              </a>
-            </nav>
-          </div>
-        </div>
-      )}
-
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8 lg:py-16">
         {properties.map((property) => renderPropertyCard(property, expandedPropertyId === property.id))}

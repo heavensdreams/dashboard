@@ -4,6 +4,7 @@ import { useDataStore } from '@/stores/dataStore'
 import { useUserStore } from '@/stores/userStore'
 import { PropertyDetail } from '@/components/PropertyDetail/PropertyDetail'
 import { filterBookingsForCustomer } from '@/utils/filtering'
+import { ROITrendGraph } from '@/components/ROITrendGraph/ROITrendGraph'
 
 export function Dashboard() {
   const apartments = useDataStore(state => state.apartments)
@@ -285,20 +286,61 @@ export function Dashboard() {
       <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border-2 border-[#D4AF37]/20">
         <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#2C3E1F] mb-6 sm:mb-8 tracking-wide gold-text-gradient">Quick Navigation</h2>
-          <div className="flex justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
             <button
               onClick={() => {
                 const event = new CustomEvent('navigate', { detail: 'properties' })
                 window.dispatchEvent(event)
               }}
-              className="w-full max-w-md h-24 sm:h-28 flex flex-col items-center justify-center bg-gradient-to-br from-[#D4AF37]/10 via-[#F4D03F]/10 to-[#D4AF37]/10 border-2 border-[#D4AF37]/30 rounded-xl sm:rounded-2xl hover:border-[#D4AF37] hover:shadow-xl transition-all duration-300 group"
+              className="w-full sm:w-auto sm:min-w-[200px] h-24 sm:h-28 flex flex-col items-center justify-center bg-gradient-to-br from-[#D4AF37]/10 via-[#F4D03F]/10 to-[#D4AF37]/10 border-2 border-[#D4AF37]/30 rounded-xl sm:rounded-2xl hover:border-[#D4AF37] hover:shadow-xl transition-all duration-300 group"
             >
               <span className="text-3xl sm:text-4xl mb-2 group-hover:scale-110 transition-transform duration-300">🏠</span>
               <span className="text-base sm:text-lg font-light text-[#2C3E1F] group-hover:text-[#D4AF37] transition-colors duration-300">View Properties</span>
             </button>
+            {isCustomer && (
+              <button
+                onClick={() => {
+                  const event = new CustomEvent('navigate', { detail: 'calendar' })
+                  window.dispatchEvent(event)
+                }}
+                className="w-full sm:w-auto sm:min-w-[200px] h-24 sm:h-28 flex flex-col items-center justify-center bg-gradient-to-br from-[#D4AF37]/10 via-[#F4D03F]/10 to-[#D4AF37]/10 border-2 border-[#D4AF37]/30 rounded-xl sm:rounded-2xl hover:border-[#D4AF37] hover:shadow-xl transition-all duration-300 group"
+              >
+                <span className="text-3xl sm:text-4xl mb-2 group-hover:scale-110 transition-transform duration-300">📅</span>
+                <span className="text-base sm:text-lg font-light text-[#2C3E1F] group-hover:text-[#D4AF37] transition-colors duration-300">View Calendar</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
+
+      {/* ROI Section - For customers */}
+      {isCustomer && propertiesWithStatus.length > 0 && (() => {
+        // Get all bookings for all client properties
+        const allClientBookings = propertiesWithStatus.flatMap((apt: any) => 
+          (apt.bookings || []).map((b: any) => ({
+            ...b,
+            property_id: apt.id
+          }))
+        )
+        return (
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border-2 border-[#D4AF37]/20">
+            <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#2C3E1F] mb-4 sm:mb-6 lg:mb-8 tracking-wide gold-text-gradient">
+                Return on Investment (ROI)
+              </h2>
+              <p className="text-sm text-[#6B7C4A] font-light mb-6">
+                Cumulative profit trend based on booking occupancy across all your properties
+              </p>
+              <div className="bg-gradient-to-b from-white to-[#FAFAFA] p-4 sm:p-6 lg:p-8 rounded-lg sm:rounded-xl lg:rounded-2xl border-2 border-[#D4AF37]/20">
+                <ROITrendGraph 
+                  properties={propertiesWithStatus}
+                  allBookings={allClientBookings}
+                />
+              </div>
+            </div>
+          </div>
+        )
+      })()}
 
       {/* Property Detail Modal */}
       {selectedProperty && (
