@@ -325,14 +325,27 @@ export function Calendar() {
               
               // Get tooltip content for the day (all bookings)
               const tooltipContent = dayBookings.length > 0 ? (
-                <div className="text-left">
+                <div className="text-left space-y-2">
                   {dayBookings.map(booking => {
                     const propertyName = booking.property_name || 'Unknown Property'
                     const guestName = booking.client_name || booking.extra_info || booking.user_email || 'Guest'
+                    const startDate = new Date(booking.start_date)
+                    const endDate = new Date(booking.end_date)
+                    const bookingDates = `${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d, yyyy')}`
                     return (
-                      <div key={booking.id} className="mb-1 last:mb-0">
-                        <div className="font-semibold">{propertyName}</div>
-                        <div className="text-xs opacity-90">{guestName}</div>
+                      <div key={booking.id} className="pb-2 border-b border-gray-700 last:border-0 last:pb-0">
+                        <div className="font-semibold text-base mb-1">{propertyName}</div>
+                        <div className="text-xs opacity-90 mb-1">
+                          <span className="font-medium">Guest:</span> {guestName}
+                        </div>
+                        <div className="text-xs opacity-75">
+                          <span className="font-medium">Dates:</span> {bookingDates}
+                        </div>
+                        {booking.extra_info && !booking.client_name && (
+                          <div className="text-xs opacity-75 mt-1">
+                            <span className="font-medium">Details:</span> {booking.extra_info}
+                          </div>
+                        )}
                       </div>
                     )
                   })}
