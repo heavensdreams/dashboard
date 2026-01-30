@@ -39,12 +39,14 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
       // The steeper the occupancy %, the steeper the rise
       // Formula: profitIncrement = occupancyRate * maxIncrement
       // This means:
-      // - 100% occupancy = maxIncrement (steepest)
-      // - 50% occupancy = maxIncrement * 0.5 (medium)
-      // - 25% occupancy = maxIncrement * 0.25 (small)
+      // - 100% occupancy = maxIncrement (steepest, ~45 degrees visually)
+      // - 50% occupancy = maxIncrement * 0.5 (medium steepness)
+      // - 10% occupancy = maxIncrement * 0.1 (shallow, ~10 degrees visually)
       // - 0% occupancy = 0 (flat)
       
-      const maxIncrement = 5 // Maximum profit increment for 100% occupancy
+      // Scale the increment so that occupancy percentage directly affects steepness
+      // Higher maxIncrement = steeper line for same occupancy
+      const maxIncrement = 10 // Maximum profit increment for 100% occupancy
       const profitIncrement = occupancyRate * maxIncrement
       
       cumulativeProfit += profitIncrement
