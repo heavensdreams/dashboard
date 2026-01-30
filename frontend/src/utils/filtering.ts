@@ -9,6 +9,7 @@ interface Booking {
   user_email?: string
   start_date: string
   end_date: string
+  client_name?: string
   extra_info?: string
 }
 
@@ -54,10 +55,11 @@ export function filterBookingsBySearch(
     )
   }
   
-  // Admin/normal users can search by property, email, or extra_info
+  // Admin/normal users can search by property, email, client_name, or extra_info
   return bookings.filter(booking => 
     booking.property_name?.toLowerCase().includes(term) ||
     booking.user_email?.toLowerCase().includes(term) ||
+    booking.client_name?.toLowerCase().includes(term) ||
     booking.extra_info?.toLowerCase().includes(term)
   )
 }

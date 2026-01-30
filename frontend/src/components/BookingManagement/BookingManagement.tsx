@@ -117,6 +117,7 @@ export function BookingManagement() {
   const [editingBooking, setEditingBooking] = useState<Booking | null>(null)
   const [editStartDate, setEditStartDate] = useState('')
   const [editEndDate, setEditEndDate] = useState('')
+  const [editClientName, setEditClientName] = useState('')
   const [editExtraInfo, setEditExtraInfo] = useState('')
   const [editPropertyId, setEditPropertyId] = useState('')
 
@@ -132,6 +133,7 @@ export function BookingManagement() {
     
     setEditStartDate(startDate)
     setEditEndDate(endDate)
+    setEditClientName(booking.client_name || '')
     setEditExtraInfo(booking.extra_info || '')
   }
 
@@ -151,8 +153,8 @@ export function BookingManagement() {
       const endDateISO = new Date(editEndDate + 'T00:00:00Z').toISOString()
 
       const oldBooking = allBookings.find((b: any) => b.id === editingBooking.id)
-      const oldValue = oldBooking ? `${oldBooking.start_date.split('T')[0]} to ${oldBooking.end_date.split('T')[0]}${oldBooking.extra_info ? ` (${oldBooking.extra_info})` : ''}` : ''
-      const newValue = `${editStartDate} to ${editEndDate}${editExtraInfo ? ` (${editExtraInfo})` : ''}`
+      const oldValue = oldBooking ? `${oldBooking.start_date.split('T')[0]} to ${oldBooking.end_date.split('T')[0]}${oldBooking.client_name ? ` (${oldBooking.client_name})` : oldBooking.extra_info ? ` (${oldBooking.extra_info})` : ''}` : ''
+      const newValue = `${editStartDate} to ${editEndDate}${editClientName ? ` (${editClientName})` : editExtraInfo ? ` (${editExtraInfo})` : ''}`
 
       // Update booking in apartment
       await updateData((data) => ({
@@ -186,6 +188,7 @@ export function BookingManagement() {
                   property_id: editPropertyId,
                   start_date: startDateISO,
                   end_date: endDateISO,
+                  client_name: editClientName || undefined,
                   extra_info: editExtraInfo
                 }]
               }
@@ -209,6 +212,7 @@ export function BookingManagement() {
       setEditingBooking(null)
       setEditStartDate('')
       setEditEndDate('')
+      setEditClientName('')
       setEditExtraInfo('')
       setEditPropertyId('')
     } catch (error: any) {
@@ -366,10 +370,13 @@ export function BookingManagement() {
                       <p className="text-sm text-muted-foreground">
                         {formatDate(booking.start_date)} - {formatDate(booking.end_date)}
                       </p>
-                      {!isCustomer && userEmail && (
+                      {!isCustomer && booking.client_name && (
+                        <p className="text-xs text-muted-foreground">Client: {booking.client_name}</p>
+                      )}
+                      {!isCustomer && !booking.client_name && userEmail && (
                         <p className="text-xs text-muted-foreground">Guest: {userEmail}</p>
                       )}
-                      {!isCustomer && booking.extra_info && (
+                      {!isCustomer && !booking.client_name && booking.extra_info && (
                         <p className="text-sm mt-1">{booking.extra_info}</p>
                       )}
                       {isCustomer && (

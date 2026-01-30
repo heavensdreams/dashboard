@@ -5,7 +5,6 @@ export interface Apartment {
   name: string
   address: string
   extra_info?: string | null
-  roi_info?: string | null
   created_at?: string
   bookings: Booking[]
   groups: string[]
@@ -18,6 +17,7 @@ export interface Booking {
   user_id: string
   start_date: string
   end_date: string
+  client_name?: string
   extra_info?: string
   created_at?: string
 }

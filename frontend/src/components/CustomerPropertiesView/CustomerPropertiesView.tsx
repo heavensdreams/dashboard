@@ -4,14 +4,14 @@ import { useDataStore } from '@/stores/dataStore'
 import { useUserStore } from '@/stores/userStore'
 import { filterBookingsForCustomer } from '@/utils/filtering'
 import { getPhotoUrl, handlePhotoError } from '@/utils/photoHelpers'
+import { ROITrendGraph } from '@/components/ROITrendGraph/ROITrendGraph'
+import { getAllBookings } from '@/utils/apartmentHelpers'
 
 interface Property {
   id: string
   name: string
   address: string
   extra_info: string
-  roi_info?: string | null
-  roi_chart?: string | null
   photos: string[]
   bookings: Array<{
     start_date: string
@@ -77,8 +77,6 @@ export function CustomerPropertiesView() {
         name: apartment.name,
         address: apartment.address,
         extra_info: apartment.extra_info || '',
-        roi_info: apartment.roi_info || null,
-        roi_chart: apartment.roi_chart || null,
         photos: apartment.photos || [],
         bookings: apartmentBookings.map((b: any) => ({
           start_date: b.start_date,
@@ -445,40 +443,85 @@ export function CustomerPropertiesView() {
           </div>
         </div>
 
-        {/* ROI Section */}
-        {(property.roi_info || property.roi_chart) && (
-          <div className="px-3 sm:px-4 lg:px-12 py-6 sm:py-8 lg:py-12 border-t-2 border-[#D4AF37]/20 bg-gradient-to-b from-white to-[#FAFAFA]" id={`roi-${property.id}`}>
-            <h3 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#2C3E1F] mb-4 sm:mb-6 lg:mb-8 tracking-wide gold-text-gradient">Return on Investment (ROI)</h3>
-            <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg border-2 border-[#D4AF37]/20 space-y-6">
-              {property.roi_chart && (
-                <div className="w-full">
-                  <img
-                    src={getPhotoUrl(property.roi_chart)}
-                    onError={(e) => handlePhotoError(e, property.roi_chart || '')}
-                    alt="ROI Chart"
-                    className="w-full h-auto rounded-lg shadow-md"
-                  />
-                </div>
-              )}
-              {property.roi_info && (
-                <div className="prose prose-sm sm:prose-base lg:prose-lg max-w-none">
-                  <p className="text-sm sm:text-base lg:text-lg text-[#4A5D23] leading-relaxed sm:leading-loose whitespace-pre-wrap font-light">
-                    {property.roi_info}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     )
   }
 
+  const scrollToROI = () => {
+    const element = document.getElementById('roi-section')
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#FAFAFA] via-[#FFF8E7] to-white">
+      {/* Navigation Bar */}
+      {properties.length > 0 && (
+        <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b-2 border-[#D4AF37]/20 shadow-sm">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-4">
+            <nav className="flex items-center justify-center gap-4 sm:gap-6 lg:gap-8">
+              <a
+                href="#properties"
+                onClick={(e) => {
+                  e.preventDefault()
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }}
+                className="text-sm sm:text-base text-[#6B7C4A] font-light hover:text-[#D4AF37] transition-colors duration-300 relative group"
+              >
+                Properties
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] group-hover:w-full transition-all duration-300"></span>
+              </a>
+              <a
+                href="#roi"
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollToROI()
+                }}
+                className="text-sm sm:text-base text-[#6B7C4A] font-light hover:text-[#D4AF37] transition-colors duration-300 relative group"
+              >
+                ROI
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] group-hover:w-full transition-all duration-300"></span>
+              </a>
+            </nav>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8 lg:py-16">
         {properties.map((property) => renderPropertyCard(property, expandedPropertyId === property.id))}
+        
+        {/* ROI Section - Once per customer, showing trend for all their properties */}
+        {properties.length > 0 && (
+          <div id="roi-section" className="px-3 sm:px-4 lg:px-12 py-6 sm:py-8 lg:py-12 border-t-2 border-[#D4AF37]/20 bg-gradient-to-b from-white to-[#FAFAFA] mt-8 sm:mt-12 lg:mt-20">
+            <h3 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#2C3E1F] mb-4 sm:mb-6 lg:mb-8 tracking-wide gold-text-gradient">Return on Investment (ROI)</h3>
+            <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg border-2 border-[#D4AF37]/20">
+              {/* ROI Trend Graph - Calculated for all client properties */}
+              {(() => {
+                // Get all bookings for all client properties (from original apartments data)
+                const clientApartmentIds = properties.map(p => p.id)
+                const clientApartments = apartments.filter((a: any) => 
+                  clientApartmentIds.includes(a.id)
+                )
+                const allClientBookings = clientApartments.flatMap((apt: any) => 
+                  (apt.bookings || []).map((b: any) => ({
+                    ...b,
+                    property_id: apt.id
+                  }))
+                )
+                return (
+                  <div className="w-full">
+                    <ROITrendGraph 
+                      properties={clientApartments}
+                      allBookings={allClientBookings}
+                    />
+                  </div>
+                )
+              })()}
+            </div>
+          </div>
+        )}
       </main>
 
       {/* Photo Lightbox Modal */}

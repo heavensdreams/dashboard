@@ -28,6 +28,7 @@ export function BookingForm({ propertyId: initialPropertyId, startDate, endDate,
   const [selectedEndDate, setSelectedEndDate] = useState(
     endDate ? endDate.toISOString().split('T')[0] : ''
   )
+  const [clientName, setClientName] = useState('')
   const [extraInfo, setExtraInfo] = useState('')
   const [photos, setPhotos] = useState<string[]>([])
 
@@ -88,6 +89,7 @@ export function BookingForm({ propertyId: initialPropertyId, startDate, endDate,
         property_id: selectedPropertyId,
         start_date: startDateISO,
         end_date: endDateISO,
+        client_name: clientName || undefined,
         extra_info: extraInfo,
         user_id: currentUser.id,
         created_at: new Date().toISOString()
@@ -167,6 +169,17 @@ export function BookingForm({ propertyId: initialPropertyId, startDate, endDate,
             value={selectedEndDate}
             onChange={(e) => setSelectedEndDate(e.target.value)}
             required
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="clientName">Client Name</Label>
+          <Input
+            id="clientName"
+            type="text"
+            value={clientName}
+            onChange={(e) => setClientName(e.target.value)}
+            placeholder="Guest/client name (optional)"
           />
         </div>
 

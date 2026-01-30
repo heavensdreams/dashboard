@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { BookingForm } from '@/components/BookingForm'
+import { Tooltip } from '@/components/ui/tooltip'
 import { useDataStore } from '@/stores/dataStore'
 import { useUserStore } from '@/stores/userStore'
 import { filterBookingsForCustomer, filterBookingsBySearch, filterBookingsByProperty } from '@/utils/filtering'
@@ -16,6 +17,7 @@ interface EnrichedBooking {
   user_id: string
   start_date: string
   end_date: string
+  client_name?: string
   extra_info?: string
   created_at?: string
   property_name?: string
@@ -305,22 +307,28 @@ export function Calendar() {
               const availabilityStatus = getDateAvailabilityStatus(day)
               
               let bgColor = ''
+              let borderColor = ''
               if (availabilityStatus === 'red') {
-                bgColor = 'bg-red-100 border-red-300'
+                bgColor = 'bg-red-100'
+                borderColor = 'border-red-300'
               } else if (availabilityStatus === 'yellow') {
-                bgColor = 'bg-yellow-100 border-yellow-300'
+                bgColor = 'bg-yellow-100'
+                borderColor = 'border-yellow-300'
               } else {
-                bgColor = 'bg-green-100 border-green-300'
+                bgColor = 'bg-green-100'
+                borderColor = 'border-green-300'
               }
               
-              const finalBgColor = isToday ? 'bg-blue-50 border-blue-300' : bgColor
+              // Override for today, but keep the border color based on availability
+              const finalBgColor = isToday ? 'bg-blue-50' : bgColor
+              const finalBorderColor = isToday ? 'border-blue-300' : borderColor
               
               return (
                 <div
                   key={day.toISOString()}
-                  className={`min-h-[80px] border rounded p-2 ${
-                    canEdit ? 'cursor-pointer hover:bg-muted' : ''
-                  } ${finalBgColor}`}
+                  className={`min-h-[80px] border-2 rounded p-2 ${finalBgColor} ${finalBorderColor} ${
+                    canEdit ? 'cursor-pointer hover:opacity-80' : ''
+                  }`}
                   onClick={() => handleDateClick(day)}
                 >
                   <div className="text-sm font-medium mb-1">
@@ -329,14 +337,20 @@ export function Calendar() {
                   <div className="space-y-1">
                     {dayBookings.slice(0, 2).map(booking => {
                       const propertyName = booking.property_name || 'Unknown Property'
+                      // Show client_name if available, otherwise show extra_info, otherwise show user_email or 'Guest'
+                      const guestName = booking.client_name || booking.extra_info || booking.user_email || 'Guest'
                       return (
-                        <div
+                        <Tooltip
                           key={booking.id}
-                          className="text-xs bg-blue-100 text-blue-800 rounded px-1 py-0.5 truncate"
-                          title={isCustomer ? `${propertyName}: Booked` : `${propertyName}`}
+                          content={guestName}
                         >
-                          {propertyName}
-                        </div>
+                          <div
+                            className="text-xs bg-blue-100 text-blue-800 rounded px-1 py-0.5 truncate cursor-default"
+                            title={isCustomer ? `${propertyName}: Booked` : `${propertyName}`}
+                          >
+                            {propertyName}
+                          </div>
+                        </Tooltip>
                       )
                     })}
                     {dayBookings.length > 2 && (
@@ -375,27 +389,34 @@ export function Calendar() {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {filteredBookings.map(booking => (
-                <div key={booking.id} className="border-b pb-2 last:border-0">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">{booking.property_name || 'Unknown Property'}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {new Date(booking.start_date).toLocaleDateString()} - {new Date(booking.end_date).toLocaleDateString()}
-                      </p>
-                      {!isCustomer && booking.user_email && (
-                        <p className="text-xs text-muted-foreground">Guest: {booking.user_email}</p>
-                      )}
-                      {!isCustomer && booking.extra_info && (
-                        <p className="text-xs text-muted-foreground mt-1">{booking.extra_info}</p>
-                      )}
-                      {isCustomer && (
-                        <p className="text-xs text-muted-foreground mt-1">Booked</p>
-                      )}
+              {filteredBookings.map(booking => {
+                // Show client_name if available, otherwise show extra_info
+                const displayInfo = booking.client_name || booking.extra_info
+                return (
+                  <div key={booking.id} className="border-b pb-2 last:border-0">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">{booking.property_name || 'Unknown Property'}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {new Date(booking.start_date).toLocaleDateString()} - {new Date(booking.end_date).toLocaleDateString()}
+                        </p>
+                        {!isCustomer && booking.client_name && (
+                          <p className="text-xs text-muted-foreground">Client: {booking.client_name}</p>
+                        )}
+                        {!isCustomer && !booking.client_name && booking.user_email && (
+                          <p className="text-xs text-muted-foreground">Guest: {booking.user_email}</p>
+                        )}
+                        {!isCustomer && !booking.client_name && booking.extra_info && (
+                          <p className="text-xs text-muted-foreground mt-1">{booking.extra_info}</p>
+                        )}
+                        {isCustomer && (
+                          <p className="text-xs text-muted-foreground mt-1">Booked</p>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </CardContent>
         </Card>

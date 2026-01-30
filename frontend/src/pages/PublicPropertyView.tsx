@@ -7,8 +7,6 @@ interface Property {
   name: string
   address: string
   extra_info: string
-  roi_info?: string | null
-  roi_chart?: string | null
   photos: string[]
   bookings: Array<{
     start_date: string
@@ -107,20 +105,6 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
     return upcoming[0] || null
   }
 
-  const scrollToROI = (propertyId: string) => {
-    const element = document.getElementById(`roi-${propertyId}`)
-    if (element) {
-      // If property is collapsed, expand it first
-      if (expandedPropertyId !== propertyId) {
-        setExpandedPropertyId(propertyId)
-        setTimeout(() => {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        }, 300)
-      } else {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
-    }
-  }
 
   if (loading) {
     return (
@@ -458,31 +442,6 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
           </div>
         </div>
 
-        {/* ROI Section */}
-        {(property.roi_info || property.roi_chart) && (
-          <div className="px-3 sm:px-4 lg:px-12 py-6 sm:py-8 lg:py-12 border-t-2 border-[#D4AF37]/20 bg-gradient-to-b from-white to-[#FAFAFA]" id={`roi-${property.id}`}>
-            <h3 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#2C3E1F] mb-4 sm:mb-6 lg:mb-8 tracking-wide gold-text-gradient">Return on Investment (ROI)</h3>
-            <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg border-2 border-[#D4AF37]/20 space-y-6">
-              {property.roi_chart && (
-                <div className="w-full">
-                  <img
-                    src={getPhotoUrl(property.roi_chart)}
-                    alt="ROI Chart"
-                    className="w-full h-auto rounded-lg shadow-md"
-                    onError={(e) => handlePhotoError(e, property.roi_chart || '')}
-                  />
-                </div>
-              )}
-              {property.roi_info && (
-                <div className="prose prose-sm sm:prose-base lg:prose-lg max-w-none">
-                  <p className="text-sm sm:text-base lg:text-lg text-[#4A5D23] leading-relaxed sm:leading-loose whitespace-pre-wrap font-light">
-                    {property.roi_info}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     )
   }
@@ -508,29 +467,8 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
               </div>
             </div>
             <div className="hidden lg:flex items-center gap-6 text-sm text-[#6B7C4A] font-light">
-              {isSingleProperty ? (
-                // For single property, show only ROI link if available
-                (() => {
-                  const propertyWithROI = properties.find(p => p.roi_info || p.roi_chart)
-                  if (propertyWithROI) {
-                    return (
-                      <a 
-                        href="#roi" 
-                        onClick={(e) => {
-                          e.preventDefault()
-                          scrollToROI(propertyWithROI.id)
-                        }}
-                        className="hover:text-[#D4AF37] transition-colors duration-300 relative group"
-                      >
-                        ROI
-                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] group-hover:w-full transition-all duration-300"></span>
-                      </a>
-                    )
-                  }
-                  return null
-                })()
-              ) : (
-                // For multiple properties, show all navigation links
+              {!isSingleProperty && (
+                // For multiple properties, show navigation links
                 <>
                   <a href="#properties" className="hover:text-[#D4AF37] transition-colors duration-300 relative group">
                     Properties
@@ -538,20 +476,6 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
                   </a>
                   <a href="#availability" className="hover:text-[#D4AF37] transition-colors duration-300 relative group">
                     Availability
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] group-hover:w-full transition-all duration-300"></span>
-                  </a>
-                  <a 
-                    href="#roi" 
-                    onClick={(e) => {
-                      e.preventDefault()
-                      const propertyWithROI = properties.find(p => p.roi_info || p.roi_chart)
-                      if (propertyWithROI) {
-                        scrollToROI(propertyWithROI.id)
-                      }
-                    }}
-                    className="hover:text-[#D4AF37] transition-colors duration-300 relative group"
-                  >
-                    ROI
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] group-hover:w-full transition-all duration-300"></span>
                   </a>
                   <a 
@@ -607,30 +531,8 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
           </div>
         </div>
         <nav className="p-6 space-y-4">
-          {isSingleProperty ? (
-            // For single property, show only ROI link if available
-            (() => {
-              const propertyWithROI = properties.find(p => p.roi_info || p.roi_chart)
-              if (propertyWithROI) {
-                return (
-                  <a
-                    href="#roi"
-                    onClick={() => {
-                      setMenuOpen(false)
-                      setTimeout(() => {
-                        scrollToROI(propertyWithROI.id)
-                      }, 100)
-                    }}
-                    className="block text-lg font-light text-[#2C3E1F] hover:text-[#D4AF37] transition-colors duration-300 py-2 border-b border-[#E8E8E8]"
-                  >
-                    ROI
-                  </a>
-                )
-              }
-              return null
-            })()
-          ) : (
-            // For multiple properties, show all navigation links
+          {!isSingleProperty && (
+            // For multiple properties, show navigation links
             <>
               <a
                 href="#properties"
@@ -655,21 +557,6 @@ export function PublicPropertyView({ propertyIds }: PublicPropertyViewProps) {
                 className="block text-lg font-light text-[#2C3E1F] hover:text-[#D4AF37] transition-colors duration-300 py-2 border-b border-[#E8E8E8]"
               >
                 Availability
-              </a>
-              <a
-                href="#roi"
-                onClick={() => {
-                  setMenuOpen(false)
-                  setTimeout(() => {
-                    const propertyWithROI = properties.find(p => p.roi_info || p.roi_chart)
-                    if (propertyWithROI) {
-                      scrollToROI(propertyWithROI.id)
-                    }
-                  }, 100)
-                }}
-                className="block text-lg font-light text-[#2C3E1F] hover:text-[#D4AF37] transition-colors duration-300 py-2 border-b border-[#E8E8E8]"
-              >
-                ROI
               </a>
               <a
                 href="#contact"
