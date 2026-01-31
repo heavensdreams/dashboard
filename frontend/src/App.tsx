@@ -17,6 +17,7 @@ function App() {
   const { currentUser, setCurrentUser } = useUserStore()
   const { loadData, loading } = useDataStore()
   const [currentPage, setCurrentPage] = useState<Page>('dashboard')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     // Load all data on app start (even when not logged in)
@@ -95,7 +96,7 @@ function App() {
               </div>
             </div>
             <div className="flex items-center gap-4 sm:gap-6">
-              {/* Navigation Links */}
+              {/* Navigation Links - Desktop */}
               <div className="hidden lg:flex items-center gap-6 text-sm text-[#6B7C4A] font-light">
                 <button
                   onClick={() => setCurrentPage('dashboard')}
@@ -198,6 +199,41 @@ function App() {
                   </>
                 )}
               </div>
+
+              {/* Mobile Navigation - Customer Only */}
+              {isCustomer && (
+                <>
+                  {/* Back to Dashboard Button - Show on sub-pages (mobile only) */}
+                  {currentPage !== 'dashboard' && (
+                    <button
+                      onClick={() => {
+                        setCurrentPage('dashboard')
+                        setMobileMenuOpen(false)
+                      }}
+                      className="lg:hidden px-3 py-1.5 text-sm text-[#6B7C4A] hover:text-[#D4AF37] border border-[#D4AF37]/30 hover:border-[#D4AF37] rounded-md transition-colors duration-300 font-light whitespace-nowrap"
+                    >
+                      ← Back to Dashboard
+                    </button>
+                  )}
+                  {/* Hamburger Menu - Show on dashboard (mobile only) */}
+                  {currentPage === 'dashboard' && (
+                    <button
+                      onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                      className="lg:hidden p-2 text-[#6B7C4A] hover:text-[#D4AF37] transition-colors touch-manipulation"
+                      aria-label="Menu"
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        {mobileMenuOpen ? (
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        ) : (
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                        )}
+                      </svg>
+                    </button>
+                  )}
+                </>
+              )}
+
               {/* User Info and Logout */}
               <div className="flex items-center gap-3 sm:gap-4">
                 <div className="flex items-center gap-2">
@@ -219,6 +255,86 @@ function App() {
           </div>
         </div>
       </header>
+
+      {/* Mobile Menu - Customer Only */}
+      {isCustomer && (
+        <>
+          {/* Slide-out Menu */}
+          <div
+            className={`fixed top-0 right-0 h-full w-64 sm:w-80 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
+              mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+            }`}
+          >
+            <div className="p-6 border-b-2 border-[#D4AF37]/30">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-light text-[#2C3E1F] tracking-wide">Menu</h2>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 text-[#6B7C4A] hover:text-[#D4AF37] transition-colors"
+                  aria-label="Close menu"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <nav className="p-6 space-y-4">
+              <button
+                onClick={() => {
+                  setCurrentPage('dashboard')
+                  setMobileMenuOpen(false)
+                }}
+                className={`block w-full text-left text-lg font-light transition-colors duration-300 py-2 border-b border-[#E8E8E8] ${
+                  currentPage === 'dashboard' ? 'text-[#D4AF37]' : 'text-[#2C3E1F] hover:text-[#D4AF37]'
+                }`}
+              >
+                Dashboard
+              </button>
+              <button
+                onClick={() => {
+                  setCurrentPage('calendar')
+                  setMobileMenuOpen(false)
+                }}
+                className={`block w-full text-left text-lg font-light transition-colors duration-300 py-2 border-b border-[#E8E8E8] ${
+                  currentPage === 'calendar' ? 'text-[#D4AF37]' : 'text-[#2C3E1F] hover:text-[#D4AF37]'
+                }`}
+              >
+                Calendar
+              </button>
+              <button
+                onClick={() => {
+                  setCurrentPage('properties')
+                  setMobileMenuOpen(false)
+                }}
+                className={`block w-full text-left text-lg font-light transition-colors duration-300 py-2 border-b border-[#E8E8E8] ${
+                  currentPage === 'properties' ? 'text-[#D4AF37]' : 'text-[#2C3E1F] hover:text-[#D4AF37]'
+                }`}
+              >
+                Properties
+              </button>
+              <button
+                onClick={() => {
+                  setCurrentPage('roi')
+                  setMobileMenuOpen(false)
+                }}
+                className={`block w-full text-left text-lg font-light transition-colors duration-300 py-2 border-b border-[#E8E8E8] ${
+                  currentPage === 'roi' ? 'text-[#D4AF37]' : 'text-[#2C3E1F] hover:text-[#D4AF37]'
+                }`}
+              >
+                ROI
+              </button>
+            </nav>
+          </div>
+          {/* Menu Overlay */}
+          {mobileMenuOpen && (
+            <div
+              className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+              onClick={() => setMobileMenuOpen(false)}
+            ></div>
+          )}
+        </>
+      )}
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8 lg:py-16">
