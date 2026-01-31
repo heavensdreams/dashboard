@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { BookingForm } from '@/components/BookingForm'
 import { Tooltip } from '@/components/ui/tooltip'
@@ -151,7 +150,6 @@ export function Calendar() {
 
   const previousMonth = () => setCurrentDate(subMonths(currentDate, 1))
   const nextMonth = () => setCurrentDate(addMonths(currentDate, 1))
-  const goToToday = () => setCurrentDate(new Date())
 
   // Use memoized filtered bookings for better performance
   const filteredBookings = useMemo(() => {
@@ -227,104 +225,92 @@ export function Calendar() {
   return (
     <div className="space-y-4">
       {/* Filters */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Filters</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex gap-4 flex-wrap">
-            <div className="flex-1 min-w-[200px]">
-              <Input
-                placeholder={isCustomer ? "Search by property name..." : "Search by property, guest, or notes..."}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+      {!isCustomer && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Filters</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex gap-4 flex-wrap">
+              <div className="flex-1 min-w-[200px]">
+                <Input
+                  placeholder="Search by property, guest, or notes..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <div>
+                <select
+                  value={propertyFilter}
+                  onChange={(e) => setPropertyFilter(e.target.value)}
+                  className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm"
+                >
+                  <option value="all">All Properties</option>
+                  {apartments.map((apt: any) => (
+                    <option key={apt.id} value={apt.id}>{apt.name}</option>
+                  ))}
+                </select>
+              </div>
             </div>
-            <div>
-              <select
-                value={propertyFilter}
-                onChange={(e) => setPropertyFilter(e.target.value)}
-                className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm"
-              >
-                <option value="all">All Properties</option>
-                {apartments.map((apt: any) => (
-                  <option key={apt.id} value={apt.id}>{apt.name}</option>
-                ))}
-              </select>
+            <div className="text-sm text-muted-foreground">
+              Showing {filteredBookings.length} of {enrichedBookings.length} bookings
             </div>
-          </div>
-          <div className="text-sm text-muted-foreground">
-            Showing {filteredBookings.length} of {enrichedBookings.length} bookings
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Calendar Legend */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Calendar Legend</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-4 flex-wrap">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded bg-red-100 border-2 border-red-300"></div>
-              <span className="text-sm">All rooms booked</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded bg-yellow-100 border-2 border-yellow-300"></div>
-              <span className="text-sm">Some rooms available</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded bg-green-100 border-2 border-green-300"></div>
-              <span className="text-sm">All rooms available</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Calendar */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>{format(currentDate, 'MMMM yyyy')}</CardTitle>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={previousMonth}>Previous</Button>
-              <Button variant="outline" onClick={goToToday}>Today</Button>
-              <Button variant="outline" onClick={nextMonth}>Next</Button>
+      <div className="bg-white p-3 sm:p-4 lg:p-8 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-xl border-2 border-[#D4AF37]/20 overflow-x-auto">
+        <div className="flex items-center justify-between mb-4 sm:mb-6 lg:mb-8 min-w-[280px]">
+          <button
+            onClick={previousMonth}
+            className="p-2 sm:p-3 hover:bg-gradient-to-br hover:from-[#D4AF37]/10 hover:to-[#F4D03F]/10 rounded-full transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
+            aria-label="Previous month"
+          >
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <h4 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-light text-[#2C3E1F] tracking-wide gold-text-gradient px-2">
+            {format(currentDate, 'MMMM yyyy')}
+          </h4>
+          <button
+            onClick={nextMonth}
+            className="p-2 sm:p-3 hover:bg-gradient-to-br hover:from-[#D4AF37]/10 hover:to-[#F4D03F]/10 rounded-full transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
+            aria-label="Next month"
+          >
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Calendar Grid */}
+        <div className="grid grid-cols-7 gap-1 sm:gap-1.5 lg:gap-2 mb-2 sm:mb-3 min-w-[280px]">
+          {weekDays.map(day => (
+            <div key={day} className="text-center text-xs sm:text-sm font-light text-[#6B7C4A] py-1.5 sm:py-2 lg:py-3">
+              <span className="hidden sm:inline">{day}</span>
+              <span className="sm:hidden">{day.substring(0, 1)}</span>
             </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-7 gap-2">
-            {weekDays.map(day => (
-              <div key={day} className="text-center font-semibold text-sm py-2">
-                {day}
-              </div>
-            ))}
-            {days.map(day => {
-              const dayBookings = getBookingsForDate(day)
+          ))}
+        </div>
+
+        <div className="grid grid-cols-7 gap-1 sm:gap-1.5 lg:gap-2 min-w-[280px]">
+          {(() => {
+            const monthStart = startOfMonth(currentDate)
+            const firstDayOfWeek = monthStart.getDay()
+            const emptyDays = Array(firstDayOfWeek).fill(null)
+            
+            return [
+              ...emptyDays.map((_, i) => <div key={`empty-${i}`} className="aspect-square"></div>),
+              ...days.map(day => {
+                const dayBookings = getBookingsForDate(day)
               const isToday = isSameDay(day, new Date())
               const availabilityStatus = getDateAvailabilityStatus(day)
-              
-              let bgColor = ''
-              let borderColor = ''
-              if (availabilityStatus === 'red') {
-                bgColor = 'bg-red-100'
-                borderColor = 'border-red-300'
-              } else if (availabilityStatus === 'yellow') {
-                bgColor = 'bg-yellow-100'
-                borderColor = 'border-yellow-300'
-              } else {
-                bgColor = 'bg-green-100'
-                borderColor = 'border-green-300'
-              }
-              
-              // Override for today, but keep the border color based on availability
-              const finalBgColor = isToday ? 'bg-blue-50' : bgColor
-              const finalBorderColor = isToday ? 'border-blue-300' : borderColor
+              const hasBookings = dayBookings.length > 0
               
               // Get tooltip content for the day (all bookings)
-              const tooltipContent = dayBookings.length > 0 ? (
+              const tooltipContent = hasBookings ? (
                 <div className="text-left space-y-2">
                   {dayBookings.map(booking => {
                     const propertyName = booking.property_name || 'Unknown Property'
@@ -352,54 +338,90 @@ export function Calendar() {
                 </div>
               ) : null
 
-              const dateBoxContent = (
-                <div
-                  className={`min-h-[80px] border-2 rounded p-2 ${finalBgColor} ${finalBorderColor} ${
-                    canEdit ? 'cursor-pointer hover:opacity-80' : ''
-                  }`}
-                  onClick={() => handleDateClick(day)}
-                >
-                  <div className="text-sm font-medium mb-1">
-                    {format(day, 'd')}
-                  </div>
-                  <div className="space-y-1">
-                    {dayBookings.slice(0, 2).map(booking => {
-                      const propertyName = booking.property_name || 'Unknown Property'
-                      return (
-                        <div
-                          key={booking.id}
-                          className="text-xs bg-blue-100 text-blue-800 rounded px-1 py-0.5 truncate cursor-default"
-                          title={isCustomer ? `${propertyName}: Booked` : `${propertyName}`}
-                        >
-                          {propertyName}
-                        </div>
-                      )
-                    })}
-                    {dayBookings.length > 2 && (
-                      <div className="text-xs text-muted-foreground">
-                        +{dayBookings.length - 2} more
-                      </div>
+                // Determine cell style based on availability status
+                // Match Properties calendar: gold gradient for booked, green for available
+                // But also show red/yellow for all/some rooms booked status
+                let cellStyle = ''
+                if (availabilityStatus === 'red') {
+                  // All rooms booked - red background
+                  cellStyle = 'bg-red-100 border-2 border-red-300 text-[#4A5D23]'
+                } else if (availabilityStatus === 'yellow') {
+                  // Some rooms booked - yellow background  
+                  cellStyle = 'bg-yellow-100 border-2 border-yellow-300 text-[#4A5D23]'
+                } else if (hasBookings) {
+                  // Has bookings - gold gradient (like Properties calendar)
+                  cellStyle = 'bg-gradient-to-br from-[#D4AF37] via-[#F4D03F] to-[#D4AF37] text-white shadow-lg'
+                } else {
+                  // Available - green background
+                  cellStyle = 'bg-[#E8F0E0] text-[#4A5D23] border-2 border-[#D4E0C8]'
+                }
+
+                const dateBoxContent = (
+                  <div
+                    className={`
+                      aspect-square flex flex-col items-center justify-center text-xs sm:text-sm font-light rounded sm:rounded-md lg:rounded-lg
+                      transition-all duration-200 hover:scale-110 cursor-pointer touch-manipulation min-h-[36px] sm:min-h-[40px]
+                      ${cellStyle}
+                      ${isToday ? 'ring-2 sm:ring-3 lg:ring-4 ring-[#D4AF37] ring-offset-1 sm:ring-offset-2 shadow-xl scale-105 sm:scale-110' : ''}
+                      ${canEdit ? '' : 'cursor-default'}
+                    `}
+                    onClick={() => handleDateClick(day)}
+                    title={hasBookings ? `${dayBookings.length} booking(s)` : 'Available'}
+                  >
+                    <span className="font-medium">{format(day, 'd')}</span>
+                    {hasBookings && dayBookings.length > 1 && (
+                      <span className="text-[10px] opacity-75 mt-0.5">+{dayBookings.length - 1}</span>
                     )}
                   </div>
-                </div>
-              )
+                )
 
-              // Wrap entire date box with tooltip if there are bookings
-              return (
-                <div key={day.toISOString()}>
-                  {tooltipContent ? (
-                    <Tooltip content={tooltipContent}>
-                      {dateBoxContent}
-                    </Tooltip>
-                  ) : (
-                    dateBoxContent
-                  )}
-                </div>
-              )
-            })}
+                // Wrap entire date box with tooltip if there are bookings
+                return (
+                  <div key={day.toISOString()}>
+                    {tooltipContent ? (
+                      <Tooltip content={tooltipContent}>
+                        {dateBoxContent}
+                      </Tooltip>
+                    ) : (
+                      dateBoxContent
+                    )}
+                  </div>
+                )
+              })
+            ]
+          })()}
+        </div>
+
+        {/* Legend */}
+        <div className="flex items-center justify-center gap-3 sm:gap-4 lg:gap-8 mt-4 sm:mt-6 lg:mt-8 pt-4 sm:pt-6 lg:pt-8 border-t-2 border-[#D4AF37]/20 flex-wrap">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-red-100 border-2 border-red-300 rounded"></div>
+            <span className="text-xs sm:text-sm text-[#4A5D23] font-light">All rooms booked</span>
           </div>
-        </CardContent>
-      </Card>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-yellow-100 border-2 border-yellow-300 rounded"></div>
+            <span className="text-xs sm:text-sm text-[#4A5D23] font-light">Some rooms available</span>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-gradient-to-br from-[#D4AF37] to-[#F4D03F] rounded shadow-md"></div>
+            <span className="text-xs sm:text-sm text-[#4A5D23] font-light">Booked</span>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#E8F0E0] border-2 border-[#D4E0C8] rounded"></div>
+            <span className="text-xs sm:text-sm text-[#4A5D23] font-light">Available</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Custom CSS for gold text gradient */}
+      <style>{`
+        .gold-text-gradient {
+          background: linear-gradient(135deg, #2C3E1F 0%, #4A5D23 40%, #D4AF37 60%, #F4D03F 80%, #D4AF37 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+      `}</style>
 
       {/* Booking Form */}
       {showBookingForm && selectedDate && (
