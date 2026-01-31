@@ -49,18 +49,67 @@ export function DateBookingModal({ isOpen, onClose, date, bookings, apartments, 
   const [newClientName, setNewClientName] = useState('')
   const [newExtraInfo, setNewExtraInfo] = useState('')
 
-  // Get all apartments that have bookings on this date
-  const bookedPropertyIds = useMemo(() => {
+  // Get properties that are booked on the selected date (for initial check)
+  const bookedPropertyIdsOnDate = useMemo(() => {
     return new Set(bookings.map(b => b.property_id))
   }, [bookings])
 
-  // Get available apartments (not all booked)
-  const availableApartments = useMemo(() => {
-    return apartments.filter(apt => !bookedPropertyIds.has(apt.id))
-  }, [apartments, bookedPropertyIds])
+  // Get available properties for NEW booking (exclude properties booked on the date range being created)
+  const availableApartmentsForNew = useMemo(() => {
+    if (!newStartDate || !newEndDate) {
+      // If dates not set yet, show all filtered apartments
+      return apartments.filter(apt => !bookedPropertyIdsOnDate.has(apt.id))
+    }
+    
+    const newStart = new Date(newStartDate + 'T00:00:00Z')
+    const newEnd = new Date(newEndDate + 'T00:00:00Z')
+    
+    return apartments.filter(apt => {
+      // Check if property has any conflicting bookings during the new date range
+      const hasConflict = (apt.bookings || []).some((booking: any) => {
+        const existingStart = booking.start_date.endsWith('Z') 
+          ? new Date(booking.start_date) 
+          : new Date(booking.start_date + 'Z')
+        const existingEnd = booking.end_date.endsWith('Z') 
+          ? new Date(booking.end_date) 
+          : new Date(booking.end_date + 'Z')
+        
+        return (newStart <= existingEnd && newEnd >= existingStart)
+      })
+      
+      return !hasConflict
+    })
+  }, [apartments, newStartDate, newEndDate, bookedPropertyIdsOnDate])
 
-  // Check if all apartments are booked
-  const allBooked = apartments.length > 0 && bookedPropertyIds.size === apartments.length
+  // Get available properties for EDIT booking (exclude properties booked during the edited date range, except the current booking)
+  const availableApartmentsForEdit = useMemo(() => {
+    if (!editStartDate || !editEndDate || !editingBooking) {
+      // If dates not set yet or not editing, show all filtered apartments
+      return apartments
+    }
+    
+    const editStart = new Date(editStartDate + 'T00:00:00Z')
+    const editEnd = new Date(editEndDate + 'T00:00:00Z')
+    
+    return apartments.filter(apt => {
+      // Check if property has any conflicting bookings during the edited date range
+      // (excluding the booking being edited)
+      const hasConflict = (apt.bookings || []).some((booking: any) => {
+        if (booking.id === editingBooking.id) return false // Skip the booking being edited
+        
+        const existingStart = booking.start_date.endsWith('Z') 
+          ? new Date(booking.start_date) 
+          : new Date(booking.start_date + 'Z')
+        const existingEnd = booking.end_date.endsWith('Z') 
+          ? new Date(booking.end_date) 
+          : new Date(booking.end_date + 'Z')
+        
+        return (editStart <= existingEnd && editEnd >= existingStart)
+      })
+      
+      return !hasConflict
+    })
+  }, [apartments, editStartDate, editEndDate, editingBooking])
 
   const handleEditBooking = (booking: EnrichedBooking) => {
     setEditingBooking(booking)
@@ -344,7 +393,7 @@ export function DateBookingModal({ isOpen, onClose, date, bookings, apartments, 
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                           >
                             <option value="">Select Property</option>
-                            {apartments.map(apt => (
+                            {availableApartmentsForEdit.map(apt => (
                               <option key={apt.id} value={apt.id}>{apt.name}</option>
                             ))}
                           </select>
@@ -465,7 +514,7 @@ export function DateBookingModal({ isOpen, onClose, date, bookings, apartments, 
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 >
                   <option value="">Select Property</option>
-                  {availableApartments.map(apt => (
+                  {availableApartmentsForNew.map(apt => (
                     <option key={apt.id} value={apt.id}>{apt.name}</option>
                   ))}
                 </select>
@@ -526,13 +575,16 @@ export function DateBookingModal({ isOpen, onClose, date, bookings, apartments, 
             </div>
           </div>
         ) : (
-          // Show "New Booking" button if not all rooms are booked
-          !allBooked && (
+          // Show "New Booking" button if there are available properties (not all booked on date range)
+          availableApartmentsForNew.length > 0 && (
             <div>
               <Button
                 onClick={() => {
                   setShowNewBooking(true)
                   setEditingBooking(null)
+                  // Reset dates to the clicked date
+                  setNewStartDate(format(date, 'yyyy-MM-dd'))
+                  setNewEndDate(format(date, 'yyyy-MM-dd'))
                 }}
                 className="bg-[#D4AF37] hover:bg-[#F4D03F] text-[#2C3E1F] w-full"
               >
@@ -545,10 +597,14 @@ export function DateBookingModal({ isOpen, onClose, date, bookings, apartments, 
         {bookings.length === 0 && !showNewBooking && (
           <div className="text-center text-[#6B7C4A] py-4">
             No bookings for this date
-            {!allBooked && (
+            {availableApartmentsForNew.length > 0 && (
               <div className="mt-2">
                 <Button
-                  onClick={() => setShowNewBooking(true)}
+                  onClick={() => {
+                    setShowNewBooking(true)
+                    setNewStartDate(format(date, 'yyyy-MM-dd'))
+                    setNewEndDate(format(date, 'yyyy-MM-dd'))
+                  }}
                   className="bg-[#D4AF37] hover:bg-[#F4D03F] text-[#2C3E1F]"
                 >
                   + Create First Booking
