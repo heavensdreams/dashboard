@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { BookingForm } from '@/components/BookingForm'
 import { Tooltip } from '@/components/ui/tooltip'
 import { Modal } from '@/components/ui/modal'
+import { DateBookingModal } from '@/components/DateBookingModal'
 import { useDataStore } from '@/stores/dataStore'
 import { useUserStore } from '@/stores/userStore'
 import { filterBookingsForCustomer, filterBookingsBySearch, filterBookingsByProperty } from '@/utils/filtering'
@@ -142,6 +143,9 @@ export function Calendar() {
   const [modalOpen, setModalOpen] = useState(false)
   const [modalBookings, setModalBookings] = useState<EnrichedBooking[]>([])
   const [modalDate, setModalDate] = useState<Date | null>(null)
+  const [adminModalOpen, setAdminModalOpen] = useState(false)
+  const [adminModalDate, setAdminModalDate] = useState<Date | null>(null)
+  const [adminModalBookings, setAdminModalBookings] = useState<EnrichedBooking[]>([])
   
   // Filters
   const [propertyFilter, setPropertyFilter] = useState<string>('all')
@@ -234,10 +238,13 @@ export function Calendar() {
       return
     }
     
-    // On desktop, allow editing if user can edit
-    if (!canEdit) return
-    setSelectedDate(date)
-    setShowBookingForm(true)
+    // For admin/normal users: show booking management modal
+    if (canEdit) {
+      setAdminModalDate(date)
+      setAdminModalBookings(bookings)
+      setAdminModalOpen(true)
+      return
+    }
   }
 
   const handleBookingSave = () => {
@@ -485,6 +492,21 @@ export function Calendar() {
             )}
           </div>
         </Modal>
+      )}
+
+      {/* Admin Booking Management Modal */}
+      {canEdit && adminModalOpen && adminModalDate && (
+        <DateBookingModal
+          isOpen={adminModalOpen}
+          onClose={() => {
+            setAdminModalOpen(false)
+            setAdminModalDate(null)
+            setAdminModalBookings([])
+          }}
+          date={adminModalDate}
+          bookings={adminModalBookings}
+          apartments={apartments}
+        />
       )}
 
       {/* Booking Form */}
