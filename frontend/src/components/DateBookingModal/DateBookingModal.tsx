@@ -27,9 +27,11 @@ interface DateBookingModalProps {
   date: Date
   bookings: EnrichedBooking[]
   apartments: any[]
+  allApartments?: any[]
+  hasActiveFilter?: boolean
 }
 
-export function DateBookingModal({ isOpen, onClose, date, bookings, apartments }: DateBookingModalProps) {
+export function DateBookingModal({ isOpen, onClose, date, bookings, apartments, allApartments, hasActiveFilter }: DateBookingModalProps) {
   const updateData = useDataStore(state => state.updateData)
   const { currentUser } = useUserStore()
   
@@ -307,11 +309,17 @@ export function DateBookingModal({ isOpen, onClose, date, bookings, apartments }
 
   if (!isOpen) return null
 
+  const totalApartments = (allApartments || apartments).length
+  const filteredApartmentsCount = apartments.length
+  const filterInfo = hasActiveFilter && totalApartments !== filteredApartmentsCount
+    ? ` (Filtered ${filteredApartmentsCount} props out of total ${totalApartments})`
+    : ''
+
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Bookings for ${format(date, 'MMMM d, yyyy')}`}
+      title={`Bookings for ${format(date, 'MMMM d, yyyy')}${filterInfo}`}
       size="lg"
     >
       <div className="space-y-6">

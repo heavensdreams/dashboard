@@ -239,9 +239,17 @@ export function Calendar() {
     }
     
     // For admin/normal users: show booking management modal
+    // Filter bookings to only include those whose properties are in filteredApartments
+    // (bookings are already filtered by propertyFilter and searchTerm via filteredBookings)
     if (canEdit) {
+      // Filter bookings to only show those for properties in the filtered apartments list
+      // This respects the groupOrEmailFilter
+      const filteredBookingsForDate = bookings.filter(booking => 
+        filteredApartments.some((a: any) => a.id === booking.property_id)
+      )
+      
       setAdminModalDate(date)
-      setAdminModalBookings(bookings)
+      setAdminModalBookings(filteredBookingsForDate)
       setAdminModalOpen(true)
       return
     }
@@ -505,7 +513,9 @@ export function Calendar() {
           }}
           date={adminModalDate}
           bookings={adminModalBookings}
-          apartments={apartments}
+          apartments={filteredApartments}
+          allApartments={apartments}
+          hasActiveFilter={propertyFilter !== 'all' || searchTerm !== '' || groupOrEmailFilter !== 'all'}
         />
       )}
 
