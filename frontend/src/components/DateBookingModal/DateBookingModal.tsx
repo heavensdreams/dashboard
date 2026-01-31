@@ -49,23 +49,18 @@ export function DateBookingModal({ isOpen, onClose, date, bookings, apartments, 
   const [newClientName, setNewClientName] = useState('')
   const [newExtraInfo, setNewExtraInfo] = useState('')
 
-  // Get properties that are booked on the selected date (for initial check)
-  const bookedPropertyIdsOnDate = useMemo(() => {
-    return new Set(bookings.map(b => b.property_id))
-  }, [bookings])
-
-  // Get available properties for NEW booking (exclude properties booked on the date range being created)
-  const availableApartmentsForNew = useMemo(() => {
+  // Check if a property is booked during a date range (for new booking)
+  const isPropertyBookedForNew = useMemo(() => {
     if (!newStartDate || !newEndDate) {
-      // If dates not set yet, show all filtered apartments
-      return apartments.filter(apt => !bookedPropertyIdsOnDate.has(apt.id))
+      // If dates not set, check if booked on the clicked date
+      return new Set(bookings.map(b => b.property_id))
     }
     
     const newStart = new Date(newStartDate + 'T00:00:00Z')
     const newEnd = new Date(newEndDate + 'T00:00:00Z')
+    const bookedIds = new Set<string>()
     
-    return apartments.filter(apt => {
-      // Check if property has any conflicting bookings during the new date range
+    apartments.forEach(apt => {
       const hasConflict = (apt.bookings || []).some((booking: any) => {
         const existingStart = booking.start_date.endsWith('Z') 
           ? new Date(booking.start_date) 
@@ -77,23 +72,25 @@ export function DateBookingModal({ isOpen, onClose, date, bookings, apartments, 
         return (newStart <= existingEnd && newEnd >= existingStart)
       })
       
-      return !hasConflict
+      if (hasConflict) {
+        bookedIds.add(apt.id)
+      }
     })
-  }, [apartments, newStartDate, newEndDate, bookedPropertyIdsOnDate])
+    
+    return bookedIds
+  }, [apartments, newStartDate, newEndDate, bookings])
 
-  // Get available properties for EDIT booking (exclude properties booked during the edited date range, except the current booking)
-  const availableApartmentsForEdit = useMemo(() => {
+  // Check if a property is booked during a date range (for edit booking)
+  const isPropertyBookedForEdit = useMemo(() => {
     if (!editStartDate || !editEndDate || !editingBooking) {
-      // If dates not set yet or not editing, show all filtered apartments
-      return apartments
+      return new Set<string>()
     }
     
     const editStart = new Date(editStartDate + 'T00:00:00Z')
     const editEnd = new Date(editEndDate + 'T00:00:00Z')
+    const bookedIds = new Set<string>()
     
-    return apartments.filter(apt => {
-      // Check if property has any conflicting bookings during the edited date range
-      // (excluding the booking being edited)
+    apartments.forEach(apt => {
       const hasConflict = (apt.bookings || []).some((booking: any) => {
         if (booking.id === editingBooking.id) return false // Skip the booking being edited
         
@@ -107,9 +104,18 @@ export function DateBookingModal({ isOpen, onClose, date, bookings, apartments, 
         return (editStart <= existingEnd && editEnd >= existingStart)
       })
       
-      return !hasConflict
+      if (hasConflict) {
+        bookedIds.add(apt.id)
+      }
     })
+    
+    return bookedIds
   }, [apartments, editStartDate, editEndDate, editingBooking])
+
+  // Get available properties for NEW booking (for button visibility)
+  const availableApartmentsForNew = useMemo(() => {
+    return apartments.filter(apt => !isPropertyBookedForNew.has(apt.id))
+  }, [apartments, isPropertyBookedForNew])
 
   const handleEditBooking = (booking: EnrichedBooking) => {
     setEditingBooking(booking)
@@ -393,9 +399,18 @@ export function DateBookingModal({ isOpen, onClose, date, bookings, apartments, 
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                           >
                             <option value="">Select Property</option>
-                            {availableApartmentsForEdit.map(apt => (
-                              <option key={apt.id} value={apt.id}>{apt.name}</option>
-                            ))}
+                            {apartments.map(apt => {
+                              const isBooked = isPropertyBookedForEdit.has(apt.id)
+                              return (
+                                <option 
+                                  key={apt.id} 
+                                  value={apt.id}
+                                  disabled={isBooked}
+                                >
+                                  {apt.name}{isBooked ? ' (Booked)' : ''}
+                                </option>
+                              )
+                            })}
                           </select>
                         </div>
                         <div className="grid grid-cols-2 gap-3">
@@ -514,9 +529,18 @@ export function DateBookingModal({ isOpen, onClose, date, bookings, apartments, 
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 >
                   <option value="">Select Property</option>
-                  {availableApartmentsForNew.map(apt => (
-                    <option key={apt.id} value={apt.id}>{apt.name}</option>
-                  ))}
+                  {apartments.map(apt => {
+                    const isBooked = isPropertyBookedForNew.has(apt.id)
+                    return (
+                      <option 
+                        key={apt.id} 
+                        value={apt.id}
+                        disabled={isBooked}
+                      >
+                        {apt.name}{isBooked ? ' (Booked)' : ''}
+                      </option>
+                    )
+                  })}
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-3">
