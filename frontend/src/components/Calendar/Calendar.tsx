@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { BookingForm } from '@/components/BookingForm'
 import { Tooltip } from '@/components/ui/tooltip'
+import { Modal } from '@/components/ui/modal'
 import { useDataStore } from '@/stores/dataStore'
 import { useUserStore } from '@/stores/userStore'
 import { filterBookingsForCustomer, filterBookingsBySearch, filterBookingsByProperty } from '@/utils/filtering'
@@ -137,6 +138,10 @@ export function Calendar() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [showBookingForm, setShowBookingForm] = useState(false)
   const [selectedProperty, setSelectedProperty] = useState<string | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalBookings, setModalBookings] = useState<EnrichedBooking[]>([])
+  const [modalDate, setModalDate] = useState<Date | null>(null)
   
   // Filters
   const [propertyFilter, setPropertyFilter] = useState<string>('all')
@@ -150,6 +155,16 @@ export function Calendar() {
 
   const previousMonth = () => setCurrentDate(subMonths(currentDate, 1))
   const nextMonth = () => setCurrentDate(addMonths(currentDate, 1))
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024) // lg breakpoint
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Use memoized filtered bookings for better performance
   const filteredBookings = useMemo(() => {
@@ -210,7 +225,16 @@ export function Calendar() {
     return 'green'
   }
 
-  const handleDateClick = (date: Date) => {
+  const handleDateClick = (date: Date, bookings: EnrichedBooking[]) => {
+    // On mobile, show modal with booking details (CUSTOMERS ONLY)
+    if (isCustomer && isMobile && bookings.length > 0) {
+      setModalDate(date)
+      setModalBookings(bookings)
+      setModalOpen(true)
+      return
+    }
+    
+    // On desktop, allow editing if user can edit
     if (!canEdit) return
     setSelectedDate(date)
     setShowBookingForm(true)
@@ -363,9 +387,9 @@ export function Calendar() {
                       transition-all duration-200 hover:scale-110 cursor-pointer touch-manipulation min-h-[36px] sm:min-h-[40px]
                       ${cellStyle}
                       ${isToday ? 'ring-2 sm:ring-3 lg:ring-4 ring-[#D4AF37] ring-offset-1 sm:ring-offset-2 shadow-xl scale-105 sm:scale-110' : ''}
-                      ${canEdit ? '' : 'cursor-default'}
+                      ${canEdit || (isMobile && hasBookings) ? '' : 'cursor-default'}
                     `}
-                    onClick={() => handleDateClick(day)}
+                    onClick={() => handleDateClick(day, dayBookings)}
                     title={hasBookings ? `${dayBookings.length} booking(s)` : 'Available'}
                   >
                     <span className="font-medium">{format(day, 'd')}</span>
@@ -375,10 +399,10 @@ export function Calendar() {
                   </div>
                 )
 
-                // Wrap entire date box with tooltip if there are bookings
+                // On desktop, wrap with tooltip on hover. On mobile (customers only), clicking opens modal
                 return (
                   <div key={day.toISOString()}>
-                    {tooltipContent ? (
+                    {(!isMobile || !isCustomer) && tooltipContent ? (
                       <Tooltip content={tooltipContent}>
                         {dateBoxContent}
                       </Tooltip>
@@ -392,7 +416,7 @@ export function Calendar() {
           })()}
         </div>
 
-        {/* Legend */}
+        {/* Legend - 3 states for all users */}
         <div className="flex items-center justify-center gap-3 sm:gap-4 lg:gap-8 mt-4 sm:mt-6 lg:mt-8 pt-4 sm:pt-6 lg:pt-8 border-t-2 border-[#D4AF37]/20 flex-wrap">
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-red-100 border-2 border-red-300 rounded"></div>
@@ -401,10 +425,6 @@ export function Calendar() {
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-yellow-100 border-2 border-yellow-300 rounded"></div>
             <span className="text-xs sm:text-sm text-[#4A5D23] font-light">Some rooms available</span>
-          </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-gradient-to-br from-[#D4AF37] to-[#F4D03F] rounded shadow-md"></div>
-            <span className="text-xs sm:text-sm text-[#4A5D23] font-light">Booked</span>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#E8F0E0] border-2 border-[#D4E0C8] rounded"></div>
@@ -422,6 +442,50 @@ export function Calendar() {
           background-clip: text;
         }
       `}</style>
+
+      {/* Booking Details Modal - Mobile (CUSTOMERS ONLY) */}
+      {isCustomer && modalOpen && modalDate && (
+        <Modal
+          isOpen={modalOpen}
+          onClose={() => {
+            setModalOpen(false)
+            setModalDate(null)
+            setModalBookings([])
+          }}
+          title={`Bookings for ${format(modalDate, 'MMMM d, yyyy')}`}
+          size="md"
+        >
+          <div className="space-y-4">
+            {modalBookings.length > 0 ? (
+              modalBookings.map(booking => {
+                const propertyName = booking.property_name || 'Unknown Property'
+                const guestName = booking.client_name || booking.extra_info || booking.user_email || 'Guest'
+                const startDate = new Date(booking.start_date)
+                const endDate = new Date(booking.end_date)
+                const bookingDates = `${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d, yyyy')}`
+                return (
+                  <div key={booking.id} className="pb-4 border-b border-gray-200 last:border-0 last:pb-0">
+                    <div className="font-semibold text-lg mb-2 text-[#2C3E1F]">{propertyName}</div>
+                    <div className="text-sm text-[#6B7C4A] mb-1">
+                      <span className="font-medium">Guest:</span> {guestName}
+                    </div>
+                    <div className="text-sm text-[#6B7C4A] mb-1">
+                      <span className="font-medium">Dates:</span> {bookingDates}
+                    </div>
+                    {booking.extra_info && !booking.client_name && (
+                      <div className="text-sm text-[#6B7C4A] mt-2">
+                        <span className="font-medium">Details:</span> {booking.extra_info}
+                      </div>
+                    )}
+                  </div>
+                )
+              })
+            ) : (
+              <div className="text-center text-[#6B7C4A] py-4">No bookings for this date</div>
+            )}
+          </div>
+        </Modal>
+      )}
 
       {/* Booking Form */}
       {showBookingForm && selectedDate && (

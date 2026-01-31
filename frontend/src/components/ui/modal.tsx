@@ -19,22 +19,22 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-3 sm:p-4" onClick={onClose}>
       <div 
-        className={`bg-background rounded-lg w-full ${sizeClasses[size]} max-h-[90vh] overflow-y-auto`}
+        className={`bg-white rounded-lg sm:rounded-xl w-full ${sizeClasses[size]} max-h-[85vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-background border-b px-6 py-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">{title}</h2>
+        <div className="sticky top-0 bg-white border-b-2 border-[#D4AF37]/30 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between z-10">
+          <h2 className="text-lg sm:text-xl font-light text-[#2C3E1F] tracking-wide">{title}</h2>
           <button
             onClick={onClose}
-            className="text-muted-foreground hover:text-foreground text-2xl leading-none"
+            className="text-[#6B7C4A] hover:text-[#D4AF37] text-3xl sm:text-2xl leading-none transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation"
             aria-label="Close"
           >
             ×
           </button>
         </div>
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {children}
         </div>
       </div>
