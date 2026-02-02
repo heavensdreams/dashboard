@@ -6,7 +6,7 @@ interface DataStore extends AppData {
   error: string | null
   groupOrEmailFilter: string
   setGroupOrEmailFilter: (filter: string) => void
-  loadData: () => Promise<void>
+  loadData: (silent?: boolean) => Promise<void>
   saveData: () => Promise<void>
   updateData: (updater: (data: AppData) => AppData) => Promise<void>
   user_groups?: any[]
@@ -29,10 +29,22 @@ export const useDataStore = create<DataStore>((set, get) => ({
   groupOrEmailFilter: 'all',
   setGroupOrEmailFilter: (filter: string) => set({ groupOrEmailFilter: filter }),
   
-  loadData: async () => {
-    set({ loading: true, error: null })
+  loadData: async (silent = false) => {
+    if (!silent) set({ loading: true, error: null })
     try {
       const data = await loadAllData()
+      const state = get()
+      const unchanged =
+        JSON.stringify(state.users) === JSON.stringify(data.users) &&
+        JSON.stringify(state.groups) === JSON.stringify(data.groups) &&
+        JSON.stringify(state.apartments) === JSON.stringify(data.apartments) &&
+        JSON.stringify(state.logs || []) === JSON.stringify(data.logs || []) &&
+        JSON.stringify(state.user_groups || []) === JSON.stringify(data.user_groups || []) &&
+        JSON.stringify(state.property_groups || []) === JSON.stringify(data.property_groups || [])
+      if (unchanged) {
+        if (!silent) set({ loading: false })
+        return
+      }
       set({ ...data, loading: false })
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to load data'

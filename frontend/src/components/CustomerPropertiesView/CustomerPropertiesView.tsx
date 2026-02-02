@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, parseISO } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { useDataStore } from '@/stores/dataStore'
 import { useUserStore } from '@/stores/userStore'
 import { filterBookingsForCustomer } from '@/utils/filtering'
@@ -16,7 +16,6 @@ interface Property {
     start_date: string
     end_date: string
   }>
-  availability: Record<string, 'booked' | 'available'>
 }
 
 export function CustomerPropertiesView() {
@@ -26,7 +25,6 @@ export function CustomerPropertiesView() {
   const { currentUser } = useUserStore()
   
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<{ propertyId: string; index: number } | null>(null)
-  const [currentMonth, setCurrentMonth] = useState<Record<string, Date>>({})
   const [visibleProperties, setVisibleProperties] = useState<Set<string>>(new Set())
   const [expandedPropertyId, setExpandedPropertyId] = useState<string | null>(null)
 
@@ -59,18 +57,6 @@ export function CustomerPropertiesView() {
       // Filter bookings for customer (remove personal info)
       let apartmentBookings = apartment.bookings || []
       apartmentBookings = filterBookingsForCustomer(apartmentBookings)
-      
-      // Build availability map
-      const availability: Record<string, 'booked' | 'available'> = {}
-      apartmentBookings.forEach((booking: any) => {
-        const start = new Date(booking.start_date)
-        const end = new Date(booking.end_date)
-        const days = eachDayOfInterval({ start, end })
-        days.forEach(day => {
-          availability[day.toISOString().split('T')[0]] = 'booked'
-        })
-      })
-      
       return {
         id: apartment.id,
         name: apartment.name,
@@ -80,8 +66,7 @@ export function CustomerPropertiesView() {
         bookings: apartmentBookings.map((b: any) => ({
           start_date: b.start_date,
           end_date: b.end_date
-        })),
-        availability
+        }))
       } as Property
     })
   }, [apartments, customerGroupName, currentUser?.email])
@@ -96,23 +81,11 @@ export function CustomerPropertiesView() {
         setVisibleProperties(prev => new Set([...prev, prop.id]))
       }, index * 200)
     })
-    // Initialize current month for each property
-    const months: Record<string, Date> = {}
-    properties.forEach(prop => {
-      months[prop.id] = new Date()
-    })
-    setCurrentMonth(months)
     // If single property, expand it by default
     if (properties.length === 1) {
       setExpandedPropertyId(properties[0].id)
     }
   }, [properties])
-
-
-  const getDateStatus = (date: Date, property: Property): 'booked' | 'available' => {
-    const dateStr = date.toISOString().split('T')[0]
-    return property.availability[dateStr] || 'available'
-  }
 
   const formatBookingDate = (dateStr: string) => {
     try {
@@ -343,104 +316,6 @@ export function CustomerPropertiesView() {
             </div>
           </div>
         )}
-
-        {/* Availability Calendar */}
-        <div className="px-3 sm:px-4 lg:px-12 py-6 sm:py-8 lg:py-12 border-t-2 border-[#D4AF37]/20 bg-gradient-to-b from-[#FAFAFA] to-white" id="availability">
-          <h3 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#2C3E1F] mb-4 sm:mb-6 lg:mb-10 tracking-wide gold-text-gradient">Availability Calendar</h3>
-          <div className="bg-white p-3 sm:p-4 lg:p-8 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-xl border-2 border-[#D4AF37]/20 overflow-x-auto">
-            <div className="flex items-center justify-between mb-4 sm:mb-6 lg:mb-8 min-w-[280px]">
-              <button
-                onClick={() => {
-                  const newMonth = new Date(currentMonth[property.id] || new Date())
-                  newMonth.setMonth(newMonth.getMonth() - 1)
-                  setCurrentMonth({ ...currentMonth, [property.id]: newMonth })
-                }}
-                className="p-2 sm:p-3 hover:bg-gradient-to-br hover:from-[#D4AF37]/10 hover:to-[#F4D03F]/10 rounded-full transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
-                aria-label="Previous month"
-              >
-                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <h4 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-light text-[#2C3E1F] tracking-wide gold-text-gradient px-2">
-                {format(currentMonth[property.id] || new Date(), 'MMMM yyyy')}
-              </h4>
-              <button
-                onClick={() => {
-                  const newMonth = new Date(currentMonth[property.id] || new Date())
-                  newMonth.setMonth(newMonth.getMonth() + 1)
-                  setCurrentMonth({ ...currentMonth, [property.id]: newMonth })
-                }}
-                className="p-2 sm:p-3 hover:bg-gradient-to-br hover:from-[#D4AF37]/10 hover:to-[#F4D03F]/10 rounded-full transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
-                aria-label="Next month"
-              >
-                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Calendar Grid */}
-            <div className="grid grid-cols-7 gap-1 sm:gap-1.5 lg:gap-2 mb-2 sm:mb-3 min-w-[280px]">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                <div key={day} className="text-center text-xs sm:text-sm font-light text-[#6B7C4A] py-1.5 sm:py-2 lg:py-3">
-                  <span className="hidden sm:inline">{day}</span>
-                  <span className="sm:hidden">{day.substring(0, 1)}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-7 gap-1 sm:gap-1.5 lg:gap-2 min-w-[280px]">
-              {(() => {
-                const month = currentMonth[property.id] || new Date()
-                const monthStart = startOfMonth(month)
-                const monthEnd = endOfMonth(month)
-                const days = eachDayOfInterval({ start: monthStart, end: monthEnd })
-                const firstDayOfWeek = monthStart.getDay()
-                const emptyDays = Array(firstDayOfWeek).fill(null)
-
-                return [
-                  ...emptyDays.map((_, i) => <div key={`empty-${i}`} className="aspect-square"></div>),
-                  ...days.map(day => {
-                    const status = getDateStatus(day, property)
-                    const isToday = isSameDay(day, new Date())
-                    const isBooked = status === 'booked'
-
-                    return (
-                      <div
-                        key={day.toISOString()}
-                        className={`
-                          aspect-square flex items-center justify-center text-xs sm:text-sm font-light rounded sm:rounded-md lg:rounded-lg
-                          transition-all duration-200 hover:scale-110 cursor-pointer touch-manipulation min-h-[36px] sm:min-h-[40px]
-                          ${isBooked 
-                            ? 'bg-gradient-to-br from-[#D4AF37] via-[#F4D03F] to-[#D4AF37] text-white shadow-lg hover:shadow-xl' 
-                            : 'bg-[#E8F0E0] text-[#4A5D23] border-2 border-[#D4E0C8] hover:border-[#D4AF37] hover:bg-[#F0F8E8]'
-                          }
-                          ${isToday ? 'ring-2 sm:ring-3 lg:ring-4 ring-[#D4AF37] ring-offset-1 sm:ring-offset-2 shadow-xl scale-105 sm:scale-110' : ''}
-                        `}
-                        title={isBooked ? 'Booked' : 'Available'}
-                      >
-                        {format(day, 'd')}
-                      </div>
-                    )
-                  })
-                ]
-              })()}
-            </div>
-
-            {/* Legend */}
-            <div className="flex items-center justify-center gap-3 sm:gap-4 lg:gap-8 mt-4 sm:mt-6 lg:mt-8 pt-4 sm:pt-6 lg:pt-8 border-t-2 border-[#D4AF37]/20">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#E8F0E0] border-2 border-[#D4E0C8] rounded"></div>
-                <span className="text-xs sm:text-sm text-[#4A5D23] font-light">Available</span>
-              </div>
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-gradient-to-br from-[#D4AF37] to-[#F4D03F] rounded shadow-md"></div>
-                <span className="text-xs sm:text-sm text-[#4A5D23] font-light">Booked</span>
-              </div>
-            </div>
-          </div>
-        </div>
 
       </div>
     )

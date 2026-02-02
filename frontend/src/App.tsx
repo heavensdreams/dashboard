@@ -24,6 +24,16 @@ function App() {
     loadData()
   }, [loadData])
 
+  // For customers: poll data every 10s so profile/assignments stay in sync (e.g. vediamo@vediamo.com)
+  // Silent refresh: no loading state, no store update if nothing changed → no blink, collapse/expand preserved
+  useEffect(() => {
+    if (currentUser?.role !== 'customer') return
+    const interval = setInterval(() => {
+      loadData(true)
+    }, 10_000)
+    return () => clearInterval(interval)
+  }, [currentUser?.role, loadData])
+
   // Handle navigation events from Dashboard
   useEffect(() => {
     const handleNavigate = (e: CustomEvent) => {
