@@ -14,8 +14,8 @@ interface Booking {
 }
 
 /**
- * Filter booking data for customers - removes all personal information
- * Only shows: id, property_id, property_name, start_date, end_date
+ * Filter booking data for customers - removes internal personal info (user_email).
+ * Keeps client_name and extra_info so calendar/Properties can show reservation details.
  */
 export function filterBookingForCustomer(booking: Booking): Booking {
   return {
@@ -23,8 +23,10 @@ export function filterBookingForCustomer(booking: Booking): Booking {
     property_id: booking.property_id,
     property_name: booking.property_name,
     start_date: booking.start_date,
-    end_date: booking.end_date
-    // Explicitly exclude: user_email, extra_info
+    end_date: booking.end_date,
+    client_name: booking.client_name,
+    extra_info: booking.extra_info
+    // Explicitly exclude: user_email
   }
 }
 

@@ -5,6 +5,14 @@ import { useUserStore } from '@/stores/userStore'
 import { filterBookingsForCustomer } from '@/utils/filtering'
 import { getPhotoUrl, handlePhotoError } from '@/utils/photoHelpers'
 import { ROITrendGraph } from '@/components/ROITrendGraph/ROITrendGraph'
+import { Modal } from '@/components/ui/modal'
+
+interface PropertyBooking {
+  start_date: string
+  end_date: string
+  client_name?: string
+  extra_info?: string
+}
 
 interface Property {
   id: string
@@ -12,10 +20,7 @@ interface Property {
   address: string
   extra_info: string
   photos: string[]
-  bookings: Array<{
-    start_date: string
-    end_date: string
-  }>
+  bookings: PropertyBooking[]
 }
 
 export function CustomerPropertiesView() {
@@ -25,6 +30,7 @@ export function CustomerPropertiesView() {
   const { currentUser } = useUserStore()
   
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<{ propertyId: string; index: number } | null>(null)
+  const [selectedBooking, setSelectedBooking] = useState<{ booking: PropertyBooking; propertyName: string } | null>(null)
   const [visibleProperties, setVisibleProperties] = useState<Set<string>>(new Set())
   const [expandedPropertyId, setExpandedPropertyId] = useState<string | null>(null)
 
@@ -65,7 +71,9 @@ export function CustomerPropertiesView() {
         photos: apartment.photos || [],
         bookings: apartmentBookings.map((b: any) => ({
           start_date: b.start_date,
-          end_date: b.end_date
+          end_date: b.end_date,
+          client_name: b.client_name,
+          extra_info: b.extra_info
         }))
       } as Property
     })
@@ -276,7 +284,11 @@ export function CustomerPropertiesView() {
                 return (
                   <div
                     key={index}
-                    className={`p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl border-2 transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 ${
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => setSelectedBooking({ booking, propertyName: property.name })}
+                    onKeyDown={(e) => e.key === 'Enter' && setSelectedBooking({ booking, propertyName: property.name })}
+                    className={`p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl border-2 transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 cursor-pointer ${
                       isPast
                         ? 'bg-gradient-to-r from-[#F5F5F5] to-[#F0F0F0] border-[#E0E0E0] opacity-60'
                         : isCurrent
@@ -358,6 +370,43 @@ export function CustomerPropertiesView() {
           </div>
         )}
       </main>
+
+      {/* Reservation detail modal */}
+      {selectedBooking && (
+        <Modal
+          isOpen={!!selectedBooking}
+          onClose={() => setSelectedBooking(null)}
+          title="Reservation details"
+          size="sm"
+        >
+          <div className="space-y-4 text-[#2C3E1F]">
+            <div>
+              <p className="text-xs sm:text-sm font-medium text-[#6B7C4A] mb-1">Property</p>
+              <p className="text-sm sm:text-base font-light">{selectedBooking.propertyName}</p>
+            </div>
+            <div>
+              <p className="text-xs sm:text-sm font-medium text-[#6B7C4A] mb-1">Check-in</p>
+              <p className="text-sm sm:text-base font-light">{formatBookingDate(selectedBooking.booking.start_date)}</p>
+            </div>
+            <div>
+              <p className="text-xs sm:text-sm font-medium text-[#6B7C4A] mb-1">Check-out</p>
+              <p className="text-sm sm:text-base font-light">{formatBookingDate(selectedBooking.booking.end_date)}</p>
+            </div>
+            {selectedBooking.booking.client_name && (
+              <div>
+                <p className="text-xs sm:text-sm font-medium text-[#6B7C4A] mb-1">Client name</p>
+                <p className="text-sm sm:text-base font-light">{selectedBooking.booking.client_name}</p>
+              </div>
+            )}
+            {selectedBooking.booking.extra_info && (
+              <div>
+                <p className="text-xs sm:text-sm font-medium text-[#6B7C4A] mb-1">Notes</p>
+                <p className="text-sm sm:text-base font-light whitespace-pre-wrap">{selectedBooking.booking.extra_info}</p>
+              </div>
+            )}
+          </div>
+        </Modal>
+      )}
 
       {/* Photo Lightbox Modal */}
       {selectedPhotoIndex && (

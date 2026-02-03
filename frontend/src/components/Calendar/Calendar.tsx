@@ -120,6 +120,7 @@ export function Calendar() {
         user_id: booking.user_id,
         start_date: booking.start_date,
         end_date: booking.end_date,
+        client_name: booking.client_name,
         extra_info: booking.extra_info,
         created_at: booking.created_at,
         property_name: apartment?.name || 'Unknown Property',

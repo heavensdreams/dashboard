@@ -265,7 +265,7 @@ export function Dashboard() {
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border-2 border-[#D4AF37]/20 hover:shadow-xl transition-all duration-300">
           <div className="p-6 sm:p-8">
             <div className="text-3xl sm:text-4xl lg:text-5xl font-light text-[#4A5D23] mb-2 tracking-wide">{stats.availableProperties}</div>
-            <div className="text-sm sm:text-base text-[#6B7C4A] font-light">Available</div>
+            <div className="text-sm sm:text-base text-[#6B7C4A] font-light">Available today</div>
           </div>
         </div>
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border-2 border-[#D4AF37]/20 hover:shadow-xl transition-all duration-300">
