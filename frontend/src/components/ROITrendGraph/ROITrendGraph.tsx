@@ -52,13 +52,13 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
     return months
   }, [properties, allBookings])
   
-  // Calculate graph dimensions - use viewBox for responsive scaling
-  const width = 800
-  const height = 380
-  const padding = { top: 55, right: 30, bottom: 55, left: 55 }
+  // Calculate graph dimensions - taller aspect ratio for mobile readability
+  const width = 600
+  const height = 450
+  const padding = { top: 70, right: 25, bottom: 70, left: 50 }
   const graphWidth = width - padding.left - padding.right
   const graphHeight = height - padding.top - padding.bottom
-  const barWidth = graphWidth / graphData.length * 0.55
+  const barWidth = graphWidth / graphData.length * 0.65
   
   const currentYear = new Date().getFullYear()
   
@@ -102,23 +102,23 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
   return (
     <div className="w-full flex justify-center px-2 sm:px-4">
       <div className="w-full max-w-4xl">
-        {/* Title */}
-        <div className="text-center mb-2">
-          <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-[#2C3E1F]">
+        {/* Title - larger for mobile */}
+        <div className="text-center mb-3">
+          <h3 className="text-xl sm:text-2xl font-bold text-[#2C3E1F]">
             Occupancy Trend ({currentYear})
           </h3>
         </div>
         
-        {/* Legend - responsive layout */}
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mb-3 sm:mb-4 bg-white/80 py-2 px-3 rounded-lg">
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <div className="w-4 sm:w-5 h-3 sm:h-4 bg-[#F5E6C8] border border-[#D4AF37]/50 rounded-sm"></div>
-            <span className="text-xs sm:text-sm text-gray-700">Occupancy (%)</span>
+        {/* Legend - larger text for mobile readability */}
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 mb-3 sm:mb-4 bg-white/80 py-2 px-4 rounded-lg">
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-4 bg-[#F5E6C8] border-2 border-[#D4AF37]/60 rounded-sm"></div>
+            <span className="text-sm sm:text-base text-gray-700 font-medium">Occupancy</span>
           </div>
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <div className="w-4 sm:w-5 h-0.5 bg-[#4A5D23]"></div>
-            <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-[#4A5D23] rounded-full -ml-2.5 sm:-ml-3.5"></div>
-            <span className="text-xs sm:text-sm text-gray-700 ml-0.5 sm:ml-1">Trend</span>
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-1 bg-[#4A5D23] rounded"></div>
+            <div className="w-2.5 h-2.5 bg-[#4A5D23] rounded-full -ml-4"></div>
+            <span className="text-sm sm:text-base text-gray-700 font-medium ml-1">Trend</span>
           </div>
         </div>
         
@@ -138,8 +138,8 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
               fill="#FAFAFA"
             />
             
-            {/* Grid lines */}
-            {[0, 20, 40, 60, 80, 100].map((value) => {
+            {/* Grid lines - simplified to 0, 50, 100 for readability */}
+            {[0, 50, 100].map((value) => {
               const y = padding.top + graphHeight - (value / 100) * graphHeight
               return (
                 <g key={value}>
@@ -148,19 +148,20 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
                     y1={y}
                     x2={padding.left + graphWidth}
                     y2={y}
-                    stroke="#e0e0e0"
+                    stroke="#d0d0d0"
                     strokeWidth={1}
-                    strokeDasharray="4 4"
+                    strokeDasharray="5 5"
                   />
-                  {/* Y-axis labels */}
+                  {/* Y-axis labels - larger font */}
                   <text
-                    x={padding.left - 8}
-                    y={y + 3}
+                    x={padding.left - 10}
+                    y={y + 5}
                     textAnchor="end"
-                    fontSize={10}
-                    fill="#666"
+                    fontSize={16}
+                    fontWeight="500"
+                    fill="#555"
                   >
-                    {value}
+                    {value}%
                   </text>
                 </g>
               )
@@ -173,20 +174,20 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
               x2={padding.left + graphWidth}
               y2={thresholdY}
               stroke="#DC2626"
-              strokeWidth={1.5}
-              strokeDasharray="6 3"
+              strokeWidth={2}
+              strokeDasharray="8 4"
             />
             <text
-              x={padding.left + 8}
-              y={thresholdY - 6}
-              fontSize={10}
+              x={padding.left + 10}
+              y={thresholdY - 8}
+              fontSize={14}
               fill="#DC2626"
-              fontWeight="500"
+              fontWeight="600"
             >
-              Low Threshold (40%)
+              40% threshold
             </text>
             
-            {/* Occupancy bars */}
+            {/* Occupancy bars - thicker border for visibility */}
             {graphData.map((data, index) => {
               const barHeight = (data.occupancy / 100) * graphHeight
               const x = padding.left + (index / graphData.length) * graphWidth + (graphWidth / graphData.length - barWidth) / 2
@@ -201,32 +202,32 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
                   height={barHeight}
                   fill="#F5E6C8"
                   stroke="#D4AF37"
-                  strokeWidth={1}
-                  opacity={0.9}
+                  strokeWidth={2}
+                  opacity={0.95}
                 />
               )
             })}
             
-            {/* Trend line */}
+            {/* Trend line - thicker for mobile visibility */}
             <path
               d={trendLinePath}
               fill="none"
               stroke="#4A5D23"
-              strokeWidth={3}
+              strokeWidth={4}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
             
-            {/* Trend line dots */}
+            {/* Trend line dots - larger */}
             {trendLinePoints.map((point, index) => (
               <circle
                 key={index}
                 cx={point.x}
                 cy={point.y}
-                r={5}
+                r={7}
                 fill="#4A5D23"
                 stroke="#fff"
-                strokeWidth={1.5}
+                strokeWidth={2}
               />
             ))}
             
@@ -235,8 +236,8 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
               <g>
                 {/* Calculate annotation position to stay within bounds */}
                 {(() => {
-                  const boxWidth = 110
-                  const boxHeight = 30
+                  const boxWidth = 130
+                  const boxHeight = 38
                   let annotX = peakPoint.x
                   // Keep annotation box within chart bounds
                   if (annotX - boxWidth/2 < padding.left) {
@@ -249,29 +250,29 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
                       {/* Annotation box */}
                       <rect
                         x={annotX - boxWidth/2}
-                        y={peakPoint.y - 65}
+                        y={peakPoint.y - 75}
                         width={boxWidth}
                         height={boxHeight}
                         fill="white"
                         stroke="#333"
-                        strokeWidth={1}
-                        rx={3}
+                        strokeWidth={1.5}
+                        rx={4}
                       />
                       <text
                         x={annotX}
-                        y={peakPoint.y - 51}
+                        y={peakPoint.y - 54}
                         textAnchor="middle"
-                        fontSize={10}
-                        fontWeight="600"
+                        fontSize={15}
+                        fontWeight="700"
                         fill="#333"
                       >
                         Peak: {Math.round(peakData.value)}%
                       </text>
                       <text
                         x={annotX}
-                        y={peakPoint.y - 40}
+                        y={peakPoint.y - 42}
                         textAnchor="middle"
-                        fontSize={9}
+                        fontSize={12}
                         fill="#666"
                       >
                         ({peakData.month})
@@ -279,15 +280,15 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
                       {/* Arrow line */}
                       <line
                         x1={peakPoint.x}
-                        y1={peakPoint.y - 34}
+                        y1={peakPoint.y - 36}
                         x2={peakPoint.x}
-                        y2={peakPoint.y - 8}
+                        y2={peakPoint.y - 10}
                         stroke="#333"
-                        strokeWidth={1.5}
+                        strokeWidth={2}
                       />
                       {/* Arrow head */}
                       <polygon
-                        points={`${peakPoint.x},${peakPoint.y - 6} ${peakPoint.x - 4},${peakPoint.y - 12} ${peakPoint.x + 4},${peakPoint.y - 12}`}
+                        points={`${peakPoint.x},${peakPoint.y - 8} ${peakPoint.x - 6},${peakPoint.y - 16} ${peakPoint.x + 6},${peakPoint.y - 16}`}
                         fill="#333"
                       />
                     </>
@@ -296,45 +297,39 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
               </g>
             )}
             
-            {/* Month labels */}
+            {/* Month labels - show every other month for readability */}
             {graphData.map((data, index) => {
               const x = padding.left + (index / graphData.length) * graphWidth + (graphWidth / graphData.length) / 2
-              return (
+              // Show every other month: Jan, Mar, May, Jul, Sep, Nov
+              const showLabel = index % 2 === 0
+              return showLabel ? (
                 <text
                   key={index}
                   x={x}
-                  y={height - padding.bottom + 20}
+                  y={height - padding.bottom + 25}
                   textAnchor="middle"
-                  fontSize={10}
-                  fill="#666"
+                  fontSize={15}
+                  fontWeight="500"
+                  fill="#555"
                 >
                   {data.month}
                 </text>
-              )
+              ) : null
             })}
             
             {/* Year label under month labels */}
             <text
               x={width / 2}
-              y={height - 12}
+              y={height - 15}
               textAnchor="middle"
-              fontSize={11}
-              fill="#666"
+              fontSize={16}
+              fontWeight="600"
+              fill="#555"
             >
               {currentYear}
             </text>
             
-            {/* Y-axis label */}
-            <text
-              x={14}
-              y={height / 2}
-              textAnchor="middle"
-              transform={`rotate(-90, 14, ${height / 2})`}
-              fontSize={11}
-              fill="#666"
-            >
-              Occupancy (%)
-            </text>
+            {/* Y-axis label - removed for cleaner mobile look, values have % already */}
             
             {/* Axes */}
             <line
@@ -343,7 +338,7 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
               x2={padding.left}
               y2={padding.top + graphHeight}
               stroke="#333"
-              strokeWidth={1.5}
+              strokeWidth={2}
             />
             <line
               x1={padding.left}
@@ -351,7 +346,7 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
               x2={padding.left + graphWidth}
               y2={padding.top + graphHeight}
               stroke="#333"
-              strokeWidth={1.5}
+              strokeWidth={2}
             />
           </svg>
         </div>
