@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { eachDayOfInterval, startOfYear, endOfYear, format, isWithinInterval } from 'date-fns'
+import { startOfMonth, endOfMonth, eachDayOfInterval, format, isWithinInterval } from 'date-fns'
 import type { Apartment, Booking } from '@/utils/apartmentHelpers'
 
 interface ROITrendGraphProps {
@@ -10,95 +10,54 @@ interface ROITrendGraphProps {
 export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
   const graphData = useMemo(() => {
     const currentYear = new Date().getFullYear()
-    const yearStart = startOfYear(new Date(currentYear, 0, 1))
-    const yearEnd = endOfYear(new Date(currentYear, 11, 31))
-    const days = eachDayOfInterval({ start: yearStart, end: yearEnd })
-    
     const totalRooms = properties.length
+    const months: { month: string; occupancy: number }[] = []
     
-    // Calculate daily occupancy and cumulative profit
-    let cumulativeProfit = 0
-    const dataPoints: { date: Date; profit: number; occupancy: number }[] = []
-    
-    days.forEach(day => {
-      // Count how many properties (rooms) are booked on this day
-      const bookedRooms = properties.filter(property => {
-        const propertyBookings = allBookings.filter(booking => 
-          booking.property_id === property.id
-        )
-        return propertyBookings.some(booking => {
-          const start = new Date(booking.start_date)
-          const end = new Date(booking.end_date)
-          return isWithinInterval(day, { start, end })
-        })
-      }).length
+    // Calculate monthly occupancy rates
+    for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
+      const monthStart = startOfMonth(new Date(currentYear, monthIndex, 1))
+      const monthEnd = endOfMonth(new Date(currentYear, monthIndex, 1))
+      const days = eachDayOfInterval({ start: monthStart, end: monthEnd })
       
-      const occupancyRate = totalRooms > 0 ? bookedRooms / totalRooms : 0
+      // Calculate average occupancy for the month
+      let totalOccupancy = 0
+      let dayCount = 0
       
-      // Calculate profit increment based on occupancy percentage
-      // The steeper the occupancy %, the steeper the rise
-      // Formula: profitIncrement = occupancyRate * maxIncrement
-      // This means:
-      // - 100% occupancy = maxIncrement (steepest, ~45 degrees visually)
-      // - 50% occupancy = maxIncrement * 0.5 (medium steepness)
-      // - 10% occupancy = maxIncrement * 0.1 (shallow, ~10 degrees visually)
-      // - 0% occupancy = 0 (flat)
-      
-      // Scale the increment so that occupancy percentage directly affects steepness
-      // Higher maxIncrement = steeper line for same occupancy
-      const maxIncrement = 10 // Maximum profit increment for 100% occupancy
-      const profitIncrement = occupancyRate * maxIncrement
-      
-      cumulativeProfit += profitIncrement
-      
-      dataPoints.push({
-        date: day,
-        profit: cumulativeProfit,
-        occupancy: occupancyRate
+      days.forEach(day => {
+        // Count how many properties (rooms) are booked on this day
+        const bookedRooms = properties.filter(property => {
+          const propertyBookings = allBookings.filter(booking => 
+            booking.property_id === property.id
+          )
+          return propertyBookings.some(booking => {
+            const start = new Date(booking.start_date)
+            const end = new Date(booking.end_date)
+            return isWithinInterval(day, { start, end })
+          })
+        }).length
+        
+        const occupancyRate = totalRooms > 0 ? bookedRooms / totalRooms : 0
+        totalOccupancy += occupancyRate
+        dayCount++
       })
-    })
+      
+      const avgOccupancy = dayCount > 0 ? totalOccupancy / dayCount : 0
+      months.push({
+        month: format(monthStart, 'MMM'),
+        occupancy: avgOccupancy * 100 // Convert to percentage
+      })
+    }
     
-    return dataPoints
+    return months
   }, [properties, allBookings])
   
   // Calculate graph dimensions
   const width = 800
   const height = 300
-  const padding = { top: 20, right: 20, bottom: 40, left: 60 }
+  const padding = { top: 20, right: 40, bottom: 50, left: 60 }
   const graphWidth = width - padding.left - padding.right
   const graphHeight = height - padding.top - padding.bottom
-  
-  // Find min/max for scaling
-  const maxProfit = Math.max(...graphData.map(d => d.profit), 1)
-  const minProfit = 0
-  
-  // Generate SVG path for the line
-  const pathData = graphData.map((point, index) => {
-    const x = padding.left + (index / (graphData.length - 1)) * graphWidth
-    const y = padding.top + graphHeight - ((point.profit - minProfit) / (maxProfit - minProfit || 1)) * graphHeight
-    return `${index === 0 ? 'M' : 'L'} ${x} ${y}`
-  }).join(' ')
-  
-  // Generate month labels
-  const monthLabels = useMemo(() => {
-    const labels: { month: string; x: number }[] = []
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    
-    months.forEach((month, index) => {
-      const monthStart = new Date(new Date().getFullYear(), index, 1)
-      const dayIndex = graphData.findIndex(d => 
-        format(d.date, 'yyyy-MM') === format(monthStart, 'yyyy-MM')
-      )
-      if (dayIndex >= 0) {
-        labels.push({
-          month,
-          x: padding.left + (dayIndex / (graphData.length - 1)) * graphWidth
-        })
-      }
-    })
-    
-    return labels
-  }, [graphData, graphWidth])
+  const barWidth = graphWidth / graphData.length * 0.7 // 70% of available space for bars
   
   const currentYear = new Date().getFullYear()
   
@@ -107,64 +66,85 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
       <div className="min-w-[800px]">
         <div className="text-center mb-4">
           <h3 className="text-lg sm:text-xl font-light text-[#2C3E1F]">
-            {currentYear}
+            Occupancy Rate ({currentYear})
           </h3>
         </div>
         <svg width={width} height={height} className="w-full h-auto">
           {/* Grid lines */}
-          {[0, 0.25, 0.5, 0.75, 1].map((ratio) => {
-            const y = padding.top + graphHeight * (1 - ratio)
+          {[0, 25, 50, 75, 100].map((value) => {
+            const y = padding.top + graphHeight - (value / 100) * graphHeight
             return (
-              <line
-                key={ratio}
-                x1={padding.left}
-                y1={y}
-                x2={width - padding.right}
-                y2={y}
-                stroke="#e5e7eb"
-                strokeWidth={1}
-                strokeDasharray="4 4"
-              />
+              <g key={value}>
+                <line
+                  x1={padding.left}
+                  y1={y}
+                  x2={width - padding.right}
+                  y2={y}
+                  stroke="#e5e7eb"
+                  strokeWidth={1}
+                  strokeDasharray="4 4"
+                />
+                {/* Y-axis labels */}
+                <text
+                  x={padding.left - 10}
+                  y={y + 4}
+                  textAnchor="end"
+                  className="text-xs fill-gray-600"
+                >
+                  {value}%
+                </text>
+              </g>
             )
           })}
           
-          {/* Profit line */}
-          <path
-            d={pathData}
-            fill="none"
-            stroke="#D4AF37"
-            strokeWidth={3}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          
-          {/* Area under curve */}
-          <path
-            d={`${pathData} L ${padding.left + graphWidth} ${padding.top + graphHeight} L ${padding.left} ${padding.top + graphHeight} Z`}
-            fill="url(#gradient)"
-            opacity={0.2}
-          />
-          
-          {/* Gradient definition */}
-          <defs>
-            <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#D4AF37" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="#D4AF37" stopOpacity={0.05} />
-            </linearGradient>
-          </defs>
+          {/* Occupancy bars */}
+          {graphData.map((data, index) => {
+            const barHeight = (data.occupancy / 100) * graphHeight
+            const x = padding.left + (index / graphData.length) * graphWidth + (graphWidth / graphData.length - barWidth) / 2
+            const y = padding.top + graphHeight - barHeight
+            
+            return (
+              <g key={index}>
+                {/* Bar */}
+                <rect
+                  x={x}
+                  y={y}
+                  width={barWidth}
+                  height={barHeight}
+                  fill="#D4AF37"
+                  opacity={0.7}
+                  rx={2}
+                />
+                {/* Value label on top of bar */}
+                {data.occupancy > 5 && (
+                  <text
+                    x={x + barWidth / 2}
+                    y={y - 5}
+                    textAnchor="middle"
+                    className="text-xs fill-[#4A5D23] font-medium"
+                  >
+                    {Math.round(data.occupancy)}%
+                  </text>
+                )}
+              </g>
+            )
+          })}
           
           {/* Month labels */}
-          {monthLabels.map((label, index) => (
-            <text
-              key={index}
-              x={label.x}
-              y={height - padding.bottom + 20}
-              textAnchor="middle"
-              className="text-xs fill-gray-600"
-            >
-              {label.month}
-            </text>
-          ))}
+          {graphData.map((data, index) => {
+            const x = padding.left + (index / graphData.length) * graphWidth + (graphWidth / graphData.length) / 2
+            return (
+              <text
+                key={index}
+                x={x}
+                y={height - padding.bottom + 20}
+                textAnchor="middle"
+                className="text-xs fill-gray-600"
+              >
+                {data.month}
+              </text>
+            )
+          })}
           
           {/* Y-axis label */}
           <text
@@ -174,7 +154,7 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
             transform={`rotate(-90, 15, ${height / 2})`}
             className="text-xs fill-gray-600"
           >
-            Cumulative Profit Trend
+            Occupancy Rate (%)
           </text>
         </svg>
       </div>
