@@ -69,6 +69,13 @@ export function ROITrendGraph({ properties, allBookings }: ROITrendGraphProps) {
             Occupancy Rate ({currentYear})
           </h3>
         </div>
+        {/* Legend */}
+        <div className="flex items-center justify-center gap-6 mb-4">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-[#D4AF37] opacity-70 rounded"></div>
+            <span className="text-xs sm:text-sm text-[#4A5D23] font-light">Occupancy Rate (%)</span>
+          </div>
+        </div>
         <svg width={width} height={height} className="w-full h-auto">
           {/* Grid lines */}
           {[0, 25, 50, 75, 100].map((value) => {
