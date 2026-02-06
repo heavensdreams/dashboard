@@ -134,30 +134,6 @@ export function Login() {
                 )}
               </button>
             </form>
-
-            {/* Demo Credentials */}
-            <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t-2 border-[#D4AF37]/20">
-              <p className="text-xs sm:text-sm text-[#6B7C4A] font-light text-center mb-3">
-                Demo credentials:
-              </p>
-              <div className="space-y-2">
-                <div className="bg-gradient-to-r from-[#E8F0E0] to-[#F0F8E8] rounded-lg px-4 py-2 border border-[#D4E0C8]">
-                  <p className="text-xs sm:text-sm text-[#4A5D23] font-light">
-                    <span className="font-medium">Admin:</span> john.doe@example.com / password123
-                  </p>
-                </div>
-                <div className="bg-gradient-to-r from-[#E8F0E0] to-[#F0F8E8] rounded-lg px-4 py-2 border border-[#D4E0C8]">
-                  <p className="text-xs sm:text-sm text-[#4A5D23] font-light">
-                    <span className="font-medium">User:</span> jane.smith@example.com / password123
-                  </p>
-                </div>
-                <div className="bg-gradient-to-r from-[#FFF8E7] to-[#FFF4D6] rounded-lg px-4 py-2 border border-[#D4AF37]/30">
-                  <p className="text-xs sm:text-sm text-[#4A5D23] font-light">
-                    <span className="font-medium">Customer:</span> demo@example.com / password123
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
